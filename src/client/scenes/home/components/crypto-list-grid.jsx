@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -9,6 +10,9 @@ query allCurrencies {
     currencyName
     currentSupply
     currencySymbol
+    markets(aggregation:VWAP){
+      ticker
+    }
   }
 }
 `;
@@ -33,23 +37,47 @@ export class CryptoListGridComponent extends PureComponent {
     }
   }
 
+  asCurrency(value) {
+    return '$'+(value.toLocaleString());
+  }
+
+  calculateMarketCap(currentSupply, lastPrice) {
+    return this.asCurrency(currentSupply * lastPrice);
+  }
+
   render() {
     let currencyList = this.state.topCurrencies.map(currency => {
-      return (<div key={currency.id}>
-          {currency.currencyName}
-        </div>);
+      return (<tr key={currency.id}>
+          <td>
+            <span>{currency.currencySymbol}</span><br />
+            <span>{currency.currencyName}</span>
+          </td>
+          <td className="numeral">{currency.currentSupply.toLocaleString()}</td>
+          <td className="numeral">{this.calculateMarketCap(currency.currentSupply, currency.markets[0].ticker[0])}</td>
+          <td className="numeral">{currency.markets[0].ticker[0]}</td>{/* Last price */}
+        </tr>);
     });
-    return (<div>
-      <div className="header">
-      </div>
-      <div className="grid">
+
+    return (
+    <table className="crypto-list-grid">
+      <thead>
+        <tr className="header">
+          <th >Name</th>
+          <th className="numeral">Current Supply</th>
+          <th className="numeral">Market Cap</th>
+          <th className="numeral">Price</th>
+        </tr>
+      </thead>
+      <tbody>
         {currencyList}
-      </div>
-      <div className="footer">
-      </div>
-    </div>);
+      </tbody>
+    </table>);
   }
 }
+
+CryptoListGridComponent.propTypes = {
+  data: PropTypes.object
+};
 
 let CryptoListGrid = graphql(ALL_CURRENCY_QUERY)(CryptoListGridComponent);
 

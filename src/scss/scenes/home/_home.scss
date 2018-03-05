@@ -1,0 +1,15 @@
+.crypto-list-grid {
+  width: 100%;
+
+  tr > td, tr > th{
+    padding: .5em 0;
+  }
+
+  tr {
+    border-bottom: 1px solid $gray-500;
+  }
+
+  .numeral {
+    text-align: right;
+  }
+}
