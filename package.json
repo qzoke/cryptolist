@@ -1,0 +1,75 @@
+{
+  "name": "cryptolist",
+  "version": "0.1.0",
+  "description": "Cryptocurrency market information portal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/altangent/cryptolist.git"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "market",
+    "marketcap",
+    "bitcoin",
+    "litecoin"
+  ],
+  "bugs": {
+    "url": "https://github.com/altangent/cryptolist/issues"
+  },
+  "author": "Brian Mancini <bmancini@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/altangent/cryptolist#readme",
+  "main": "src/server/server.js",
+  "scripts": {
+    "start": "NODE_ENV=production node src/server/server",
+    "build": "npm-run-all build:*",
+    "build:app": "NODE_ENV=production browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js",
+    "build:app-compress": "uglifyjs -c -o ./dist/app/bundle.js ./dist/app/bundle.js",
+    "build:scss": "node-sass -o dist/css --output-style compressed src/scss/app.scss",
+    "test": "mocha --recursive \"src/**/*.spec\"",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:app": "browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js && watchify src/client/app.jsx --debug -v --extension=.jsx -o ./dist/app/bundle.js",
+    "watch:scss": "node-sass -o dist/css src/scss/app.scss && node-sass -w -o dist/css src/scss/app.scss",
+    "watch:server": "nodemon --ignore dist --ignore src/client src/server/server"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bootstrap": "^4.0.0",
+    "compression": "^1.7.2",
+    "express": "^4.16.2",
+    "moment": "^2.21.0",
+    "prop-types": "^15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "reactstrap": "^5.0.0-alpha.4",
+    "serve-static": "^1.13.2",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.1.0",
+    "eslint": "^4.18.2",
+    "eslint-plugin-react": "^7.7.0",
+    "node-sass": "^4.7.2",
+    "nodemon": "^1.17.1",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.11.1",
+    "uglify-js": "^3.3.13",
+    "watchify": "^3.11.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify"
+      ]
+    ]
+  }
+}
