@@ -33,18 +33,28 @@
     "watch:server": "nodemon --ignore dist --ignore src/client src/server/server"
   },
   "dependencies": {
+    "apollo-client-preset": "^1.0.4",
+    "apollo-link": "^1.0.5",
+    "apollo-link-batch-http": "^1.0.4",
+    "apollo-link-ws": "^1.0.2",
+    "apollo-utilities": "^1.0.3",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
     "compression": "^1.7.2",
     "express": "^4.16.2",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
     "moment": "^2.21.0",
+    "npm": "^5.7.1",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
+    "react-apollo": "^2.0.1",
     "react-dom": "^16.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "reactstrap": "^5.0.0-alpha.4",
     "serve-static": "^1.13.2",
+    "subscriptions-transport-ws": "^0.9.4",
     "winston": "^2.4.0"
   },
   "devDependencies": {
