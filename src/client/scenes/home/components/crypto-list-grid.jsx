@@ -2,13 +2,11 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-
-// This is a temporary hack until we have market cap implemented in Blocktap
-const topMarketsList = ['BTC','ETH','XRP','BCH','LTC','ADA','NEO','XLM','XMR','EOS','MIOTA','DASH','XEM','TRX','ETC','USDT','VEN','NANO','QTUM','LSK'];
+import { marketCapFormat } from './market-cap-formatter';
 
 const ALL_CURRENCY_QUERY = gql`
 query allCurrencies {
-  currencies (filter: {currencySymbol_in: [${topMarketsList.map(p => `"${p}"`)}]}) {
+  currencies (sort:{marketcapRank:ASC}, page:{limit:25}) {
     id
     currencyName
     currentSupply
@@ -40,37 +38,21 @@ export class CryptoListGridComponent extends PureComponent {
     }
   }
 
-  asCurrency(value) {
-    if (value < 1)
-      return '¢'+(value * 100);
-    return '$'+(value.toLocaleString());
-  }
-
-  calculateMarketCap(currentSupply, lastPrice) {
-    return this.asCurrency(currentSupply * lastPrice);
-  }
-
   render() {
-    let currencyList = this.state.topCurrencies.map((currency, index) => {
-      let hasMarkets = currency.markets.length;
-      let market = hasMarkets ? currency.markets.find(market => {
-        return market.marketSymbol.endsWith(this.props.quoteSymbol);
-      }) : null;
-      let lastPrice = hasMarkets && market ? market.ticker[0] : 0;
-
+    let currencyList = marketCapFormat(this.state.topCurrencies, this.props.quoteSymbol).map(currency => {
       return (
         <tr key={currency.id}>
-          <td>{index + 1}</td>
+          <td>{currency.index + 1}</td>
           <td>
             <div className="currency-icon">
               <i className={'cc ' + currency.id} />
             </div>
-            <span>{currency.currencySymbol}</span><br />
-            <span>{currency.currencyName}</span>
+            <span>{currency.symbol}</span><br />
+            <span>{currency.name}</span>
           </td>
-          <td className="numeral">{currency.currentSupply.toLocaleString()}</td>
-          <td className="numeral">{this.calculateMarketCap(currency.currentSupply, lastPrice)}</td>
-          <td className="numeral">{this.asCurrency(lastPrice)}</td>{/* Last price */}
+          <td className="numeral">{currency.supply.toLocaleString()}</td>
+          <td className="numeral">{currency.marketCap}</td>
+          <td className="numeral">{currency.price}</td>{/* Last price */}
         </tr>);
     });
 
