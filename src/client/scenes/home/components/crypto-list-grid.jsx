@@ -53,6 +53,7 @@ export class CryptoListGridComponent extends PureComponent {
           </td>
           <td className="numeral">{currency.supply.toLocaleString()}</td>
           <td className="numeral">{currency.marketCap}</td>
+          <td className="numeral">{currency.volume}</td>
           <td className={percentChangeClass}>{currency.percentChange}</td>
           <td className="numeral">{currency.price}</td>{/* Last price */}
         </tr>);
@@ -66,6 +67,7 @@ export class CryptoListGridComponent extends PureComponent {
             <th>Name</th>
             <th className="numeral">Current Supply</th>
             <th className="numeral">Market Cap</th>
+            <th className="numeral">24 Hour Volume</th>
             <th className="numeral">Percent Change</th>
             <th className="numeral">Price</th>
           </tr>
