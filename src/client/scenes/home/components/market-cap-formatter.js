@@ -1,21 +1,48 @@
 const asCurrency = (value, quoteSymbol) => {
-  if(quoteSymbol === 'USD'){
-    if (value < 1)
-      return '¢'+(value * 100).toLocaleString();
-    return '$'+(value.toLocaleString());
+  switch (quoteSymbol) {
+    case 'USD':
+      return '$'+(value.toLocaleString());
+    case 'GBP':
+      return '£'+(value.toLocaleString());
+    case 'EUR':
+      return '€'+(value.toLocaleString());
+    case 'USDT':
+      return value.toLocaleString()+'USDT';
+    default:
+      return value.toFixed(8) + quoteSymbol;
   }
-  else
-    if (quoteSymbol != 'BTC')
-      return value.toLocaleString();
-    return value.toFixed(8);
 };
 
 const calculateMarketCap = (currentSupply, lastPrice, quoteSymbol) => {
   return asCurrency(currentSupply * lastPrice, quoteSymbol);
 };
 
-const calculateBriceFromBtc = (priceInBtc, priceOfBtc) => {
+const calculatePriceFromBtc = (priceInBtc, priceOfBtc) => {
   return priceInBtc * priceOfBtc;
+};
+
+const getPriceOfBtc = (btcNode, quoteSymbol) => {
+  const btcMarket = btcNode.markets.find(market => {
+    return market.marketSymbol.endsWith(quoteSymbol);
+  });
+  return btcMarket ? btcMarket.ticker[0] : 1;
+};
+
+const getPercentageChange = (markets, btcNode, quoteSymbol) => {
+  if (!markets || !markets.length) return 0;
+
+  // Try to use native market
+  const market = markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
+  if (market)
+    return (market.ticker[1] * 100).toFixed(2);
+
+  // If native market does not exist, convert to btc
+  const currencyBtcMarket = markets.find(market => market.marketSymbol.endsWith('BTC'));
+  const btcQuoteMarket = btcNode.markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
+  if (currencyBtcMarket && btcQuoteMarket)
+    return ((btcQuoteMarket.ticker[1] + currencyBtcMarket.ticker[1]) * 100).toFixed(2);
+
+  return 0;
 };
 
 export const marketCapFormat = (currencies, quoteSymbol) => {
@@ -23,24 +50,18 @@ export const marketCapFormat = (currencies, quoteSymbol) => {
     return [];
 
   const btcNode = currencies.find(currency => currency.currencySymbol === 'BTC');
-  const btcMarket = btcNode.markets.find(market => {
-    return market.marketSymbol.endsWith(quoteSymbol);
-  });
-  const priceOfBtc = btcMarket ? btcMarket.ticker[0] : 1;
+  const priceOfBtc = getPriceOfBtc(btcNode, quoteSymbol);
 
   return currencies.map((currency, index) => {
-    let hasMarkets = currency.markets.length;
-    let market = hasMarkets ? currency.markets.find(market => {
-      return market.marketSymbol.endsWith(quoteSymbol);
-    }) : null;
+    const hasMarkets = currency.markets.length;
+    const market = hasMarkets ? currency.markets.find(market => market.marketSymbol.endsWith(quoteSymbol)) : null;
+    const percentChange = getPercentageChange(currency.markets, btcNode, quoteSymbol);
 
     let lastPrice = hasMarkets && market ? market.ticker[0] : 0;
     if (lastPrice === 0 && hasMarkets) {
-      let btcMarket = currency.markets.find(market => {
-        return market.marketSymbol.endsWith('BTC');
-      });
+      const btcMarket = currency.markets.find(market => market.marketSymbol.endsWith('BTC'));
       const priceInBtc = btcMarket ? btcMarket.ticker[0] : 1;
-      lastPrice = calculateBriceFromBtc(priceInBtc, priceOfBtc);
+      lastPrice = calculatePriceFromBtc(priceInBtc, priceOfBtc);
     }
 
     return {
@@ -50,7 +71,8 @@ export const marketCapFormat = (currencies, quoteSymbol) => {
       index: index,
       supply: currency.currentSupply.toLocaleString(),
       marketCap: calculateMarketCap(currency.currentSupply, lastPrice, quoteSymbol),
-      price: asCurrency(lastPrice, quoteSymbol)
+      price: asCurrency(lastPrice, quoteSymbol),
+      percentChange: percentChange
     };
   });
 };

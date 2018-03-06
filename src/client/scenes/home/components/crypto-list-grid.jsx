@@ -33,13 +33,14 @@ export class CryptoListGridComponent extends PureComponent {
     // 2) other page loads, and the cache has been populated, which means
     //    that we need to construct from the cache
     if (nextProps.data.currencies) {
-      let topCurrencies = nextProps.data.currencies;
+      const topCurrencies = nextProps.data.currencies;
       this.setState({ topCurrencies });
     }
   }
 
   render() {
-    let currencyList = marketCapFormat(this.state.topCurrencies, this.props.quoteSymbol).map(currency => {
+    const currencyList = marketCapFormat(this.state.topCurrencies, this.props.quoteSymbol).map(currency => {
+      const percentChangeClass = 'numeral ' + (currency.percentChange >= 0 ? 'positive' : 'negative');
       return (
         <tr key={currency.id}>
           <td>{currency.index + 1}</td>
@@ -52,6 +53,7 @@ export class CryptoListGridComponent extends PureComponent {
           </td>
           <td className="numeral">{currency.supply.toLocaleString()}</td>
           <td className="numeral">{currency.marketCap}</td>
+          <td className={percentChangeClass}>{currency.percentChange}</td>
           <td className="numeral">{currency.price}</td>{/* Last price */}
         </tr>);
     });
@@ -64,6 +66,7 @@ export class CryptoListGridComponent extends PureComponent {
             <th>Name</th>
             <th className="numeral">Current Supply</th>
             <th className="numeral">Market Cap</th>
+            <th className="numeral">Percent Change</th>
             <th className="numeral">Price</th>
           </tr>
         </thead>
