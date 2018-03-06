@@ -4,7 +4,6 @@ import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 export class PaginationBar extends React.PureComponent {
   render() {
-    console.log(this.props);
     return (
       <div className="pagination-container">
         <Pagination>

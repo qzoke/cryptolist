@@ -32,8 +32,8 @@ export class QuoteCurrencySwitcher extends React.PureComponent {
       );
     });
     return (
-      <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-        <DropdownToggle color="secondary" outline caret>{this.props.currentQuoteSymbol}</DropdownToggle>
+      <ButtonDropdown className="currency-switcher" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+        <DropdownToggle color="" caret>{this.props.currentQuoteSymbol}</DropdownToggle>
         <DropdownMenu>
           {inputs}
         </DropdownMenu>

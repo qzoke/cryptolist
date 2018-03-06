@@ -7,6 +7,10 @@
 
   tr {
     border-bottom: 1px solid $gray-500;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 
   th {
