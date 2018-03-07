@@ -1,8 +1,7 @@
 import fontawesome from '@fortawesome/fontawesome';
-import sortUp from '@fortawesome/fontawesome-free-solid/faSortUp';
-import sortDown from '@fortawesome/fontawesome-free-solid/faSortDown';
+import freeSolid from '@fortawesome/fontawesome-free-solid';
 
 
 export const createIconFactory = () => {
-  fontawesome.library.add(sortUp, sortDown);
+  fontawesome.library.add(freeSolid);
 };

@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { marketCapFormat } from './market-cap-formatter';
 import { PaginationBar } from './pagination-bar';
 import { GridSortableHeaderItem } from './grid-sortable-header-item';
+import { Loading } from '../../../components/loading';
 
 const ITEMS_PER_PAGE = 50;
 
@@ -68,8 +69,9 @@ export class CryptoListGridComponent extends PureComponent {
   }
 
   render() {
+    // Wait until props come back from Apollo
     if (!this.props.currencies || !this.props.bitcoin)
-      return null;
+      return <Loading />;
 
     const currencyList = marketCapFormat(this.props.currencies, this.props.bitcoin, this.props.quoteSymbol).map(currency => {
       const percentChangeClass = 'numeral ' + (currency.percentChange >= 0 ? 'positive' : 'negative');
@@ -106,7 +108,7 @@ export class CryptoListGridComponent extends PureComponent {
                 key={header.name}
                 name={header.name}
                 sortName={header.sortName}
-                selectedSortName={this.state.sortProp}
+                isSorted={this.state.sortProp == header.sortName}
                 sort={this.sort}
                 numeral={header.numeral}
                 sortDir={this.state.sortDirectionAsc ? 'down' : 'up'}/>;
