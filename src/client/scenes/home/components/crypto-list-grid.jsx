@@ -73,7 +73,6 @@ export class CryptoListGridComponent extends PureComponent {
 
     const currencyList = marketCapFormat(this.props.currencies, this.props.bitcoin, this.props.quoteSymbol).map(currency => {
       const percentChangeClass = 'numeral ' + (currency.percentChange >= 0 ? 'positive' : 'negative');
-      console.log(currency);
       return (
         <tr key={currency.id}>
           <td>{currency.marketCapRank}</td>
@@ -109,7 +108,8 @@ export class CryptoListGridComponent extends PureComponent {
                 sortName={header.sortName}
                 selectedSortName={this.state.sortProp}
                 sort={this.sort}
-                numeral={header.numeral} />;
+                numeral={header.numeral}
+                sortDir={this.state.sortDirectionAsc ? 'down' : 'up'}/>;
     });
 
     return (

@@ -19,6 +19,10 @@
     a {
       color: $gray-600;
       text-decoration: underline;
+
+      .name {
+        padding-right: 0.4em;
+      }
     }
   }
 
