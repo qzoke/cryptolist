@@ -79,6 +79,7 @@ export const marketCapFormat = (currencies, btcNode, quoteSymbol) => {
       symbol: currency.currencySymbol,
       supply: currency.currentSupply.toLocaleString(),
       marketCap: calculateMarketCap(currency.currentSupply, lastPrice, quoteSymbol),
+      marketCapRank: currency.marketCapRank,
       price: asCurrency(lastPrice, quoteSymbol),
       percentChange: percentChange,
       volume: volume

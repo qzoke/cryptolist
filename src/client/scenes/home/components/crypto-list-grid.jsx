@@ -4,16 +4,19 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { marketCapFormat } from './market-cap-formatter';
 import { PaginationBar } from './pagination-bar';
+import { GridSortableHeaderItem } from './grid-sortable-header-item';
 
 const ITEMS_PER_PAGE = 50;
 
 const ALL_CURRENCY_QUERY = gql`
-query AllCurrencies ($limit: Int!, $skip: Int!) {
-  currencies (sort:{marketcapRank:ASC}, page:{limit:$limit, skip: $skip}) {
+query AllCurrencies ($sort:[CurrencySorter], $page:Page) {
+  currencies (sort:$sort, page:$page) {
     id
     currencyName
     currentSupply
     currencySymbol
+    marketCap
+    marketCapRank
     markets(aggregation:VWAP){
       marketSymbol
       ticker
@@ -41,30 +44,39 @@ export class CryptoListGridComponent extends PureComponent {
     super(props);
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
-    this.state = { page: 1 };
+    this.sort = this.sort.bind(this);
+    this.state = { page: 1, sortProp: 'marketcapRank', sortDirectionAsc: true };
   }
 
   nextPage() {
     this.setState({ page: this.state.page + 1 });
-    this.props.loadMoreEntries((this.state.page) * ITEMS_PER_PAGE);
+    this.props.page((this.state.page) * ITEMS_PER_PAGE);
   }
 
   previousPage() {
     var newPage = this.state.page == 1 ? this.state.page : this.state.page - 1;
 
     this.setState({ page: newPage });
-    this.props.loadMoreEntries((newPage - 1) * ITEMS_PER_PAGE);
+    this.props.page((newPage - 1) * ITEMS_PER_PAGE);
+  }
+
+  sort(sortProp) {
+    var sortAsc = sortProp != this.state.sortProp ? this.state.sortDirectionAsc : !this.state.sortDirectionAsc;
+    this.setState({ sortProp, sortDirectionAsc: sortAsc });
+
+    this.props.sort(sortProp, sortAsc ? 'ASC' : 'DESC');
   }
 
   render() {
     if (!this.props.currencies || !this.props.bitcoin)
       return null;
 
-    const currencyList = marketCapFormat(this.props.currencies, this.props.bitcoin, this.props.quoteSymbol).map((currency, index) => {
+    const currencyList = marketCapFormat(this.props.currencies, this.props.bitcoin, this.props.quoteSymbol).map(currency => {
       const percentChangeClass = 'numeral ' + (currency.percentChange >= 0 ? 'positive' : 'negative');
+      console.log(currency);
       return (
         <tr key={currency.id}>
-          <td>{(index + 1) + ((this.state.page - 1) * ITEMS_PER_PAGE)}</td>
+          <td>{currency.marketCapRank}</td>
           <td>
             <div className="currency-icon">
               <i className={'cc ' + currency.id} />
@@ -80,18 +92,32 @@ export class CryptoListGridComponent extends PureComponent {
         </tr>);
     });
 
+    const headerTypes = [
+      {name: '#', sortName: 'marketcapRank'},
+      {name: 'Name', sortName: 'currencyName'},
+      {name: 'Current Supply', sortName: null, numeral: true},
+      {name: 'Market Cap', sortName: 'marketcap', numeral: true},
+      {name: '24 Hour Volume', sortName: null, numeral: true},
+      {name: 'Percent Change', sortName: null, numeral: true},
+      {name: 'Price', sortName: null, numeral: true}
+    ];
+
+    const headers = headerTypes.map(header => {
+      return <GridSortableHeaderItem
+                key={header.name}
+                name={header.name}
+                sortName={header.sortName}
+                selectedSortName={this.state.sortProp}
+                sort={this.sort}
+                numeral={header.numeral} />;
+    });
+
     return (
       <div>
         <table className="crypto-list-grid">
           <thead>
             <tr className="header">
-              <th></th>
-              <th>Name</th>
-              <th className="numeral">Current Supply</th>
-              <th className="numeral">Market Cap</th>
-              <th className="numeral">24 Hour Volume</th>
-              <th className="numeral">Percent Change</th>
-              <th className="numeral">Price</th>
+              {headers}
             </tr>
           </thead>
           <tbody>
@@ -111,7 +137,8 @@ export class CryptoListGridComponent extends PureComponent {
 CryptoListGridComponent.propTypes = {
   currencies: PropTypes.array,
   bitcoin: PropTypes.object,
-  loadMoreEntries: PropTypes.func,
+  page: PropTypes.func,
+  sort: PropTypes.func,
   quoteSymbol: PropTypes.string.isRequired
 };
 
@@ -123,23 +150,43 @@ const withBitcoin = graphql(BITCOIN_QUERY,{
 const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
   options: () => ({
     variables: {
-      limit: ITEMS_PER_PAGE,
-      skip: 0
+      page: {
+        limit: ITEMS_PER_PAGE,
+        skip: 0
+      },
+      sort: {
+        marketcapRank: 'ASC'
+      }
     },
   }),
   props: ({ data: { currencies, fetchMore } }) => ({
     currencies: currencies,
-    loadMoreEntries(skip) {
+    page(skip) {
       return fetchMore({
         variables: {
-          skip: skip,
+          page: {
+            skip: skip,
+            limit: ITEMS_PER_PAGE
+          },
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult.currencies) { return previousResult; }
-          return Object.assign({}, {
-            // Append the new feed results to the old one
-            currencies: [...fetchMoreResult.currencies],
-          });
+          return {
+            currencies: fetchMoreResult.currencies,
+          };
+        }
+      });
+    },
+    sort(property, direction) {
+      var sort = {};
+      sort[property] = direction;
+      return fetchMore({
+        variables: { sort: sort },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult.currencies) { return previousResult; }
+          return {
+            currencies: fetchMoreResult.currencies
+          };
         }
       });
     }

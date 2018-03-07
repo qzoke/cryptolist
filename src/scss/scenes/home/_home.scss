@@ -6,7 +6,7 @@
   }
 
   tr {
-    border-bottom: 1px solid $gray-500;
+    border-bottom: 1px solid $gray-400;
 
     &:last-child {
       border-bottom: none;
@@ -15,6 +15,11 @@
 
   th {
     color: $gray-600;
+
+    a {
+      color: $gray-600;
+      text-decoration: underline;
+    }
   }
 
   .numeral {
