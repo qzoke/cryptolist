@@ -5,16 +5,15 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
-let GRAPHQL_HOST = process.env.GRAPHQL_HOST || 'localhost';
+let GRAPHQL_HOST = process.env.GRAPHQL_HOST || 'alpha.blocktap.io';
 
 export const createClient = ssrMode => {
   const httpLink = new BatchHttpLink({
-    uri: `http://${GRAPHQL_HOST}:8081/graphql`,
-    //fetch,
+    uri: `https://${GRAPHQL_HOST}/graphql`,
   });
 
   const wsLink = new WebSocketLink({
-    uri: `ws://${GRAPHQL_HOST}:8081/subscriptions`,
+    uri: `wss://${GRAPHQL_HOST}/subscriptions`,
     options: {
       reconnect: true,
     },
