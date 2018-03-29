@@ -12,15 +12,26 @@ const ITEMS_PER_PAGE = 50;
 const ALL_CURRENCY_QUERY = gql`
 query AllCurrencies ($sort:[CurrencySorter], $page:Page) {
   currencies (sort:$sort, page:$page) {
-    id
-    currencyName
-    currentSupply
-    currencySymbol
-    marketCap
-    marketCapRank
-    markets(aggregation:VWAP){
-      marketSymbol
-      ticker
+    data {
+	    id
+      currencyName
+      currentSupply
+      currencySymbol
+      marketCap
+      marketCapRank
+      markets(aggregation:VWAP) {
+        data {
+          marketSymbol
+          ticker {
+            last
+            percentChange
+            dayLow
+            dayHigh
+            baseVolume
+            quoteVolume
+          }
+        }
+      }
     }
   }
 }
@@ -33,8 +44,17 @@ const BITCOIN_QUERY = gql`
     currentSupply
     currencySymbol
     markets(aggregation:VWAP) {
-      marketSymbol
-      ticker
+      data {
+        marketSymbol
+        ticker {
+          last
+          percentChange
+          dayLow
+          dayHigh
+          baseVolume
+          quoteVolume
+        }
+      }
     }
   }
 }
@@ -46,7 +66,7 @@ export class CryptoListGridComponent extends PureComponent {
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.sort = this.sort.bind(this);
-    this.state = { page: 1, sortProp: 'marketcapRank', sortDirectionAsc: true };
+    this.state = { page: 1, sortProp: 'marketCapRank', sortDirectionAsc: true };
   }
 
   nextPage() {
@@ -94,7 +114,7 @@ export class CryptoListGridComponent extends PureComponent {
     });
 
     const headerTypes = [
-      {name: '#', sortName: 'marketcapRank'},
+      {name: '#', sortName: 'marketCapRank'},
       {name: 'Name', sortName: 'currencyName'},
       {name: 'Current Supply', sortName: null, numeral: true},
       {name: 'Market Cap', sortName: 'marketcap', numeral: true},
@@ -111,7 +131,7 @@ export class CryptoListGridComponent extends PureComponent {
                 isSorted={this.state.sortProp == header.sortName}
                 sort={this.sort}
                 numeral={header.numeral}
-                sortDir={this.state.sortDirectionAsc ? 'down' : 'up'}/>;
+                sortDir={this.state.sortDirectionAsc ? 'down' : 'up'} />;
     });
 
     return (
@@ -144,11 +164,12 @@ CryptoListGridComponent.propTypes = {
   quoteSymbol: PropTypes.string.isRequired
 };
 
-const withBitcoin = graphql(BITCOIN_QUERY,{
+const withBitcoin = graphql(BITCOIN_QUERY, {
   props: ({ data }) => ({
     bitcoin: data && data.currency,
-  }),
+  })
 });
+
 const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
   options: () => ({
     variables: {
@@ -157,12 +178,12 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
         skip: 0
       },
       sort: {
-        marketcapRank: 'ASC'
+        marketCapRank: 'ASC'
       }
     },
   }),
-  props: ({ data: { currencies, fetchMore } }) => ({
-    currencies: currencies,
+  props: ({ data: { currencies, fetchMore } }) =>  ({
+    currencies: currencies && currencies.data,
     page(skip) {
       return fetchMore({
         variables: {
