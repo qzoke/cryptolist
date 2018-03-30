@@ -112,7 +112,7 @@ export class CryptoListGridComponent extends PureComponent {
           <td className="numeral">{currency.volume}</td>
           <td className={percentChangeClass}>{currency.percentChange}%</td>
           <td className="numeral">{currency.price}</td>{/* Last price */}
-          <td><MiniGraph currencyId={currency.symbol} quote={this.props.quoteSymbol} width={100} height={50} /></td>
+          <td><MiniGraph currencyId={currency.symbol} quote={this.props.quoteSymbol} width={120} height={50} /></td>
         </tr>);
     });
 
@@ -124,7 +124,7 @@ export class CryptoListGridComponent extends PureComponent {
       {name: '24 Hour Volume', sortName: null, numeral: true},
       {name: '% Change', sortName: null, numeral: true},
       {name: 'Price', sortName: null, numeral: true},
-      {name: '1 Day Graph', numeral: true}
+      {name: '3 Day Graph', numeral: true}
     ];
 
     const headers = headerTypes.map(header => {

@@ -4,6 +4,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
 
+const numberOfDays = 3;
 const CURRENCY_QUERY = gql`
 query CurrencyQuery($symbol:String, $quoteSymbol:String, $start:Int, $end:Int, $resolution:Int){
   currency(currencySymbol:$symbol) {
@@ -29,7 +30,7 @@ export const MiniGraphComponent = ({ data, width, height }) => {
   let low = Math.min(...prices);
   let denominator = high - low;
   let actualPoints = prices.map((price, index) => ({
-    x: (index / 24) * width,
+    x: (index / (24 * numberOfDays)) * width,
     y: (height - ((price - low) / denominator) * height)
   }));
   let paths = actualPoints.map(price => `L ${price.x} ${price.y}`);
@@ -39,7 +40,6 @@ export const MiniGraphComponent = ({ data, width, height }) => {
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
       <path d={path} fill="transparent" stroke="#6D747C" />
-      {/* <circle cx="10" cy="10" r="2" fill="red"/> */}
     </svg>
   );
 };
@@ -57,7 +57,7 @@ const withCurrencyQuery = graphql(CURRENCY_QUERY, {
     variables: {
       symbol: currencyId,
       quoteSymbol: quote,
-      start: moment().subtract(1, 'day').utc().unix(),
+      start: moment().subtract(numberOfDays, 'day').utc().unix(),
       end: moment().utc().unix(),
       resolution: 60 * 60 // hour
     },
