@@ -8,16 +8,24 @@
     "browser": true,
     "node": true,
     "mocha": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  "plugins": ["jest"],
   "rules": {
     "no-console": 0,
     "quotes": [2, "single"],
     "semi": [2, "always"],
     "comma-dangle": 0
+  },
+  "overrides": {
+    "files": "*.test.js",
+    "rules": {
+      "no-undef": "off"
+    }
   }
 }

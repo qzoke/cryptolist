@@ -9,7 +9,7 @@ const asCurrency = (value, quoteSymbol) => {
     case 'USDT':
       return value.toLocaleString()+'USDT';
     default:
-      return value.toFixed(8) + quoteSymbol;
+      return value.toFixed(4) + quoteSymbol;
   }
 };
 
