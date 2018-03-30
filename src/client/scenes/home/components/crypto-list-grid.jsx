@@ -7,6 +7,7 @@ import { PaginationBar } from './pagination-bar';
 import { GridSortableHeaderItem } from './grid-sortable-header-item';
 import { Loading } from '../../../components/loading';
 import { Table } from 'reactstrap';
+import { MiniGraph } from './mini-graph';
 
 const ITEMS_PER_PAGE = 50;
 
@@ -109,8 +110,9 @@ export class CryptoListGridComponent extends PureComponent {
           <td className="numeral">{currency.supply.toLocaleString()}</td>
           <td className="numeral">{currency.marketCap}</td>
           <td className="numeral">{currency.volume}</td>
-          <td className={percentChangeClass}>{currency.percentChange}</td>
+          <td className={percentChangeClass}>{currency.percentChange}%</td>
           <td className="numeral">{currency.price}</td>{/* Last price */}
+          <td><MiniGraph currencyId={currency.symbol} quote={this.props.quoteSymbol} width={100} height={50} /></td>
         </tr>);
     });
 
@@ -120,8 +122,9 @@ export class CryptoListGridComponent extends PureComponent {
       {name: 'Current Supply', sortName: null, numeral: true},
       {name: 'Market Cap', sortName: 'marketcap', numeral: true},
       {name: '24 Hour Volume', sortName: null, numeral: true},
-      {name: 'Percent Change', sortName: null, numeral: true},
-      {name: 'Price', sortName: null, numeral: true}
+      {name: '% Change', sortName: null, numeral: true},
+      {name: 'Price', sortName: null, numeral: true},
+      {name: '1 Day Graph', numeral: true}
     ];
 
     const headers = headerTypes.map(header => {
