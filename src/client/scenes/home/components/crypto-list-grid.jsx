@@ -6,6 +6,7 @@ import { marketCapFormat } from './market-cap-formatter';
 import { PaginationBar } from './pagination-bar';
 import { GridSortableHeaderItem } from './grid-sortable-header-item';
 import { Loading } from '../../../components/loading';
+import { Table } from 'reactstrap';
 
 const ITEMS_PER_PAGE = 50;
 
@@ -136,7 +137,7 @@ export class CryptoListGridComponent extends PureComponent {
 
     return (
       <div>
-        <table className="crypto-list-grid">
+        <Table responsive className="crypto-list-grid">
           <thead>
             <tr className="header">
               {headers}
@@ -145,7 +146,7 @@ export class CryptoListGridComponent extends PureComponent {
           <tbody>
             {currencyList}
           </tbody>
-        </table>
+        </Table>
         <PaginationBar
           nextFunction={this.nextPage}
           previousFunction={this.previousPage}
