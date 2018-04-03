@@ -6,32 +6,37 @@ import moment from 'moment';
 
 const numberOfDays = 3;
 const CURRENCY_QUERY = gql`
-query CurrencyQuery($symbol:String, $quoteSymbol:String, $start:Int, $end:Int, $resolution:Int){
-  currency(currencySymbol:$symbol) {
-    markets (filter:{quoteSymbol_eq: $quoteSymbol}, aggregation:VWAP){
-      data {
-        marketSymbol
-        candles (batches: [{ start:$start, end:$end, resolution:$resolution }]) {
-          data
+  query CurrencyQuery(
+    $symbol: String
+    $quoteSymbol: String
+    $start: Int
+    $end: Int
+    $resolution: CandleResolution!
+  ) {
+    currency(currencySymbol: $symbol) {
+      markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+        data {
+          marketSymbol
+          candles(start: $start, end: $end, resolution: $resolution) {
+            data
+          }
         }
       }
     }
   }
-}
 `;
 
 export const MiniGraphComponent = ({ data, width, height }) => {
-  if (!data.currency || !data.currency.markets.data.length)
-    return <div></div>;
+  if (!data.currency || !data.currency.markets.data.length) return <div />;
 
-  let candles = data.currency.markets.data[0].candles[0].data;
+  let candles = data.currency.markets.data[0].candles.data;
   let prices = candles.map(candle => candle[1]);
   let high = Math.max(...prices);
   let low = Math.min(...prices);
   let denominator = high - low;
   let actualPoints = prices.map((price, index) => ({
-    x: (index / (24 * numberOfDays)) * width,
-    y: (height - ((price - low) / denominator) * height)
+    x: index / (24 * numberOfDays) * width,
+    y: height - (price - low) / denominator * height,
   }));
   let paths = actualPoints.map(price => `L ${price.x} ${price.y}`);
   let startingPosition = `M0 ${actualPoints[0].y}`;
@@ -53,13 +58,18 @@ MiniGraphComponent.propTypes = {
 };
 
 const withCurrencyQuery = graphql(CURRENCY_QUERY, {
-  options: ({currencyId, quote}) => ({
+  options: ({ currencyId, quote }) => ({
     variables: {
       symbol: currencyId,
       quoteSymbol: quote,
-      start: moment().subtract(numberOfDays, 'day').utc().unix(),
-      end: moment().utc().unix(),
-      resolution: 60 * 60 // hour
+      start: moment()
+        .subtract(numberOfDays, 'day')
+        .utc()
+        .unix(),
+      end: moment()
+        .utc()
+        .unix(),
+      resolution: '_1h',
     },
   }),
 });
