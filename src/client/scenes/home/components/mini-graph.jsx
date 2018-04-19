@@ -17,7 +17,7 @@ const CURRENCY_QUERY = gql`
       markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
         data {
           marketSymbol
-          candles(start: $start, end: $end, resolution: $resolution) {
+          candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
             data
           }
         }
