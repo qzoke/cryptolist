@@ -124,7 +124,7 @@ export class CryptoListGridComponent extends PureComponent {
       {name: '24 Hour Volume', sortName: null, numeral: true},
       {name: '% Change', sortName: null, numeral: true},
       {name: 'Price', sortName: null, numeral: true},
-      {name: '3 Day Graph', numeral: true}
+      {name: '24h Graph', numeral: true}
     ];
 
     const headers = headerTypes.map(header => {

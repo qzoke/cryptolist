@@ -4,7 +4,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
 
-const numberOfDays = 3;
+const numberOfDays = 1;
 const CURRENCY_QUERY = gql`
   query CurrencyQuery(
     $symbol: String
@@ -22,15 +22,43 @@ const CURRENCY_QUERY = gql`
           }
         }
       }
+      btcMarket: markets (filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
+        data {
+          marketSymbol
+          candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+            data
+          }
+        }
+      }
+    }
+    btcPrice: currency (currencySymbol: "BTC") {
+      markets (filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+        data {
+          marketSymbol
+          ticker {
+            last
+          }
+        }
+      }
     }
   }
 `;
 
 export const MiniGraphComponent = ({ data, width, height }) => {
-  if (!data.currency || !data.currency.markets.data.length) return <div />;
+  if (!data.currency) return <div />;
+  let prices;
+  if (!data.currency.markets.data.length)
+  {
+    if (data.currency.btcMarket.data.length) {
+      let quotePrice = data.btcPrice.markets.data[0].ticker.last;
+      prices = data.currency.btcMarket.data[0].candles.data.map(candle => {
+        return candle[1] * quotePrice;
+      });
+    }
+    else return <div />;
+  }
+  else prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
 
-  let candles = data.currency.markets.data[0].candles.data;
-  let prices = candles.map(candle => candle[1]);
   let high = Math.max(...prices);
   let low = Math.min(...prices);
   let denominator = high - low;
