@@ -44,7 +44,7 @@ const CURRENCY_QUERY = gql`
   }
 `;
 
-export const MiniGraphComponent = ({ data, width, height }) => {
+export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   if (!data.currency) return <div />;
   let prices;
   if (!data.currency.markets.data.length)
@@ -67,12 +67,22 @@ export const MiniGraphComponent = ({ data, width, height }) => {
     y: height - (price - low) / denominator * height,
   }));
   let paths = actualPoints.map(price => `L ${price.x} ${price.y}`);
-  let startingPosition = `M0 ${actualPoints[0].y}`;
-  let path = `${startingPosition} ${paths.join(' ')}`;
+  let startingPosition = `M0 ${height}`;
+  let path = `${startingPosition} ${paths.join(' ')} L ${width} ${height} Z`;
 
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
-      <path d={path} fill="transparent" stroke="#6D747C" />
+      <defs>
+        <linearGradient id="positiveGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop stopColor="#777E47" offset="0%"/>
+          <stop stopOpacity="15%" stopColor="white" offset="100%"/>
+        </linearGradient>
+        <linearGradient id="negativeGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop stopColor="#DF7341" offset="0%"/>
+          <stop stopOpacity="15%" stopColor="white" offset="100%"/>
+        </linearGradient>
+      </defs>
+      <path d={path} stroke="transparent" fill={ isPositive ? 'url(#positiveGradient)' : 'url(#negativeGradient)'} />
     </svg>
   );
 };
@@ -83,6 +93,7 @@ MiniGraphComponent.propTypes = {
   data: PropTypes.object,
   width: PropTypes.number,
   height: PropTypes.number,
+  isPositive: PropTypes.bool,
 };
 
 const withCurrencyQuery = graphql(CURRENCY_QUERY, {

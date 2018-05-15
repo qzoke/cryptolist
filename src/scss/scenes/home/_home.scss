@@ -31,10 +31,10 @@
     text-align: right;
 
     &.positive {
-      color: green;
+      color: $cl-green;
     }
     &.negative {
-      color: red;
+      color: $cl-orange;
     }
   }
 

@@ -113,7 +113,7 @@ export class CryptoListGridComponent extends PureComponent {
           <td className="numeral">{currency.volume}</td>
           <td className={percentChangeClass}>{currency.percentChange}%</td>
           <td className="numeral">{currency.price}</td>{/* Last price */}
-          <td><MiniGraph currencyId={currency.symbol} quote={this.props.quoteSymbol} width={120} height={50} /></td>
+          <td><MiniGraph currencyId={currency.symbol} quote={this.props.quoteSymbol} width={120} height={50} isPositive={currency.percentChange >= 0} /></td>
         </tr>);
     });
 
