@@ -3,6 +3,7 @@
 
   tr > td, tr > th{
     padding: .5em 0;
+    vertical-align: middle;
   }
 
   tr {
@@ -39,5 +40,10 @@
 
   .mini-graph {
     float: right;
+  }
+
+  .currency-icon {
+    font-size: 1.5em;
+    margin-right: .5em;
   }
 }

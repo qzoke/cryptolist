@@ -13,6 +13,12 @@ app.use('/public/app', serveStatic(path.join(__dirname, '../../dist/app')));
 app.use('/public/css', serveStatic(path.join(__dirname, '../../dist/css')));
 app.use(bodyParser.json());
 
+// cryptocoins
+app.use(
+  '/public/cryptocoins',
+  serveStatic(path.resolve(__dirname, '../../node_modules/cryptocoins-icons/webfont/'))
+);
+
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../../public/index.html')));
 
 // eslint-disable-next-line

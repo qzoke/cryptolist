@@ -101,10 +101,11 @@ export class CryptoListGridComponent extends PureComponent {
         <tr key={currency.id}>
           <td>{currency.marketCapRank}</td>
           <td>
-            <div className="currency-icon">
-              <i className={'cc ' + currency.id} />
-            </div>
-            <span>{currency.symbol}</span><br />
+            <span className="currency-icon">
+              <i className={'cc ' + currency.symbol.toUpperCase()} />
+            </span>
+          </td>
+          <td>
             <span>{currency.name}</span>
           </td>
           <td className="numeral">{currency.supply.toLocaleString()}</td>
@@ -118,6 +119,7 @@ export class CryptoListGridComponent extends PureComponent {
 
     const headerTypes = [
       {name: '#', sortName: 'marketCapRank'},
+      {name: '', sortName: null},
       {name: 'Name', sortName: 'currencyName'},
       {name: 'Current Supply', sortName: null, numeral: true},
       {name: 'Market Cap', sortName: 'marketcap', numeral: true},
