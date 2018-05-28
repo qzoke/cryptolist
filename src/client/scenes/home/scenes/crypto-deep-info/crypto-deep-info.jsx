@@ -5,6 +5,8 @@ import { graphql } from 'react-apollo';
 import { CurrencyBasicInfo } from './components/currency-basic-info';
 import gql from 'graphql-tag';
 import { marketCapFormat } from '../../../../components/market-cap-formatter';
+import { Tooltip } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const CURRENCY_QUERY = gql`
   query DeepInfoQuery($currencySymbol: String) {
@@ -49,6 +51,21 @@ const CURRENCY_QUERY = gql`
 `;
 
 export class CryptoDeepInfoComponent extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      tooltipOpen: false,
+    };
+  }
+
+  toggle() {
+    this.setState({
+      tooltipOpen: !this.state.tooltipOpen,
+    });
+  }
+
   render() {
     if (!this.props.data.currency) return <Loading />;
 
@@ -60,6 +77,20 @@ export class CryptoDeepInfoComponent extends React.PureComponent {
         <div className="hero">
           <h1 className="name">{currency.currencyName}</h1>
           <h3 className="symbol">({currency.currencySymbol})</h3>
+          {currency.computedMarket ? (
+            <div className="computed-market">
+              <FontAwesomeIcon id="calculated" icon="calculator" />
+              <Tooltip
+                placement="left"
+                isOpen={this.state.tooltipOpen}
+                target="calculated"
+                toggle={this.toggle}
+              >
+                No native market found for selected currency to quote currency. The values shown are
+                interpreted from BTC.
+              </Tooltip>
+            </div>
+          ) : null}
         </div>
         <div className="price-container">
           <span className="price">{currency.price}</span>

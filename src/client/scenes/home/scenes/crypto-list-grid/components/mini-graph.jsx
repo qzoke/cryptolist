@@ -68,9 +68,11 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
     x: index / (24 * numberOfDays) * width,
     y: height - (price - low) / denominator * height,
   }));
-  let paths = actualPoints.map(price => `L ${price.x} ${price.y}`);
-  let startingPosition = `M0 ${height}`;
-  let path = `${startingPosition} ${paths.join(' ')} L ${width} ${height} Z`;
+  let paths = actualPoints.map(price => `L${price.x},${price.y}`);
+  let startingPosition = `M0,${height}`;
+  let path = `${startingPosition}${paths.join('')}L${width},${
+    actualPoints[actualPoints.length - 1].y
+  }L${width},${height}Z`;
 
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
