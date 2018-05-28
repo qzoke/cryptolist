@@ -1,0 +1,32 @@
+.crypto-list-grid {
+  width: 100%;
+
+  .currency-list-item {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em 0;
+    border-bottom: 1px solid $gray-300;
+    &:hover {
+      background-color: $gray-100;
+      cursor: pointer;
+    }
+
+    .currency-info {
+      .price {
+        font-size: 0.8em;
+        color: $gray-700;
+      }
+    }
+
+    .currency-icon {
+      font-size: 1.3em;
+      margin-right: 0.7em;
+      width: 1.3em;
+    }
+
+    .currency-graph {
+      margin-left: auto;
+      align-self: center;
+    }
+  }
+}

@@ -14,16 +14,19 @@ const CURRENCY_QUERY = gql`
     $resolution: CandleResolution!
   ) {
     currency(currencySymbol: $symbol) {
+      id
       markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
         data {
+          id
           marketSymbol
           candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
             data
           }
         }
       }
-      btcMarket: markets (filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
+      btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
         data {
+          id
           marketSymbol
           candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
             data
@@ -31,9 +34,11 @@ const CURRENCY_QUERY = gql`
         }
       }
     }
-    btcPrice: currency (currencySymbol: "BTC") {
-      markets (filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+    btcPrice: currency(currencySymbol: "BTC") {
+      id
+      markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
         data {
+          id
           marketSymbol
           ticker {
             last
@@ -47,17 +52,14 @@ const CURRENCY_QUERY = gql`
 export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   if (!data.currency) return <div />;
   let prices;
-  if (!data.currency.markets.data.length)
-  {
+  if (!data.currency.markets.data.length) {
     if (data.currency.btcMarket.data.length) {
       let quotePrice = data.btcPrice.markets.data[0].ticker.last;
       prices = data.currency.btcMarket.data[0].candles.data.map(candle => {
         return candle[1] * quotePrice;
       });
-    }
-    else return <div />;
-  }
-  else prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
+    } else return <div />;
+  } else prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
 
   let high = Math.max(...prices);
   let low = Math.min(...prices);
@@ -74,15 +76,19 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="positiveGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop stopColor="#777E47" offset="0%"/>
-          <stop stopOpacity="15%" stopColor="white" offset="100%"/>
+          <stop stopColor="#777E47" offset="0%" />
+          <stop stopOpacity="15%" stopColor="white" offset="100%" />
         </linearGradient>
         <linearGradient id="negativeGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop stopColor="#DF7341" offset="0%"/>
-          <stop stopOpacity="15%" stopColor="white" offset="100%"/>
+          <stop stopColor="#DF7341" offset="0%" />
+          <stop stopOpacity="15%" stopColor="white" offset="100%" />
         </linearGradient>
       </defs>
-      <path d={path} stroke="transparent" fill={ isPositive ? 'url(#positiveGradient)' : 'url(#negativeGradient)'} />
+      <path
+        d={path}
+        stroke="transparent"
+        fill={isPositive ? 'url(#positiveGradient)' : 'url(#negativeGradient)'}
+      />
     </svg>
   );
 };

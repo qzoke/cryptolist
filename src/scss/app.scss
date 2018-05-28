@@ -7,12 +7,11 @@
 @import './_variables.scss';
 
 // Typekit fonts
-@import url("https://use.typekit.net/rfi6tru.css");
+@import url('https://use.typekit.net/rfi6tru.css');
 
 // Components
 @import './components/_loading.scss';
 @import './components/_navbar.scss';
-@import './scenes/home/components/_pagination.scss';
 
 // Scenes
 @import './scenes/_layout.scss';
