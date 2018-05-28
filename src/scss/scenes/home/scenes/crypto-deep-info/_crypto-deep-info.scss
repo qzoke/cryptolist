@@ -1,0 +1,30 @@
+.crypto-deep-info {
+  .hero {
+    display: flex;
+    align-items: baseline;
+
+    .name {
+      padding-right: 0.5em;
+    }
+
+    .symbol {
+      color: $gray-700;
+    }
+  }
+
+  .price-container {
+    padding-bottom: 1em;
+    .price {
+      font-size: 1.3em;
+      padding-right: 0.3em;
+    }
+    .change {
+      &.negative {
+        color: $cl-orange;
+      }
+      &.positive {
+        color: $cl-green;
+      }
+    }
+  }
+}
