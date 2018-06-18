@@ -2,3 +2,7 @@
 @import './scenes/crypto-list-grid/_crypto-list-grid.scss';
 @import './scenes/crypto-deep-info/_crypto-deep-info.scss';
 @import './scenes/crypto-deep-info/components/_currency-basic-info.scss';
+
+.crypto-info-container {
+  padding-left: 2em;
+}

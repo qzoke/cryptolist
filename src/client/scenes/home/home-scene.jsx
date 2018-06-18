@@ -14,13 +14,13 @@ export class HomeScene extends React.PureComponent {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-3">
+          <div className="col-3 crypto-list-container">
             <CryptoListGrid
               quoteSymbol={this.props.quoteSymbol}
               currencySelected={data => this.setState({ currency: data })}
             />
           </div>
-          <div className="col-9">
+          <div className="col-9 crypto-info-container">
             <CryptoDeepInfo
               currencyTicker={this.state.currency}
               quoteSymbol={this.props.quoteSymbol}
