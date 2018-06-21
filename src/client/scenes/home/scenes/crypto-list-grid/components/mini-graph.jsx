@@ -72,18 +72,18 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   let startingPosition = `M0,${height}`;
   let path = `${startingPosition}${paths.join('')}L${width},${
     actualPoints[actualPoints.length - 1].y
-  }L${width},${height}Z`;
+    }L${width},${height}Z`;
 
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="positiveGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop stopColor="#777E47" offset="0%" />
-          <stop stopOpacity="15%" stopColor="white" offset="100%" />
+          <stop stopColor="#B4EC51" offset="0%" />
+          <stop stopColor="#429321" offset="100%" />
         </linearGradient>
         <linearGradient id="negativeGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop stopColor="#DF7341" offset="0%" />
-          <stop stopOpacity="15%" stopColor="white" offset="100%" />
+          <stop stopColor="#f7ad00" offset="0%" />
+          <stop stopColor="#f87a0b" offset="100%" />
         </linearGradient>
       </defs>
       <path
