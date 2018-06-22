@@ -27,7 +27,12 @@ export class Switcher extends React.PureComponent {
       case 'markets':
         return <Markets currencySymbol={this.props.currency.currencySymbol} />;
       case 'graph':
-        return <Graph currency={this.props.currency} />;
+        return (
+          <Graph
+            currencySymbol={this.props.currency.currencySymbol}
+            quoteSymbol={this.props.quoteSymbol}
+          />
+        );
       default:
         return <div />;
     }
@@ -73,4 +78,5 @@ export class Switcher extends React.PureComponent {
 
 Switcher.propTypes = {
   currency: PropTypes.object,
+  quoteSymbol: PropTypes.string.isRequired,
 };

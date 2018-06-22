@@ -100,7 +100,7 @@ export class CryptoDeepInfoComponent extends React.PureComponent {
             {currency.percentChange}%
           </span>
         </div>
-        <Switcher currency={currency} />
+        <Switcher currency={currency} quoteSymbol={this.props.quoteSymbol} />
       </div>
     );
   }
