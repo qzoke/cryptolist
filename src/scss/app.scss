@@ -1,10 +1,10 @@
+// Variables
+@import './_variables.scss';
+
 // Override Bootstrap
 @import '../../node_modules/bootstrap/scss/_functions.scss';
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 @import './_bootstrap-extensions.scss';
-
-// Variables
-@import './_variables.scss';
 
 // Typekit fonts
 @import url('https://use.typekit.net/rfi6tru.css');

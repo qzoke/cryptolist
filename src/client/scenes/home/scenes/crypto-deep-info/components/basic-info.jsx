@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const CurrencyBasicInfo = ({ currency }) => {
+export const BasicInfo = ({ currency }) => {
   return (
-    <div className="currency-basic-info">
+    <div className="currency-info-container basic-info">
       <div className="row headers">
         <div className="col">Market Cap Rank</div>
         <div className="col">Market Cap</div>
@@ -30,6 +30,6 @@ export const CurrencyBasicInfo = ({ currency }) => {
   );
 };
 
-CurrencyBasicInfo.propTypes = {
+BasicInfo.propTypes = {
   currency: PropTypes.object,
 };

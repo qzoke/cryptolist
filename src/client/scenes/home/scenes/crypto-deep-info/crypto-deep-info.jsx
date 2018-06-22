@@ -2,7 +2,7 @@ import React from 'react';
 import { Loading } from '../../../../components/loading';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import { CurrencyBasicInfo } from './components/currency-basic-info';
+import { Switcher } from './components/switcher';
 import gql from 'graphql-tag';
 import { marketCapFormat } from '../../../../components/market-cap-formatter';
 import { Tooltip } from 'reactstrap';
@@ -100,7 +100,7 @@ export class CryptoDeepInfoComponent extends React.PureComponent {
             {currency.percentChange}%
           </span>
         </div>
-        <CurrencyBasicInfo currency={currency} />
+        <Switcher currency={currency} />
       </div>
     );
   }
