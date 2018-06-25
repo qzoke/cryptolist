@@ -1,9 +1,14 @@
 .currency-info-container.markets {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  width: 48em;
   .volume-market {
     &.pie {
-      width: 24em;
+      width: 50%;
+    }
+    &.line {
+      width: 100%;
     }
     h4 {
       text-align: center;

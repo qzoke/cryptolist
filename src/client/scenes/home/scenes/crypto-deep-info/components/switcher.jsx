@@ -25,7 +25,12 @@ export class Switcher extends React.PureComponent {
       case 'info':
         return <BasicInfo currency={this.props.currency} />;
       case 'markets':
-        return <Markets currencySymbol={this.props.currency.currencySymbol} />;
+        return (
+          <Markets
+            currencySymbol={this.props.currency.currencySymbol}
+            quoteSymbol={this.props.quoteSymbol}
+          />
+        );
       case 'graph':
         return (
           <Graph

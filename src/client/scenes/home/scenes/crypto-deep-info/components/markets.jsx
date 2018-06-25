@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { Loading } from '../../../../../components/loading';
 import { ResponsivePie } from '@nivo/pie';
+import { MarketComparisonGraph } from './market-comparison-graph';
 
 // const colors = ['#F87A0B', '#002626', '#0E4749', '#95C623', '#E6FAFC'];
 // const colors = ['#222222', '#474747', '#727272', '#939393', '#bababa']; // greyscale
@@ -169,6 +170,13 @@ export class MarketsComponent extends React.PureComponent {
             />
           </div>
         </div>
+
+        {/* <div> */}
+        <MarketComparisonGraph
+          currencySymbol={this.props.currencySymbol}
+          quoteSymbol={this.props.quoteSymbol}
+        />
+        {/* </div> */}
       </div>
     );
   }
@@ -177,6 +185,7 @@ export class MarketsComponent extends React.PureComponent {
 MarketsComponent.propTypes = {
   currencySymbol: PropTypes.string.isRequired,
   data: PropTypes.object,
+  quoteSymbol: PropTypes.string.isRequired,
 };
 
 const withMarkets = graphql(MARKET_QUERY, {
