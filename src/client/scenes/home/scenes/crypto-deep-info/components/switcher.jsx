@@ -56,7 +56,7 @@ export class Switcher extends React.PureComponent {
               Info
             </NavLink>
           </NavItem>
-          <NavItem>
+          {/* <NavItem>
             <NavLink
               active={this.state.selectedTab === 'graph' ? true : false}
               href="#"
@@ -64,7 +64,7 @@ export class Switcher extends React.PureComponent {
             >
               Graph
             </NavLink>
-          </NavItem>
+          </NavItem> */}
           <NavItem>
             <NavLink
               active={this.state.selectedTab === 'markets' ? true : false}
