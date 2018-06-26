@@ -110,6 +110,9 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
     return (
       <div className="volume-market line">
         <h4>Exchange price comparison (24 hr)</h4>
+        <h5>
+          {this.props.currencySymbol}/{this.props.quoteSymbol}
+        </h5>
         <div style={{ height: '21em' }}>
           <ResponsiveLine
             data={data}
