@@ -50,7 +50,7 @@ const CURRENCY_QUERY = gql`
 `;
 
 export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
-  if (!data.currency) return <div />;
+  if (!data.currency || !data.currency.markets || !data.currency.btcMarket) return <div />;
   let prices;
   let currency = data.currency;
   let marketsData = currency.markets.data;
@@ -66,9 +66,7 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   } else {
     if (marketsData[0].candles) {
       prices = marketsData[0].candles.data.map(x => x[1]);
-    } else {
-      prices = [];
-    }
+    } else return <div />;
   }
 
   let high = Math.max(...prices);
