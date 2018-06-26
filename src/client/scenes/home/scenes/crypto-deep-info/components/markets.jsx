@@ -170,13 +170,10 @@ export class MarketsComponent extends React.PureComponent {
             />
           </div>
         </div>
-
-        {/* <div> */}
         <MarketComparisonGraph
           currencySymbol={this.props.currencySymbol}
           quoteSymbol={this.props.quoteSymbol}
         />
-        {/* </div> */}
       </div>
     );
   }

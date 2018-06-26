@@ -93,11 +93,17 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
 
     let markets = this.props.data.currency.markets.data;
     let filteredMarkets = this.findCorrectMarkets(markets, this.props.quoteSymbol);
-    if (!filteredMarkets.length) return <div>No markets found</div>;
+    if (!filteredMarkets.length) return <div />;
 
-    let data = filteredMarkets.map(market =>
-      this.generateDataFromCandles(market.candles.data, market.marketSymbol)
-    );
+    let data = filteredMarkets.map(market => {
+      if (market.candles) {
+        return this.generateDataFromCandles(market.candles.data, market.marketSymbol);
+      }
+      return {
+        id: market.marketSymbol.split(':')[0],
+        data: [],
+      };
+    });
     this.normalizeData(data);
 
     return (

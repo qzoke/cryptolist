@@ -59,7 +59,13 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
         return candle[1] * quotePrice;
       });
     } else return <div />;
-  } else prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
+  } else {
+    if (data.currency.markets.data[0].candles) {
+      prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
+    } else {
+      prices = [];
+    }
+  }
 
   let high = Math.max(...prices);
   let low = Math.min(...prices);
@@ -68,11 +74,12 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
     x: index / (24 * numberOfDays) * width,
     y: height - (price - low) / denominator * height,
   }));
+  if (!actualPoints.length) return <div />;
   let paths = actualPoints.map(price => `L${price.x},${price.y}`);
   let startingPosition = `M0,${height}`;
   let path = `${startingPosition}${paths.join('')}L${width},${
     actualPoints[actualPoints.length - 1].y
-    }L${width},${height}Z`;
+  }L${width},${height}Z`;
 
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
