@@ -6,12 +6,13 @@ import { marketCapFormat } from './components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
 import { Loading } from '../../../../components/loading';
 import { CryptoListItem } from './components/crypto-list-item';
+import { Search } from './components/search';
 
 const ITEMS_PER_PAGE = 10;
 
 const ALL_CURRENCY_QUERY = gql`
-  query AllCurrencies($sort: [CurrencySorter], $page: Page) {
-    currencies(sort: $sort, page: $page) {
+  query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilter) {
+    currencies(sort: $sort, page: $page, filter: $filter) {
       totalCount
       data {
         id
@@ -66,7 +67,12 @@ export class CryptoListGridComponent extends PureComponent {
     super(props);
     this.page = this.page.bind(this);
     this.sort = this.sort.bind(this);
-    this.state = { page: 1, sortProp: 'marketCapRank', sortDirectionAsc: true };
+    this.state = {
+      page: 1,
+      sortProp: 'marketCapRank',
+      sortDirectionAsc: true,
+      filterQuery: null,
+    };
   }
 
   page(page) {
@@ -104,6 +110,11 @@ export class CryptoListGridComponent extends PureComponent {
 
     return (
       <div className="crypto-list-grid">
+        <Search
+          updateQuery={filterQuery => {
+            this.props.filter(filterQuery);
+          }}
+        />
         {currencyList}
         <PaginationBar
           totalCount={this.props.currencies.totalCount}
@@ -121,6 +132,7 @@ CryptoListGridComponent.propTypes = {
   bitcoin: PropTypes.object,
   page: PropTypes.func,
   sort: PropTypes.func,
+  filter: PropTypes.func,
   quoteSymbol: PropTypes.string.isRequired,
   currencySelected: PropTypes.func,
 };
@@ -141,18 +153,19 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
       sort: {
         marketCapRank: 'ASC',
       },
+      filter: null,
     },
   }),
-  props: ({ data: { currencies, fetchMore } }) => ({
+  props: ({ data: { currencies, fetchMore, variables } }) => ({
     currencies: currencies,
     page(skip) {
+      let page = {
+        skip: skip,
+        limit: ITEMS_PER_PAGE,
+      };
+      let vars = Object.assign(variables, { page });
       return fetchMore({
-        variables: {
-          page: {
-            skip: skip,
-            limit: ITEMS_PER_PAGE,
-          },
-        },
+        variables: vars,
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult.currencies) {
             return previousResult;
@@ -168,6 +181,20 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
       sort[property] = direction;
       return fetchMore({
         variables: { sort: sort },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult.currencies) {
+            return previousResult;
+          }
+          return {
+            currencies: fetchMoreResult.currencies,
+          };
+        },
+      });
+    },
+    filter(filter) {
+      let vars = Object.assign(variables, { filter });
+      return fetchMore({
+        variables: vars,
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult.currencies) {
             return previousResult;

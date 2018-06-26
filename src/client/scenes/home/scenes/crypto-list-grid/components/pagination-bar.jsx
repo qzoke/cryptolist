@@ -8,18 +8,20 @@ export class PaginationBar extends React.PureComponent {
     this.getPageArray = this.getPageArray.bind(this);
   }
 
-  getPageArray(page, totalPages) {
+  getPageArray(page, total) {
     let pages = [1];
     if (page === 1) {
-      pages.push(2, 3);
-    } else if (page === totalPages) {
-      pages.push(totalPages - 2, totalPages - 1);
+      if (total > 2) pages.push(2);
+      if (total > 3) pages.push(3);
+    } else if (page === total) {
+      if (total - 2 > 1) pages.push(total - 2);
+      if (total - 1 > 1) pages.push(total - 1);
     } else {
       if (page - 1 !== 1) pages.push(page - 1);
       pages.push(page);
-      if (page + 1 !== totalPages) pages.push(page + 1);
+      if (page + 1 !== total) pages.push(page + 1);
     }
-    pages.push(totalPages);
+    if (total !== 1) pages.push(total);
     return pages;
   }
 
