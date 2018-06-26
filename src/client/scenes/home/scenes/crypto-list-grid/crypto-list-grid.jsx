@@ -65,14 +65,19 @@ const BITCOIN_QUERY = gql`
 export class CryptoListGridComponent extends PureComponent {
   constructor(props) {
     super(props);
+    this.filter = this.filter.bind(this);
     this.page = this.page.bind(this);
     this.sort = this.sort.bind(this);
     this.state = {
       page: 1,
       sortProp: 'marketCapRank',
       sortDirectionAsc: true,
-      filterQuery: null,
     };
+  }
+
+  filter(filterQuery) {
+    this.setState({ page: 1 });
+    this.props.filter(filterQuery);
   }
 
   page(page) {
@@ -110,11 +115,7 @@ export class CryptoListGridComponent extends PureComponent {
 
     return (
       <div className="crypto-list-grid">
-        <Search
-          updateQuery={filterQuery => {
-            this.props.filter(filterQuery);
-          }}
-        />
+        <Search updateQuery={this.filter} />
         {currencyList}
         <PaginationBar
           totalCount={this.props.currencies.totalCount}
@@ -192,7 +193,11 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
       });
     },
     filter(filter) {
-      let vars = Object.assign(variables, { filter });
+      let page = {
+        skip: 0,
+        limit: ITEMS_PER_PAGE,
+      };
+      let vars = Object.assign(variables, { filter, page });
       return fetchMore({
         variables: vars,
         updateQuery: (previousResult, { fetchMoreResult }) => {
