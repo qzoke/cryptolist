@@ -59,6 +59,7 @@ export class MarketsComponent extends React.PureComponent {
 
   render() {
     if (!this.props.data.currency) return <Loading />;
+    if (!this.props.data.currency.markets) return <div />;
 
     let exchangeVolumeObjects = this.getExchangeVolume(this.props.data.currency.markets.data);
     let quoteVolumeObjects = this.getQuoteVolume(this.props.data.currency.markets.data);

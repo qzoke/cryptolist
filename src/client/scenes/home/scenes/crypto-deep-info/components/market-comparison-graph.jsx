@@ -90,6 +90,7 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
           <Loading />
         </div>
       );
+    if (!this.props.data.currency.markets) return <div />;
 
     let markets = this.props.data.currency.markets.data;
     let filteredMarkets = this.findCorrectMarkets(markets, this.props.quoteSymbol);
