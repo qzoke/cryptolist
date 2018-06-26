@@ -12,6 +12,7 @@ const ITEMS_PER_PAGE = 10;
 const ALL_CURRENCY_QUERY = gql`
   query AllCurrencies($sort: [CurrencySorter], $page: Page) {
     currencies(sort: $sort, page: $page) {
+      totalCount
       data {
         id
         currencyName
@@ -63,22 +64,14 @@ const BITCOIN_QUERY = gql`
 export class CryptoListGridComponent extends PureComponent {
   constructor(props) {
     super(props);
-    this.nextPage = this.nextPage.bind(this);
-    this.previousPage = this.previousPage.bind(this);
+    this.page = this.page.bind(this);
     this.sort = this.sort.bind(this);
     this.state = { page: 1, sortProp: 'marketCapRank', sortDirectionAsc: true };
   }
 
-  nextPage() {
-    this.setState({ page: this.state.page + 1 });
-    this.props.page(this.state.page * ITEMS_PER_PAGE);
-  }
-
-  previousPage() {
-    var newPage = this.state.page == 1 ? this.state.page : this.state.page - 1;
-
-    this.setState({ page: newPage });
-    this.props.page((newPage - 1) * ITEMS_PER_PAGE);
+  page(page) {
+    this.setState({ page });
+    this.props.page((page - 1) * ITEMS_PER_PAGE);
   }
 
   sort(sortProp) {
@@ -91,10 +84,11 @@ export class CryptoListGridComponent extends PureComponent {
 
   render() {
     // Wait until props come back from Apollo
-    if (!this.props.currencies || !this.props.bitcoin) return <Loading showText={false} />;
+    if (!this.props.currencies || !this.props.currencies.data || !this.props.bitcoin)
+      return <Loading showText={false} />;
 
     const currencyList = marketCapFormat(
-      this.props.currencies,
+      this.props.currencies.data,
       this.props.bitcoin,
       this.props.quoteSymbol
     ).map(currency => (
@@ -112,10 +106,10 @@ export class CryptoListGridComponent extends PureComponent {
       <div className="crypto-list-grid">
         {currencyList}
         <PaginationBar
-          nextFunction={this.nextPage}
-          previousFunction={this.previousPage}
-          nextIsDisabled={this.props.currencies < ITEMS_PER_PAGE}
-          previousIsDisabled={this.state.page <= 1}
+          totalCount={this.props.currencies.totalCount}
+          limit={ITEMS_PER_PAGE}
+          page={this.state.page}
+          goToPage={this.page}
         />
       </div>
     );
@@ -123,7 +117,7 @@ export class CryptoListGridComponent extends PureComponent {
 }
 
 CryptoListGridComponent.propTypes = {
-  currencies: PropTypes.array,
+  currencies: PropTypes.object,
   bitcoin: PropTypes.object,
   page: PropTypes.func,
   sort: PropTypes.func,
@@ -150,7 +144,7 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
     },
   }),
   props: ({ data: { currencies, fetchMore } }) => ({
-    currencies: currencies && currencies.data,
+    currencies: currencies,
     page(skip) {
       return fetchMore({
         variables: {
