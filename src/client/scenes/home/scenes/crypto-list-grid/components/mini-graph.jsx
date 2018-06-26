@@ -52,16 +52,20 @@ const CURRENCY_QUERY = gql`
 export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   if (!data.currency) return <div />;
   let prices;
-  if (!data.currency.markets.data.length) {
-    if (data.currency.btcMarket.data.length) {
+  let currency = data.currency;
+  let marketsData = currency.markets.data;
+  let btcMarketData = currency.btcMarket.data;
+
+  if (!marketsData.length) {
+    if (btcMarketData.length && btcMarketData[0].candles) {
       let quotePrice = data.btcPrice.markets.data[0].ticker.last;
-      prices = data.currency.btcMarket.data[0].candles.data.map(candle => {
+      prices = btcMarketData[0].candles.data.map(candle => {
         return candle[1] * quotePrice;
       });
     } else return <div />;
   } else {
-    if (data.currency.markets.data[0].candles) {
-      prices = data.currency.markets.data[0].candles.data.map(x => x[1]);
+    if (marketsData[0].candles) {
+      prices = marketsData[0].candles.data.map(x => x[1]);
     } else {
       prices = [];
     }
