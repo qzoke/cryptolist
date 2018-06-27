@@ -23,6 +23,7 @@ const ALL_CURRENCY_QUERY = gql`
         marketCapRank
         markets(aggregation: VWAP) {
           data {
+            id
             marketSymbol
             ticker {
               last
@@ -36,17 +37,14 @@ const ALL_CURRENCY_QUERY = gql`
         }
       }
     }
-  }
-`;
-
-const BITCOIN_QUERY = gql`
-  {
-    currency(currencySymbol: "BTC") {
+    bitcoin: currency(currencySymbol: "BTC") {
+      id
       currencyName
       currentSupply
       currencySymbol
       markets(aggregation: VWAP) {
         data {
+          id
           marketSymbol
           ticker {
             last
@@ -67,11 +65,8 @@ export class CryptoListGridComponent extends PureComponent {
     super(props);
     this.filter = this.filter.bind(this);
     this.page = this.page.bind(this);
-    this.sort = this.sort.bind(this);
     this.state = {
       page: 1,
-      sortProp: 'marketCapRank',
-      sortDirectionAsc: true,
     };
   }
 
@@ -83,14 +78,6 @@ export class CryptoListGridComponent extends PureComponent {
   page(page) {
     this.setState({ page });
     this.props.page((page - 1) * ITEMS_PER_PAGE);
-  }
-
-  sort(sortProp) {
-    var sortAsc =
-      sortProp != this.state.sortProp ? this.state.sortDirectionAsc : !this.state.sortDirectionAsc;
-    this.setState({ sortProp, sortDirectionAsc: sortAsc });
-
-    this.props.sort(sortProp, sortAsc ? 'ASC' : 'DESC');
   }
 
   render() {
@@ -132,17 +119,10 @@ CryptoListGridComponent.propTypes = {
   currencies: PropTypes.object,
   bitcoin: PropTypes.object,
   page: PropTypes.func,
-  sort: PropTypes.func,
   filter: PropTypes.func,
   quoteSymbol: PropTypes.string.isRequired,
   currencySelected: PropTypes.func,
 };
-
-const withBitcoin = graphql(BITCOIN_QUERY, {
-  props: ({ data }) => ({
-    bitcoin: data && data.currency,
-  }),
-});
 
 const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
   options: () => ({
@@ -157,8 +137,9 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
       filter: null,
     },
   }),
-  props: ({ data: { currencies, fetchMore, variables } }) => ({
+  props: ({ data: { currencies, bitcoin, fetchMore, variables } }) => ({
     currencies: currencies,
+    bitcoin: bitcoin,
     page(skip) {
       let page = {
         skip: skip,
@@ -167,21 +148,6 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
       let vars = Object.assign(variables, { page });
       return fetchMore({
         variables: vars,
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult.currencies) {
-            return previousResult;
-          }
-          return {
-            currencies: fetchMoreResult.currencies,
-          };
-        },
-      });
-    },
-    sort(property, direction) {
-      var sort = {};
-      sort[property] = direction;
-      return fetchMore({
-        variables: { sort: sort },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult.currencies) {
             return previousResult;
@@ -213,4 +179,4 @@ const withCurrencies = graphql(ALL_CURRENCY_QUERY, {
   }),
 });
 
-export const CryptoListGrid = withCurrencies(withBitcoin(CryptoListGridComponent));
+export const CryptoListGrid = withCurrencies(CryptoListGridComponent);

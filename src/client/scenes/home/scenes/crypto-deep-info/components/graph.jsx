@@ -7,7 +7,7 @@ import { Loading } from '../../../../../components/loading';
 import moment from 'moment';
 
 const CANDLES_QUERY = gql`
-  query DeepInfoQuery($currencySymbol: String, $start: Int, $end: Int) {
+  query GraphQuery($currencySymbol: String, $start: Int, $end: Int) {
     currency(currencySymbol: $currencySymbol) {
       id
       markets {

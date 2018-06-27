@@ -13,7 +13,7 @@ import { MarketComparisonGraph } from './market-comparison-graph';
 const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
 const MARKET_QUERY = gql`
-  query DeepInfoQuery($currencySymbol: String) {
+  query MarketQuery($currencySymbol: String) {
     currency(currencySymbol: $currencySymbol) {
       id
       markets {
