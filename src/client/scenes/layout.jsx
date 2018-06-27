@@ -7,11 +7,11 @@ export class Layout extends React.PureComponent {
   constructor() {
     super();
     this.changeQuoteSymbol = this.changeQuoteSymbol.bind(this);
-    this.state = { quoteSymbol: 'USD' };
+    this.state = { quoteSymbol: 'USD', currency: null };
   }
 
   changeQuoteSymbol(newQuoteSymbol) {
-    this.setState({quoteSymbol: newQuoteSymbol});
+    this.setState({ quoteSymbol: newQuoteSymbol });
   }
 
   render() {
@@ -19,10 +19,19 @@ export class Layout extends React.PureComponent {
       <div className="layout">
         <div className="content">
           <div className="container">
-            <AppNav changeQuoteSymbol={this.changeQuoteSymbol} currentQuoteSymbol={this.state.quoteSymbol} />
+            <AppNav
+              changeQuoteSymbol={this.changeQuoteSymbol}
+              currentQuoteSymbol={this.state.quoteSymbol}
+            />
           </div>
           <div className="container mt-3">
-            <Route exact path="/" render={() => <HomeScene quoteSymbol={this.state.quoteSymbol} />} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <HomeScene quoteSymbol={this.state.quoteSymbol} currency={this.state.currency} />
+              )}
+            />
             {/* other routes go here */}
           </div>
         </div>

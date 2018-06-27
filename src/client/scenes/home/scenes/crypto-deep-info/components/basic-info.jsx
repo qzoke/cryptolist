@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const BasicInfo = ({ currency }) => {
+export const BasicInfo = ({ currency, bitcoin, quoteSymbol }) => {
   return (
     <div className="currency-info-container basic-info">
       <div className="row headers">

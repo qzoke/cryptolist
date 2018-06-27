@@ -23,7 +23,7 @@ export class Switcher extends React.PureComponent {
   getContents() {
     switch (this.state.selectedTab) {
       case 'info':
-        return <BasicInfo currency={this.props.currency} />;
+        return <BasicInfo {...this.props} />;
       case 'markets':
         return (
           <Markets

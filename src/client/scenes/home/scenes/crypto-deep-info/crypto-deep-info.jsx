@@ -1,56 +1,11 @@
 import React from 'react';
 import { Loading } from '../../../../components/loading';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
 import { Switcher } from './components/switcher';
-import gql from 'graphql-tag';
-import { marketCapFormat } from '../../../../components/market-cap-formatter';
 import { Tooltip } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-const CURRENCY_QUERY = gql`
-  query DeepInfoQuery($currencySymbol: String) {
-    currency(currencySymbol: $currencySymbol) {
-      id
-      currencyName
-      currentSupply
-      currencySymbol
-      totalSupply
-      marketCap
-      marketCapRank
-      markets(aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-            dayLow
-            dayHigh
-            baseVolume
-            quoteVolume
-          }
-        }
-      }
-    }
-    bitcoin: currency(currencySymbol: "BTC") {
-      id
-      currencyName
-      markets(aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-          }
-        }
-      }
-    }
-  }
-`;
-
-export class CryptoDeepInfoComponent extends React.PureComponent {
+export class CryptoDeepInfo extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -67,10 +22,9 @@ export class CryptoDeepInfoComponent extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.data.currency) return <Loading />;
-
-    let bitcoin = this.props.data.bitcoin;
-    let currency = marketCapFormat(this.props.data.currency, bitcoin, this.props.quoteSymbol);
+    let bitcoin = this.props.bitcoin;
+    console.log(this.props);
+    let currency = this.props.currency;
 
     return (
       <div className="crypto-deep-info">
@@ -100,24 +54,13 @@ export class CryptoDeepInfoComponent extends React.PureComponent {
             {currency.percentChange}%
           </span>
         </div>
-        <Switcher currency={currency} quoteSymbol={this.props.quoteSymbol} />
+        <Switcher {...this.props} currency={currency} />
       </div>
     );
   }
 }
 
-CryptoDeepInfoComponent.propTypes = {
-  currencyTicker: PropTypes.string,
+CryptoDeepInfo.propTypes = {
   data: PropTypes.object,
   quoteSymbol: PropTypes.string.isRequired,
 };
-
-const withCurrency = graphql(CURRENCY_QUERY, {
-  options: ({ currencyTicker }) => ({
-    variables: {
-      currencySymbol: currencyTicker,
-    },
-  }),
-});
-
-export const CryptoDeepInfo = withCurrency(CryptoDeepInfoComponent);
