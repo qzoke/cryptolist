@@ -23,7 +23,6 @@ export class CryptoDeepInfo extends React.PureComponent {
 
   render() {
     let bitcoin = this.props.bitcoin;
-    console.log(this.props);
     let currency = this.props.currency;
 
     return (

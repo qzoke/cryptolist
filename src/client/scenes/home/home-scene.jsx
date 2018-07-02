@@ -63,8 +63,8 @@ export class HomeSceneComponent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.currencySelected = this.currencySelected.bind(this);
-    let selectedCurrencySymbol: 'BTC';
-      let currency;
+    let selectedCurrencySymbol = 'BTC';
+    let currency;
 
     if (props.currencies && props.bitcoin) {
       currency = marketCapFormat(
@@ -83,13 +83,26 @@ export class HomeSceneComponent extends React.PureComponent {
   currencySelected(currency) {
     this.setState({
       selectedCurrencySymbol: currency,
-      currency: this.getSelectedCurrency(currency, this.props.currencies.data),
+      currency: marketCapFormat(
+        this.getSelectedCurrency(currency, this.props.currencies.data),
+        this.props.bitcoin,
+        this.props.quoteSymbol
+      ),
     });
   }
 
   render() {
+    let currency;
     if (!this.props.currencies || !this.props.bitcoin) {
       return <Loading />;
+    }
+
+    if (!this.state.currency) {
+      currency = this.getSelectedCurrency(
+        this.state.selectedCurrencySymbol,
+        this.props.currencies.data
+      );
+      currency = marketCapFormat(currency, this.props.bitcoin, this.props.quoteSymbol);
     }
 
     return (
@@ -103,7 +116,7 @@ export class HomeSceneComponent extends React.PureComponent {
             />
           </div>
           <div className="col-9 crypto-info-container">
-            <CryptoDeepInfo {...this.props} currency={this.state.currency} />
+            <CryptoDeepInfo {...this.props} currency={this.state.currency || currency} />
           </div>
         </div>
       </div>
