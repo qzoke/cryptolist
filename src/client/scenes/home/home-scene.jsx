@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import { Loading } from '../../components/loading';
 import { marketCapFormat } from '../../components/market-cap-formatter';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
 const CURRENCY_QUERY = gql`
   query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilter) {
     currencies(sort: $sort, page: $page, filter: $filter) {
