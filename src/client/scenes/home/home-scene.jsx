@@ -63,46 +63,45 @@ export class HomeSceneComponent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.currencySelected = this.currencySelected.bind(this);
-    let selectedCurrencySymbol = 'BTC';
-    let currency;
 
-    if (props.currencies && props.bitcoin) {
-      currency = marketCapFormat(
-        this.getSelectedCurrency(this.state.selectedCurrencySymbol, props.currencies.data),
-        props.bitcoin,
-        props.quoteSymbol
-      );
-    }
-    this.state = { selectedCurrencySymbol, currency };
+    this.state = { selectedCurrencySymbol: 'BTC', currency: null };
   }
 
-  getSelectedCurrency(symbol, list) {
+  static getSelectedCurrency(symbol, list) {
     return list.find(curr => curr.currencySymbol === symbol);
   }
 
   currencySelected(currency) {
+    // Ignore if they clicked the same currency that's selected
+    if (currency === this.state.selectedCurrencySymbol) return;
+
     this.setState({
       selectedCurrencySymbol: currency,
       currency: marketCapFormat(
-        this.getSelectedCurrency(currency, this.props.currencies.data),
+        this.constructor.getSelectedCurrency(currency, this.props.currencies.data),
         this.props.bitcoin,
         this.props.quoteSymbol
       ),
     });
   }
 
+  static getDerivedStateFromProps(props, state) {
+    // This applies to the initial load state only
+    if (props.currencies && !state.currency) {
+      let currency = HomeSceneComponent.getSelectedCurrency(
+        state.selectedCurrencySymbol,
+        props.currencies.data
+      );
+      return {
+        currency: marketCapFormat(currency, props.bitcoin, props.quoteSymbol),
+      };
+    }
+    return null;
+  }
+
   render() {
-    let currency;
     if (!this.props.currencies || !this.props.bitcoin) {
       return <Loading />;
-    }
-
-    if (!this.state.currency) {
-      currency = this.getSelectedCurrency(
-        this.state.selectedCurrencySymbol,
-        this.props.currencies.data
-      );
-      currency = marketCapFormat(currency, this.props.bitcoin, this.props.quoteSymbol);
     }
 
     return (
@@ -116,7 +115,7 @@ export class HomeSceneComponent extends React.PureComponent {
             />
           </div>
           <div className="col-9 crypto-info-container">
-            <CryptoDeepInfo {...this.props} currency={this.state.currency || currency} />
+            <CryptoDeepInfo {...this.props} currency={this.state.currency} />
           </div>
         </div>
       </div>
