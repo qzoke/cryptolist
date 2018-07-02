@@ -35,10 +35,8 @@ const CURRENCY_QUERY = gql`
       }
     }
     btcPrice: currency(currencySymbol: "BTC") {
-      id
       markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
         data {
-          id
           marketSymbol
           ticker {
             last

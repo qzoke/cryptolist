@@ -2,13 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-export class PaginationBar extends React.PureComponent {
-  constructor(params) {
-    super(params);
-    this.getPageArray = this.getPageArray.bind(this);
-  }
-
-  getPageArray(page, total) {
+export const PaginationBar = ({ totalCount, limit, page, goToPage }) => {
+  let getPageArray = (page, total) => {
     let pages = [1];
     if (page === 1) {
       if (total > 2) pages.push(2);
@@ -23,34 +18,32 @@ export class PaginationBar extends React.PureComponent {
     }
     if (total !== 1) pages.push(total);
     return pages;
-  }
+  };
 
-  render() {
-    let totalPages = Math.ceil(this.props.totalCount / this.props.limit);
-    let pageArray = this.getPageArray(this.props.page, totalPages);
-    let pageObjects = pageArray.map(x => (
-      <PaginationItem key={x} disabled={this.props.page === x}>
-        <PaginationLink onClick={() => this.props.goToPage(x)}>{x}</PaginationLink>
-      </PaginationItem>
-    ));
+  let totalPages = Math.ceil(totalCount / limit);
+  let pageArray = getPageArray(page, totalPages);
+  let pageObjects = pageArray.map(x => (
+    <PaginationItem key={x} disabled={page === x}>
+      <PaginationLink onClick={() => goToPage(x)}>{x}</PaginationLink>
+    </PaginationItem>
+  ));
 
-    return (
-      <div className="pagination-container">
-        <Pagination size="sm">
-          <PaginationItem disabled={this.props.page === 1}>
-            <PaginationLink previous onClick={() => this.props.goToPage(this.props.page - 1)} />
-          </PaginationItem>
+  return (
+    <div className="pagination-container">
+      <Pagination size="sm">
+        <PaginationItem disabled={page === 1}>
+          <PaginationLink previous onClick={() => goToPage(page - 1)} />
+        </PaginationItem>
 
-          {pageObjects}
+        {pageObjects}
 
-          <PaginationItem disabled={this.props.page === totalPages}>
-            <PaginationLink next onClick={() => this.props.goToPage(this.props.page + 1)} />
-          </PaginationItem>
-        </Pagination>
-      </div>
-    );
-  }
-}
+        <PaginationItem disabled={page === totalPages}>
+          <PaginationLink next onClick={() => goToPage(page + 1)} />
+        </PaginationItem>
+      </Pagination>
+    </div>
+  );
+};
 
 PaginationBar.propTypes = {
   totalCount: PropTypes.number.isRequired,
