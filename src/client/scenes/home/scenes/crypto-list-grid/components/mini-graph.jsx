@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import moment from 'moment';
+import { adHocRequest } from '../../../../../client-factory.js';
 
 const numberOfDays = 1;
-const CURRENCY_QUERY = gql`
+const CURRENCY_QUERY = `
   query CurrencyQuery(
     $symbol: String
     $quoteSymbol: String
@@ -35,8 +34,10 @@ const CURRENCY_QUERY = gql`
       }
     }
     btcPrice: currency(currencySymbol: "BTC") {
+      id
       markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
         data {
+          id
           marketSymbol
           ticker {
             last
@@ -71,8 +72,8 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   let low = Math.min(...prices);
   let denominator = high - low;
   let actualPoints = prices.map((price, index) => ({
-    x: index / (24 * numberOfDays) * width,
-    y: height - (price - low) / denominator * height,
+    x: (index / (24 * numberOfDays)) * width,
+    y: height - ((price - low) / denominator) * height,
   }));
   if (!actualPoints.length) return <div />;
   let paths = actualPoints.map(price => `L${price.x},${price.y}`);
@@ -111,21 +112,45 @@ MiniGraphComponent.propTypes = {
   isPositive: PropTypes.bool,
 };
 
-const withCurrencyQuery = graphql(CURRENCY_QUERY, {
-  options: ({ currencyId, quote }) => ({
-    variables: {
-      symbol: currencyId,
-      quoteSymbol: quote,
-      start: moment()
-        .subtract(numberOfDays, 'day')
-        .utc()
-        .unix(),
-      end: moment()
-        .utc()
-        .unix(),
-      resolution: '_1h',
-    },
-  }),
-});
+const withCurrencyQuery = (WrappedComponent, query) => {
+  return class extends React.PureComponent {
+    constructor(props) {
+      super(props);
+      this.getData = this.getData.bind(this);
+      this.state = {
+        data: {},
+        quote: props.quote,
+      };
+      this.getData(props.currencyId, props.quote);
+    }
 
-export const MiniGraph = withCurrencyQuery(MiniGraphComponent);
+    componentDidUpdate(prevProps, prevState) {
+      if (this.state.quote !== this.props.quote)
+        this.getData(prevProps.currencyId, prevProps.quote);
+    }
+
+    getData(currency, quote) {
+      let variables = {
+        symbol: currency,
+        quoteSymbol: quote,
+        start: moment()
+          .subtract(numberOfDays, 'day')
+          .utc()
+          .unix(),
+        end: moment()
+          .utc()
+          .unix(),
+        resolution: '_1h',
+      };
+      adHocRequest(query, variables).then(res => {
+        this.setState({ data: res.data, quote })
+      });
+    }
+
+    render() {
+      return <WrappedComponent {...this.props} data={this.state.data} />;
+    }
+  };
+};
+
+export const MiniGraph = withCurrencyQuery(MiniGraphComponent, CURRENCY_QUERY);

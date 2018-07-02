@@ -7,6 +7,14 @@ import { getMainDefinition } from 'apollo-utilities';
 
 let GRAPHQL_HOST = process.env.GRAPHQL_HOST || 'alpha.blocktap.io';
 
+export const adHocRequest = (query, variables) => {
+  return fetch(`https://${GRAPHQL_HOST}/graphql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
+  }).then(res => res.json());
+};
+
 export const createClient = ssrMode => {
   const httpLink = new BatchHttpLink({
     uri: `https://${GRAPHQL_HOST}/graphql`,
