@@ -29,4 +29,15 @@
       align-self: center;
     }
   }
+
+  .search {
+    input[type='text'] {
+      width: 80%;
+      display: inline-block;
+    }
+
+    .btn {
+      float: right;
+    }
+  }
 }
