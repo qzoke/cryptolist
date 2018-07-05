@@ -72,8 +72,8 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   let low = Math.min(...prices);
   let denominator = high - low;
   let actualPoints = prices.map((price, index) => ({
-    x: (index / (24 * numberOfDays)) * width,
-    y: height - ((price - low) / denominator) * height,
+    x: index / (24 * numberOfDays) * width,
+    y: height - (price - low) / denominator * height,
   }));
   if (!actualPoints.length) return <div />;
   let paths = actualPoints.map(price => `L${price.x},${price.y}`);
@@ -113,7 +113,7 @@ MiniGraphComponent.propTypes = {
 };
 
 const withCurrencyQuery = (WrappedComponent, query) => {
-  return class extends React.PureComponent {
+  class WithCurrencyQuery extends React.PureComponent {
     constructor(props) {
       super(props);
       this.getData = this.getData.bind(this);
@@ -124,7 +124,7 @@ const withCurrencyQuery = (WrappedComponent, query) => {
       this.getData(props.currencyId, props.quote);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
       if (this.state.quote !== this.props.quote)
         this.getData(prevProps.currencyId, prevProps.quote);
     }
@@ -143,14 +143,21 @@ const withCurrencyQuery = (WrappedComponent, query) => {
         resolution: '_1h',
       };
       adHocRequest(query, variables).then(res => {
-        this.setState({ data: res.data, quote })
+        this.setState({ data: res.data, quote });
       });
     }
 
     render() {
       return <WrappedComponent {...this.props} data={this.state.data} />;
     }
+  }
+
+  WithCurrencyQuery.propTypes = {
+    quote: PropTypes.string,
+    currencyId: PropTypes.string,
   };
+
+  return WithCurrencyQuery;
 };
 
 export const MiniGraph = withCurrencyQuery(MiniGraphComponent, CURRENCY_QUERY);

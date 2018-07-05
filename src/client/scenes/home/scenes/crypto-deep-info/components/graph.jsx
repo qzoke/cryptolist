@@ -1,21 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from '../../../../../components/loading';
 import moment from 'moment';
 import { adHocRequest } from '../../../../../client-factory.js';
 import { LineChart, BarChart, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup } from './resolution-group.jsx';
+import DateTime from 'react-datetime';
 
 const INITIAL_RESOLUTION = '_1h';
+const INITIAL_START_TIME =
+  moment()
+    .subtract(1, 'day')
+    .unix() * 1000;
+const INITIAL_END_TIME = moment().unix() * 1000;
 const CANDLE_QUERY = `
-query CandlestickData($currencySymbol: String, $quoteSymbol: String, $start: Int, $end: Int, $resolution: CandleResolution!) {
+query CandlestickData(
+  $currencySymbol: String,
+  $quoteSymbol: String,
+  $startTime: Int,
+  $endTime: Int,
+  $resolution: CandleResolution!
+) {
   currency(currencySymbol: $currencySymbol) {
     id
     markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
       data {
         id
         marketSymbol
-        candles (resolution: $resolution, start: $start, end: $end, sort: OLD_FIRST) {
+        candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
           start
           end
           data
@@ -29,10 +40,36 @@ query CandlestickData($currencySymbol: String, $quoteSymbol: String, $start: Int
 export class GraphComponent extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.updateStartTime = this.updateStartTime.bind(this);
+    this.updateEndTime = this.updateEndTime.bind(this);
     this.updateResolution = this.updateResolution.bind(this);
+    this.isValidStart = this.isValidStart.bind(this);
+    this.isValidEnd = this.isValidEnd.bind(this);
     this.state = {
       resolution: INITIAL_RESOLUTION,
+      startTime: INITIAL_START_TIME,
+      endTime: INITIAL_END_TIME,
     };
+  }
+
+  isValidStart(current) {
+    return current.unix() * 1000 < this.state.endTime;
+  }
+
+  isValidEnd(current) {
+    return current.unix() * 1000 > this.state.startTime;
+  }
+
+  updateStartTime(startTime) {
+    startTime = moment(startTime).unix() * 1000;
+    this.setState({ startTime });
+    this.props.getData({ startTime, endTime: this.state.endTime });
+  }
+
+  updateEndTime(endTime) {
+    endTime = moment(endTime).unix() * 1000;
+    this.setState({ endTime });
+    this.props.getData({ endTime, startTime: this.state.startTime });
   }
 
   updateResolution(resolution) {
@@ -53,10 +90,26 @@ export class GraphComponent extends React.PureComponent {
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
-          <ResolutionGroup
-            updateResolution={this.updateResolution}
-            resolution={this.state.resolution}
-          />
+          <div className="row">
+            <ResolutionGroup
+              updateResolution={this.updateResolution}
+              resolution={this.state.resolution}
+            />
+            <div className="startTime">
+              <DateTime
+                value={this.state.startTime}
+                onChange={this.updateStartTime}
+                isValidDate={this.isValidStart}
+              />
+            </div>
+            <div className="endTime">
+              <DateTime
+                value={this.state.endTime}
+                onChange={this.updateEndTime}
+                isValidDate={this.isValidEnd}
+              />
+            </div>
+          </div>
           <LineChart width={800} height={400} data={data}>
             <XAxis dataKey="name" />
             <YAxis dataKey="close" scale="linear" type="number" domain={['datamin', 'datamax']} />
@@ -80,22 +133,26 @@ GraphComponent.propTypes = {
   currencySymbol: PropTypes.string.isRequired,
   quoteSymbol: PropTypes.string.isRequired,
   getData: PropTypes.func,
+  data: PropTypes.object,
 };
 
 const withCurrencyQuery = (WrappedComponent, query) => {
-  return class extends React.PureComponent {
+  class WithCurrencyQuery extends React.PureComponent {
     constructor(props) {
       super(props);
       this.getData = this.getData.bind(this);
       this.state = {
         data: {},
-        quoteSymbol: props.quote,
+        quoteSymbol: props.quoteSymbol,
         currencySymbol: props.currencySymbol,
+        resolution: INITIAL_RESOLUTION,
+        startTime: INITIAL_START_TIME,
+        endTime: INITIAL_END_TIME,
       };
-      this.getData({ currencySymbol: props.currencyId, quoteSymbol: props.quote });
+      this.getData({ currencySymbol: props.currencySymbol, quoteSymbol: props.quoteSymbol });
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
       if (
         this.state.quoteSymbol !== this.props.quoteSymbol ||
         this.state.currencySymbol !== this.props.currencySymbol
@@ -107,17 +164,28 @@ const withCurrencyQuery = (WrappedComponent, query) => {
     }
 
     getData({
+      startTime = this.state.startTime,
+      endTime = this.state.endTime,
       currencySymbol = this.state.currencySymbol,
       quoteSymbol = this.state.quoteSymbol,
-      resolution = INITIAL_RESOLUTION,
+      resolution = this.state.resolution,
     }) {
       let variables = {
         quoteSymbol,
         currencySymbol,
         resolution,
+        startTime: startTime / 1000,
+        endTime: endTime / 1000,
       };
       adHocRequest(query, variables).then(res => {
-        this.setState({ data: res.data, quoteSymbol, currencySymbol });
+        this.setState({
+          data: res.data,
+          quoteSymbol,
+          currencySymbol,
+          startTime,
+          endTime,
+          resolution,
+        });
       });
     }
 
@@ -125,7 +193,14 @@ const withCurrencyQuery = (WrappedComponent, query) => {
       if (!this.state.data.currency) return <div />;
       return <WrappedComponent {...this.props} data={this.state.data} getData={this.getData} />;
     }
+  }
+
+  WithCurrencyQuery.propTypes = {
+    quoteSymbol: PropTypes.string,
+    currencySymbol: PropTypes.string,
   };
+
+  return WithCurrencyQuery;
 };
 
 export const Graph = withCurrencyQuery(GraphComponent, CANDLE_QUERY);
