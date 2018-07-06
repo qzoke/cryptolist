@@ -1,4 +1,10 @@
 .currency-info-container.graph {
+  .controls {
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 1em;
+  }
+
   // REACT DATE PICKER
   .rdt {
     position: relative;

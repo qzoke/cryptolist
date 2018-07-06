@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { adHocRequest } from '../../../../../client-factory.js';
-import { LineChart, BarChart, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { ResolutionGroup } from './resolution-group.jsx';
+import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
 
-const INITIAL_RESOLUTION = '_1h';
+const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
 const INITIAL_START_TIME =
   moment()
     .subtract(1, 'day')
@@ -53,20 +53,22 @@ export class GraphComponent extends React.PureComponent {
   }
 
   isValidStart(current) {
-    return current.unix() * 1000 < this.state.endTime;
+    return current.unix() * 1000 < this.state.endTime && current.unix() <= moment().unix();
   }
 
   isValidEnd(current) {
-    return current.unix() * 1000 > this.state.startTime;
+    return current.unix() * 1000 > this.state.startTime && current.unix() <= moment().unix();
   }
 
   updateStartTime(startTime) {
+    if (this.state.endTime - startTime <= this.state.resolution.seconds) return;
     startTime = moment(startTime).unix() * 1000;
     this.setState({ startTime });
     this.props.getData({ startTime, endTime: this.state.endTime });
   }
 
   updateEndTime(endTime) {
+    if (endTime - this.state.endTime <= this.state.resolution.seconds) return;
     endTime = moment(endTime).unix() * 1000;
     this.setState({ endTime });
     this.props.getData({ endTime, startTime: this.state.startTime });
@@ -90,7 +92,7 @@ export class GraphComponent extends React.PureComponent {
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
-          <div className="row">
+          <div className="controls">
             <ResolutionGroup
               updateResolution={this.updateResolution}
               resolution={this.state.resolution}
@@ -110,19 +112,43 @@ export class GraphComponent extends React.PureComponent {
               />
             </div>
           </div>
-          <LineChart width={800} height={400} data={data}>
+          <ComposedChart width={800} height={400} data={data}>
             <XAxis dataKey="name" />
-            <YAxis dataKey="close" scale="linear" type="number" domain={['datamin', 'datamax']} />
+            <YAxis
+              yAxisId="close"
+              dataKey="close"
+              scale="linear"
+              type="number"
+              domain={['datamin', 'datamax']}
+            />
+            <YAxis
+              yAxisId="volume"
+              dataKey="volume"
+              type="number"
+              scale="linear"
+              orientation="right"
+              domain={['datamin', dataMax => dataMax * 3]}
+            />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Line type="monotone" dataKey="close" stroke="#8884d8" dot={false} />
-          </LineChart>
-          <BarChart width={800} height={100} data={data}>
-            <XAxis dataKey="name" />
-            <YAxis dataKey="volume" type="number" domain={['datamin', 'datamax']} />
-            <Bar dataKey="volume" barSize={20} fill="#413ea0" />
-            <Tooltip />
-          </BarChart>
+            <Legend />
+            <Bar
+              dataKey="volume"
+              yAxisId="volume"
+              barSize={20}
+              fill="#e1e2e6"
+              animationDuration={500}
+            />
+            <Line
+              type="linear"
+              yAxisId="close"
+              dataKey="close"
+              stroke="#f87a0b"
+              animationDuration={500}
+              dot={false}
+              activeDot={false}
+            />
+          </ComposedChart>
         </div>
       </div>
     );
@@ -173,7 +199,7 @@ const withCurrencyQuery = (WrappedComponent, query) => {
       let variables = {
         quoteSymbol,
         currencySymbol,
-        resolution,
+        resolution: resolution.value,
         startTime: startTime / 1000,
         endTime: endTime / 1000,
       };

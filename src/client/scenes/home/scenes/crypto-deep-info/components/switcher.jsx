@@ -62,7 +62,7 @@ export class Switcher extends React.PureComponent {
               href="#"
               onClick={() => this.toggle('graph')}
             >
-              Graph
+              Chart
             </NavLink>
           </NavItem>
           <NavItem>
