@@ -44,7 +44,9 @@ export class MarketsComponent extends React.PureComponent {
   getExchangeVolume(markets) {
     return markets.reduce((aggregator, market) => {
       const exchange = market.marketSymbol.split(':')[0];
-      aggregator[exchange] = aggregator[exchange] || 0 + market.ticker.baseVolume;
+      if (market.ticker) {
+        aggregator[exchange] = aggregator[exchange] || 0 + market.ticker.baseVolume;
+      }
       return aggregator;
     }, []);
   }
@@ -52,7 +54,9 @@ export class MarketsComponent extends React.PureComponent {
   getQuoteVolume(markets) {
     return markets.reduce((aggregator, market) => {
       const quote = market.marketSymbol.split('/')[1];
-      aggregator[quote] = aggregator[quote] || 0 + market.ticker.baseVolume;
+      if (market.ticker) {
+        aggregator[quote] = aggregator[quote] || 0 + market.ticker.baseVolume;
+      }
       return aggregator;
     }, []);
   }
