@@ -9,7 +9,7 @@ import DateTime from 'react-datetime';
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
 const INITIAL_START_TIME =
   moment()
-    .subtract(1, 'day')
+    .subtract(7, 'd')
     .unix() * 1000;
 const INITIAL_END_TIME = moment().unix() * 1000;
 const CANDLE_QUERY = `
@@ -81,6 +81,13 @@ export class GraphComponent extends React.PureComponent {
 
   render() {
     if (!this.props.data.currency) return <div />;
+    if (this.props.data.currency.markets.data.length === 0) {
+      return (
+        <div>
+          No markets found for selected currency pair. Please select a different quote currency
+        </div>
+      );
+    }
     let data = this.props.data.currency.markets.data[0].candles.data.map(c => {
       return {
         name: `${moment(c[0] * 1000).format('H:m MMM DD')}`,
