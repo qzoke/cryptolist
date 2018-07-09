@@ -52,6 +52,7 @@ const get24HourVolume = (market, btcMarket, priceOfBtc, quoteSymbol) => {
 
 export const marketCapFormat = (currencies, btcNode, quoteSymbol) => {
   if (!currencies.length) return [];
+  quoteSymbol = quoteSymbol.toUpperCase();
 
   const priceOfBtc = getPriceOfBtc(btcNode, quoteSymbol);
 

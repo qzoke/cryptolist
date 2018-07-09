@@ -23,7 +23,7 @@ export class QuoteCurrencySwitcher extends React.Component {
       const isDisabled = x === quote;
       return (
         <DropdownItem key={x} disabled={isDisabled}>
-          <Link to={`/${x}/${base}/${destination.join('/')}`}>{x}</Link>
+          <Link to={`/${x.toLowerCase()}/${base}/${destination.join('/')}`}>{x}</Link>
         </DropdownItem>
       );
     });
@@ -34,7 +34,7 @@ export class QuoteCurrencySwitcher extends React.Component {
         toggle={this.toggle}
       >
         <DropdownToggle color="" caret>
-          {quote}
+          {quote.toUpperCase()}
         </DropdownToggle>
         <DropdownMenu>{inputs}</DropdownMenu>
       </ButtonDropdown>

@@ -110,7 +110,7 @@ export class MarketComparisonGraphComponent extends React.Component {
       <div className="volume-market line">
         <h4>Exchange price comparison (24 hr)</h4>
         <h5>
-          {this.props.match.params.base}/{this.props.match.params.quote}
+          {this.props.match.params.base.toUpperCase()}/{this.props.match.params.quote.toUpperCase()}
         </h5>
         <div style={{ height: '21em' }}>
           <ResponsiveLine

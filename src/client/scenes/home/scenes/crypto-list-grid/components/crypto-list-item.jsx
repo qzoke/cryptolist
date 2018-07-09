@@ -8,7 +8,7 @@ export const CryptoListItem = ({ currency, quoteSymbol }) => {
     <Link
       key={currency.id}
       className="currency-list-item"
-      to={`/${quoteSymbol}/${currency.symbol}/info${location.search}`}
+      to={`/${quoteSymbol}/${currency.symbol.toLowerCase()}/info${location.search}`}
     >
       <div className="currency-icon">
         <span className="currency-icon">
@@ -17,7 +17,7 @@ export const CryptoListItem = ({ currency, quoteSymbol }) => {
       </div>
       <div className="currency-info">
         <div className="name">{currency.name}</div>
-        <div className="price">{currency.price}</div>
+        <div className="price">{currency.price.toUpperCase()}</div>
       </div>
       <div className="currency-graph">
         <MiniGraph
