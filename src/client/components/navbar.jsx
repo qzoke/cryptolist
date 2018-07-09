@@ -5,13 +5,13 @@ import { Nav, Navbar, NavItem, NavbarBrand, Collapse, NavbarToggler } from 'reac
 import { QuoteCurrencySwitcher } from './quote-currency-switcher';
 
 export class AppNav extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.changeQuoteSymbol = props.changeQuoteSymbol;
   }
   state = {
     isOpen: false,
-    currentQuoteSymbol: this.props.currentQuoteSymbol
+    currentQuoteSymbol: this.props.currentQuoteSymbol,
   };
 
   toggle = () => {
@@ -27,7 +27,12 @@ export class AppNav extends React.Component {
         <NavbarToggler onClick={this.toggle} />
         <Collapse navbar isOpen={this.state.isOpen}>
           <Nav className="ml-auto" navbar>
-            <NavItem><QuoteCurrencySwitcher currentQuoteSymbol={this.props.currentQuoteSymbol} changeQuoteSymbol={this.changeQuoteSymbol} /></NavItem>
+            <NavItem>
+              <QuoteCurrencySwitcher
+                currentQuoteSymbol={this.props.currentQuoteSymbol}
+                changeQuoteSymbol={this.changeQuoteSymbol}
+              />
+            </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
@@ -37,5 +42,5 @@ export class AppNav extends React.Component {
 
 AppNav.propTypes = {
   changeQuoteSymbol: PropTypes.func.isRequired,
-  currentQuoteSymbol: PropTypes.string.isRequired
+  currentQuoteSymbol: PropTypes.string.isRequired,
 };

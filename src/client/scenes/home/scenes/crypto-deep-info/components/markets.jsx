@@ -72,7 +72,7 @@ export class MarketsComponent extends React.PureComponent {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.currencySymbol}`,
+        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.base}`,
       };
     });
 
@@ -80,7 +80,7 @@ export class MarketsComponent extends React.PureComponent {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.currencySymbol}`,
+        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.base}`,
       };
     });
 
@@ -175,19 +175,15 @@ export class MarketsComponent extends React.PureComponent {
             />
           </div>
         </div>
-        <MarketComparisonGraph
-          currencySymbol={this.props.currencySymbol}
-          quoteSymbol={this.props.quoteSymbol}
-        />
+        <MarketComparisonGraph {...this.props} />
       </div>
     );
   }
 }
 
 MarketsComponent.propTypes = {
-  currencySymbol: PropTypes.string.isRequired,
   data: PropTypes.object,
-  quoteSymbol: PropTypes.string.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 const withMarkets = graphql(MARKET_QUERY, {

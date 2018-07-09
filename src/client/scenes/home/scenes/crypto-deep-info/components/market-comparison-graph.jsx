@@ -42,7 +42,7 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
   }
 
   findCorrectMarkets(markets, quoteSymbol) {
-    return markets.filter(p => p.marketSymbol.endsWith(quoteSymbol));
+    return markets.filter(p => p.marketSymbol.endsWith(quoteSymbol.toUpperCase()));
   }
 
   generateDataFromCandles(candles, marketSymbol) {
@@ -93,7 +93,8 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
     if (!this.props.data.currency.markets) return <div />;
 
     let markets = this.props.data.currency.markets.data;
-    let filteredMarkets = this.findCorrectMarkets(markets, this.props.quoteSymbol);
+    let filteredMarkets = this.findCorrectMarkets(markets, this.props.match.params.quote);
+    console.log(filteredMarkets);
     if (!filteredMarkets.length) return <div />;
 
     let data = filteredMarkets.map(market => {
@@ -106,12 +107,11 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
       };
     });
     this.normalizeData(data);
-
     return (
       <div className="volume-market line">
         <h4>Exchange price comparison (24 hr)</h4>
         <h5>
-          {this.props.currencySymbol}/{this.props.quoteSymbol}
+          {this.props.match.params.base}/{this.props.match.params.quote}
         </h5>
         <div style={{ height: '21em' }}>
           <ResponsiveLine
@@ -147,24 +147,26 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
 }
 
 MarketComparisonGraphComponent.propTypes = {
-  currencySymbol: PropTypes.string.isRequired,
   data: PropTypes.object,
-  quoteSymbol: PropTypes.string.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 const withCandles = graphql(CANDLES_QUERY, {
-  options: ({ currencySymbol }) => ({
-    variables: {
-      currencySymbol,
-      start: moment()
-        .subtract(1, 'days')
-        .utc()
-        .unix(),
-      end: moment()
-        .utc()
-        .unix(),
-    },
-  }),
+  options: ({ match }) => {
+    console.log(match.params.base);
+    return {
+      variables: {
+        currencySymbol: match.params.base,
+        start: moment()
+          .subtract(1, 'days')
+          .utc()
+          .unix(),
+        end: moment()
+          .utc()
+          .unix(),
+      },
+    };
+  },
 });
 
 export const MarketComparisonGraph = withCandles(MarketComparisonGraphComponent);

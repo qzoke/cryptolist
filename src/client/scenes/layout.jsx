@@ -1,13 +1,14 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 import { AppNav } from '../components/navbar';
 import { HomeScene } from './home/home-scene';
+import { Route } from 'react-router-dom';
+import { HomepageRedirector } from '../components/homepage-redirector';
 
-export class Layout extends React.PureComponent {
+export class Layout extends React.Component {
   constructor() {
     super();
     this.changeQuoteSymbol = this.changeQuoteSymbol.bind(this);
-    this.state = { quoteSymbol: 'USD', currency: null };
+    this.state = { quoteSymbol: 'USD' };
   }
 
   changeQuoteSymbol(newQuoteSymbol) {
@@ -25,12 +26,10 @@ export class Layout extends React.PureComponent {
             />
           </div>
           <div className="container mt-3">
+            <Route path="/" component={HomepageRedirector} />
             <Route
-              exact
-              path="/"
-              render={() => (
-                <HomeScene quoteSymbol={this.state.quoteSymbol} currency={this.state.currency} />
-              )}
+              path="/:quote/:base"
+              render={props => <HomeScene {...this.props} {...props} />}
             />
             {/* other routes go here */}
           </div>

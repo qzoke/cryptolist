@@ -59,37 +59,21 @@ const CURRENCY_QUERY = gql`
   }
 `;
 
-export class HomeSceneComponent extends React.PureComponent {
+export class HomeSceneComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.currencySelected = this.currencySelected.bind(this);
-
-    this.state = { selectedCurrencySymbol: 'BTC', currency: null };
+    this.state = { currency: null };
   }
 
   static getSelectedCurrency(symbol, list) {
     return list.find(curr => curr.currencySymbol === symbol);
   }
 
-  currencySelected(currency) {
-    // Ignore if they clicked the same currency that's selected
-    if (currency === this.state.selectedCurrencySymbol) return;
-
-    this.setState({
-      selectedCurrencySymbol: currency,
-      currency: marketCapFormat(
-        this.constructor.getSelectedCurrency(currency, this.props.currencies.data),
-        this.props.bitcoin,
-        this.props.quoteSymbol
-      ),
-    });
-  }
-
   static getDerivedStateFromProps(props, state) {
     // This applies to the initial load state only
     if (props.currencies && !state.currency) {
       let currency = HomeSceneComponent.getSelectedCurrency(
-        state.selectedCurrencySymbol,
+        props.match.params.base,
         props.currencies.data
       );
       return {
@@ -108,11 +92,7 @@ export class HomeSceneComponent extends React.PureComponent {
       <div className="container">
         <div className="row">
           <div className="col-3 crypto-list-container">
-            <CryptoListGrid
-              {...this.props}
-              itemsPerPage={ITEMS_PER_PAGE}
-              currencySelected={this.currencySelected}
-            />
+            <CryptoListGrid {...this.props} itemsPerPage={ITEMS_PER_PAGE} />
           </div>
           <div className="col-9 crypto-info-container">
             <CryptoDeepInfo {...this.props} currency={this.state.currency} />
@@ -124,9 +104,9 @@ export class HomeSceneComponent extends React.PureComponent {
 }
 
 HomeSceneComponent.propTypes = {
-  quoteSymbol: PropTypes.string.isRequired,
   currencies: PropTypes.object,
   bitcoin: PropTypes.object,
+  match: PropTypes.object,
 };
 
 const withCurrency = graphql(CURRENCY_QUERY, {

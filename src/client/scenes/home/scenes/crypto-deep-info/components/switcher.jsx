@@ -2,80 +2,37 @@ import React from 'react';
 import { BasicInfo } from './basic-info';
 import { Markets } from './markets';
 import { Graph } from './graph';
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Route, Link } from 'react-router-dom';
 
-export class Switcher extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.getContents = this.getContents.bind(this);
-    this.state = {
-      selectedTab: 'info',
-    };
-  }
-
-  toggle(selectedTab) {
-    this.setState({ selectedTab });
-  }
-
-  getContents() {
-    switch (this.state.selectedTab) {
-      case 'info':
-        return <BasicInfo {...this.props} />;
-      case 'markets':
-        return (
-          <Markets
-            currencySymbol={this.props.currency.currencySymbol}
-            quoteSymbol={this.props.quoteSymbol}
-          />
-        );
-      case 'graph':
-        return (
-          <Graph
-            currencySymbol={this.props.currency.currencySymbol}
-            quoteSymbol={this.props.quoteSymbol}
-          />
-        );
-      default:
-        return <div />;
-    }
-  }
-
+export class Switcher extends React.Component {
   render() {
+    const { match } = this.props;
+    const PropsBasicInfo = () => <BasicInfo {...this.props} />;
+    const PropsGraph = () => (
+      <Graph {...this.props} currencySymbol={this.props.currency.currencySymbol} />
+    );
+    const PropsMarkets = () => (
+      <Markets {...this.props} currencySymbol={this.props.currency.currencySymbol} />
+    );
+    const pathHead = `/${match.params.quote}/${match.params.base}`;
     return (
       <div>
         <Nav tabs>
           <NavItem>
-            <NavLink
-              active={this.state.selectedTab === 'info' ? true : false}
-              href="#"
-              onClick={() => this.toggle('info')}
-            >
-              Info
-            </NavLink>
+            <Link to={`${pathHead}/info`}>Info</Link>
           </NavItem>
           <NavItem>
-            <NavLink
-              active={this.state.selectedTab === 'graph' ? true : false}
-              href="#"
-              onClick={() => this.toggle('graph')}
-            >
-              Chart
-            </NavLink>
+            <Link to={`${pathHead}/chart`}>Chart</Link>
           </NavItem>
           <NavItem>
-            <NavLink
-              active={this.state.selectedTab === 'markets' ? true : false}
-              href="#"
-              onClick={() => this.toggle('markets')}
-            >
-              Markets
-            </NavLink>
+            <Link to={`${pathHead}/markets`}>Markets</Link>
           </NavItem>
         </Nav>
-        {this.getContents()}
+        <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
+        <Route path={`${pathHead}/chart`} render={PropsGraph} />
+        <Route path={`${pathHead}/markets`} render={PropsMarkets} />
       </div>
     );
   }
@@ -83,5 +40,5 @@ export class Switcher extends React.PureComponent {
 
 Switcher.propTypes = {
   currency: PropTypes.object,
-  quoteSymbol: PropTypes.string.isRequired,
+  match: PropTypes.object,
 };

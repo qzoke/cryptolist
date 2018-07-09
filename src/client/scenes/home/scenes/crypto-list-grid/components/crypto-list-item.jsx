@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MiniGraph } from './mini-graph';
+import { Link } from 'react-router-dom';
 
-export const CryptoListItem = ({ currency, quoteSymbol, onClick }) => {
+export const CryptoListItem = ({ currency, quoteSymbol }) => {
   return (
-    <div
+    <Link
       key={currency.id}
       className="currency-list-item"
-      onClick={() => {
-        onClick(currency.symbol);
-      }}
+      to={`/${quoteSymbol}/${currency.symbol}/info`}
     >
       <div className="currency-icon">
         <span className="currency-icon">
@@ -29,12 +28,11 @@ export const CryptoListItem = ({ currency, quoteSymbol, onClick }) => {
           isPositive={currency.percentChange >= 0}
         />
       </div>
-    </div>
+    </Link>
   );
 };
 
 CryptoListItem.propTypes = {
   currency: PropTypes.object,
   quoteSymbol: PropTypes.string,
-  onClick: PropTypes.func,
 };

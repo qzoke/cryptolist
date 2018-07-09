@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Input, Form, FormGroup, Button, Col } from 'reactstrap';
+import { Input, Form, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-export class Search extends React.PureComponent {
+export class Search extends React.Component {
   constructor(props) {
     super(props);
     this.changeSearchText = this.changeSearchText.bind(this);

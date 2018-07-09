@@ -176,19 +176,22 @@ const withCurrencyQuery = (WrappedComponent, query) => {
       this.getData = this.getData.bind(this);
       this.state = {
         data: {},
-        quoteSymbol: props.quoteSymbol,
-        currencySymbol: props.currencySymbol,
+        quoteSymbol: props.match.params.quote,
+        currencySymbol: props.match.params.base,
         resolution: INITIAL_RESOLUTION,
         startTime: INITIAL_START_TIME,
         endTime: INITIAL_END_TIME,
       };
-      this.getData({ currencySymbol: props.currencySymbol, quoteSymbol: props.quoteSymbol });
+      this.getData({
+        currencySymbol: props.match.params.base,
+        quoteSymbol: props.match.params.quote,
+      });
     }
 
     componentDidUpdate(prevProps) {
       if (
-        this.state.quoteSymbol !== this.props.quoteSymbol ||
-        this.state.currencySymbol !== this.props.currencySymbol
+        this.state.quoteSymbol !== this.props.match.params.quote ||
+        this.state.currencySymbol !== this.props.match.params.base
       )
         this.getData({
           currencySymbol: prevProps.currencySymbol,
@@ -229,8 +232,7 @@ const withCurrencyQuery = (WrappedComponent, query) => {
   }
 
   WithCurrencyQuery.propTypes = {
-    quoteSymbol: PropTypes.string,
-    currencySymbol: PropTypes.string,
+    match: PropTypes.object.isRequired,
   };
 
   return WithCurrencyQuery;

@@ -1,12 +1,11 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { marketCapFormat } from './components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
-import { Loading } from '../../../../components/loading';
 import { CryptoListItem } from './components/crypto-list-item';
 import { Search } from './components/search';
 
-export class CryptoListGrid extends PureComponent {
+export class CryptoListGrid extends React.Component {
   constructor(props) {
     super(props);
     this.filter = this.filter.bind(this);
@@ -30,13 +29,12 @@ export class CryptoListGrid extends PureComponent {
     const currencyList = marketCapFormat(
       this.props.currencies.data,
       this.props.bitcoin,
-      this.props.quoteSymbol
+      this.props.match.params.quote
     ).map(currency => (
       <CryptoListItem
         key={currency.id}
         currency={currency}
-        quoteSymbol={this.props.quoteSymbol}
-        onClick={data => this.props.currencySelected(data)}
+        quoteSymbol={this.props.match.params.quote}
       />
     ));
 
@@ -58,7 +56,8 @@ export class CryptoListGrid extends PureComponent {
 CryptoListGrid.propTypes = {
   currencies: PropTypes.object,
   bitcoin: PropTypes.object,
-  quoteSymbol: PropTypes.string.isRequired,
-  currencySelected: PropTypes.func,
   itemsPerPage: PropTypes.number,
+  filter: PropTypes.func,
+  page: PropTypes.func,
+  match: PropTypes.object,
 };

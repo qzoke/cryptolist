@@ -1,11 +1,10 @@
 import React from 'react';
-import { Loading } from '../../../../components/loading';
 import PropTypes from 'prop-types';
 import { Switcher } from './components/switcher';
 import { Tooltip } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-export class CryptoDeepInfo extends React.PureComponent {
+export class CryptoDeepInfo extends React.Component {
   constructor(props) {
     super(props);
 
@@ -22,7 +21,6 @@ export class CryptoDeepInfo extends React.PureComponent {
   }
 
   render() {
-    let bitcoin = this.props.bitcoin;
     let currency = this.props.currency;
 
     return (
@@ -61,5 +59,5 @@ export class CryptoDeepInfo extends React.PureComponent {
 
 CryptoDeepInfo.propTypes = {
   data: PropTypes.object,
-  quoteSymbol: PropTypes.string.isRequired,
+  currency: PropTypes.object,
 };
