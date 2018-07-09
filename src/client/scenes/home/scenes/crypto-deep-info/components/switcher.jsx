@@ -18,13 +18,15 @@ export class Switcher extends React.Component {
     );
     const pathHead = `/${match.params.quote}/${match.params.base}`;
     const pathname = this.props.location.pathname.toLowerCase();
+    const qs = this.props.location.search;
+
     return (
       <div>
         <Nav tabs>
           <NavItem>
             <Link
               className={`nav-link ${pathname.endsWith('info') ? 'active' : ''}`}
-              to={`${pathHead}/info`}
+              to={`${pathHead}/info${qs}`}
             >
               Info
             </Link>
@@ -32,7 +34,7 @@ export class Switcher extends React.Component {
           <NavItem>
             <Link
               className={`nav-link ${pathname.endsWith('chart') ? 'active' : ''}`}
-              to={`${pathHead}/chart`}
+              to={`${pathHead}/chart${qs}`}
             >
               Chart
             </Link>
@@ -40,7 +42,7 @@ export class Switcher extends React.Component {
           <NavItem>
             <Link
               className={`nav-link ${pathname.endsWith('markets') ? 'active' : ''}`}
-              to={`${pathHead}/markets`}
+              to={`${pathHead}/markets${qs}`}
             >
               Markets
             </Link>

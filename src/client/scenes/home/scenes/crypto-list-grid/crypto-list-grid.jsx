@@ -12,15 +12,13 @@ export class CryptoListGridComponent extends React.Component {
     super(props);
     this.filter = this.filter.bind(this);
     this.page = this.page.bind(this);
-    this.state = {
-      page: 1,
-    };
   }
 
   filter(search) {
     let query = queryString.parse(this.props.location.search);
     if (search) {
       query.search = search;
+      query.page = undefined;
     } else query.search = undefined;
 
     let formattedQuery = queryString.stringify(query);
@@ -30,12 +28,18 @@ export class CryptoListGridComponent extends React.Component {
   }
 
   page(page) {
-    this.setState({ page });
-    this.props.page((page - 1) * this.props.itemsPerPage);
+    let query = queryString.parse(this.props.location.search);
+    if (page) query.page = page;
+    else query.page = undefined;
+
+    let formattedQuery = queryString.stringify(query);
+    this.props.history.push(
+      `${this.props.location.pathname}${formattedQuery ? `?${formattedQuery}` : ''}`
+    );
   }
 
   render() {
-    const search = queryString.parse(this.props.location.search).search;
+    const qs = queryString.parse(this.props.location.search);
     const currencyList = marketCapFormat(
       this.props.currencies.data,
       this.props.bitcoin,
@@ -51,12 +55,12 @@ export class CryptoListGridComponent extends React.Component {
 
     return (
       <div className="crypto-list-grid">
-        <Search updateQuery={this.filter} search={search} />
+        <Search updateQuery={this.filter} search={qs.search} />
         {currencyList}
         <PaginationBar
           totalCount={this.props.currencies.totalCount}
           limit={this.props.itemsPerPage}
-          page={this.state.page}
+          page={parseInt(qs.page) || 1}
           goToPage={this.page}
         />
       </div>

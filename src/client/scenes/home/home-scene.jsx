@@ -132,26 +132,26 @@ HomeSceneComponent.propTypes = {
 
 const withCurrency = graphql(CURRENCY_QUERY, {
   options: ({ match, location }) => {
+    let qs = queryString.parse(location.search);
     return {
       variables: {
         selectedCurrency: match.params.base,
         page: {
           limit: ITEMS_PER_PAGE,
-          skip: 0,
+          skip: qs.page ? (qs.page - 1) * ITEMS_PER_PAGE : 0,
         },
         sort: {
           marketCapRank: 'ASC',
         },
         filter: (() => {
-          let search = queryString.parse(location.search).search;
-          if (search) {
+          if (qs.search) {
             return {
               _or: [
                 {
-                  currencySymbol_like: `%${search}%`,
+                  currencySymbol_like: `%${qs.search}%`,
                 },
                 {
-                  currencyName_like: `%${search}%`,
+                  currencyName_like: `%${qs.search}%`,
                 },
               ],
             };
@@ -161,47 +161,11 @@ const withCurrency = graphql(CURRENCY_QUERY, {
       },
     };
   },
-  props: ({ data: { currencies, bitcoin, selectedCurrency, fetchMore, variables } }) => {
+  props: ({ data: { currencies, bitcoin, selectedCurrency } }) => {
     return {
       currencies: currencies,
       bitcoin: bitcoin,
       currency: selectedCurrency,
-      page(skip) {
-        let page = {
-          skip: skip,
-          limit: ITEMS_PER_PAGE,
-        };
-        let vars = Object.assign(variables, { page });
-        return fetchMore({
-          variables: vars,
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult.currencies) {
-              return previousResult;
-            }
-            return {
-              currencies: fetchMoreResult.currencies,
-            };
-          },
-        });
-      },
-      filter(filter) {
-        let page = {
-          skip: 0,
-          limit: ITEMS_PER_PAGE,
-        };
-        let vars = Object.assign(variables, { filter, page });
-        return fetchMore({
-          variables: vars,
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult.currencies) {
-              return previousResult;
-            }
-            return {
-              currencies: fetchMoreResult.currencies,
-            };
-          },
-        });
-      },
     };
   },
 });
