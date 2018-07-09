@@ -27,11 +27,7 @@ export class Layout extends React.Component {
           </div>
           <div className="container mt-3">
             <Route path="/" component={HomepageRedirector} />
-            <Route
-              path="/:quote/:base"
-              render={props => <HomeScene {...this.props} {...props} />}
-            />
-            {/* other routes go here */}
+            <Route path="/:quote/:base" component={HomeScene} />
           </div>
         </div>
         <footer className="footer">

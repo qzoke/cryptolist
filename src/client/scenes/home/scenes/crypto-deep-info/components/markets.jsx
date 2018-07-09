@@ -34,7 +34,7 @@ const MARKET_QUERY = gql`
   }
 `;
 
-export class MarketsComponent extends React.PureComponent {
+export class MarketsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.getExchangeVolume = this.getExchangeVolume.bind(this);

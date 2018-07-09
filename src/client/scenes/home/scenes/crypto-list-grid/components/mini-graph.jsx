@@ -113,7 +113,7 @@ MiniGraphComponent.propTypes = {
 };
 
 const withCurrencyQuery = (WrappedComponent, query) => {
-  class WithCurrencyQuery extends React.PureComponent {
+  class WithCurrencyQuery extends React.Component {
     constructor(props) {
       super(props);
       this.getData = this.getData.bind(this);

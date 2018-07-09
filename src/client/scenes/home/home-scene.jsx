@@ -69,15 +69,15 @@ export class HomeSceneComponent extends React.Component {
     return list.find(curr => curr.currencySymbol === symbol);
   }
 
-  static getDerivedStateFromProps(props, state) {
-    // This applies to the initial load state only
-    if (props.currencies && !state.currency) {
+  static getDerivedStateFromProps(props) {
+    if (props.currencies) {
       let currency = HomeSceneComponent.getSelectedCurrency(
         props.match.params.base,
         props.currencies.data
       );
+
       return {
-        currency: marketCapFormat(currency, props.bitcoin, props.quoteSymbol),
+        currency: marketCapFormat(currency, props.bitcoin, props.match.params.quote),
       };
     }
     return null;

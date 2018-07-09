@@ -37,7 +37,7 @@ query CandlestickData(
 }
 `;
 
-export class GraphComponent extends React.PureComponent {
+export class GraphComponent extends React.Component {
   constructor(props) {
     super(props);
     this.updateStartTime = this.updateStartTime.bind(this);
@@ -163,14 +163,12 @@ export class GraphComponent extends React.PureComponent {
 }
 
 GraphComponent.propTypes = {
-  currencySymbol: PropTypes.string.isRequired,
-  quoteSymbol: PropTypes.string.isRequired,
   getData: PropTypes.func,
   data: PropTypes.object,
 };
 
 const withCurrencyQuery = (WrappedComponent, query) => {
-  class WithCurrencyQuery extends React.PureComponent {
+  class WithCurrencyQuery extends React.Component {
     constructor(props) {
       super(props);
       this.getData = this.getData.bind(this);

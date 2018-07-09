@@ -1,14 +1,14 @@
 import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const quotes = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];
 
-export class QuoteCurrencySwitcher extends React.PureComponent {
+export class QuoteCurrencySwitcher extends React.Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.changeQuoteSymbol = props.changeQuoteSymbol;
     this.state = {
       dropdownOpen: false,
     };
@@ -19,11 +19,12 @@ export class QuoteCurrencySwitcher extends React.PureComponent {
   }
 
   render() {
+    let [quote, base, ...destination] = window.location.pathname.split('/').filter(s => s.length);
     const inputs = quotes.map(x => {
-      const isDisabled = x === this.state.currentQuoteSymbol;
+      const isDisabled = x === quote;
       return (
-        <DropdownItem key={x} onClick={() => this.changeQuoteSymbol(x)} disabled={isDisabled}>
-          <a>{x}</a>
+        <DropdownItem key={x} disabled={isDisabled}>
+          <Link to={`/${x}/${base}/${destination.join('/')}`}>{x}</Link>
         </DropdownItem>
       );
     });

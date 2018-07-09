@@ -31,7 +31,7 @@ const CANDLES_QUERY = gql`
   }
 `;
 
-export class MarketComparisonGraphComponent extends React.PureComponent {
+export class MarketComparisonGraphComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -94,7 +94,6 @@ export class MarketComparisonGraphComponent extends React.PureComponent {
 
     let markets = this.props.data.currency.markets.data;
     let filteredMarkets = this.findCorrectMarkets(markets, this.props.match.params.quote);
-    console.log(filteredMarkets);
     if (!filteredMarkets.length) return <div />;
 
     let data = filteredMarkets.map(market => {
@@ -153,7 +152,6 @@ MarketComparisonGraphComponent.propTypes = {
 
 const withCandles = graphql(CANDLES_QUERY, {
   options: ({ match }) => {
-    console.log(match.params.base);
     return {
       variables: {
         currencySymbol: match.params.base,
