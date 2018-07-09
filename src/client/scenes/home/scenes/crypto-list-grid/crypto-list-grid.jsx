@@ -4,8 +4,10 @@ import { marketCapFormat } from './components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
 import { CryptoListItem } from './components/crypto-list-item';
 import { Search } from './components/search';
+import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
-export class CryptoListGrid extends React.Component {
+export class CryptoListGridComponent extends React.Component {
   constructor(props) {
     super(props);
     this.filter = this.filter.bind(this);
@@ -15,9 +17,16 @@ export class CryptoListGrid extends React.Component {
     };
   }
 
-  filter(filterQuery) {
-    this.setState({ page: 1 });
-    this.props.filter(filterQuery);
+  filter(search) {
+    let query = queryString.parse(this.props.location.search);
+    if (search) {
+      query.search = search;
+    } else query.search = undefined;
+
+    let formattedQuery = queryString.stringify(query);
+    this.props.history.push(
+      `${this.props.location.pathname}${formattedQuery ? `?${formattedQuery}` : ''}`
+    );
   }
 
   page(page) {
@@ -26,6 +35,7 @@ export class CryptoListGrid extends React.Component {
   }
 
   render() {
+    const search = queryString.parse(this.props.location.search).search;
     const currencyList = marketCapFormat(
       this.props.currencies.data,
       this.props.bitcoin,
@@ -35,12 +45,13 @@ export class CryptoListGrid extends React.Component {
         key={currency.id}
         currency={currency}
         quoteSymbol={this.props.match.params.quote}
+        location={this.props.location}
       />
     ));
 
     return (
       <div className="crypto-list-grid">
-        <Search updateQuery={this.filter} />
+        <Search updateQuery={this.filter} search={search} />
         {currencyList}
         <PaginationBar
           totalCount={this.props.currencies.totalCount}
@@ -53,11 +64,15 @@ export class CryptoListGrid extends React.Component {
   }
 }
 
-CryptoListGrid.propTypes = {
+CryptoListGridComponent.propTypes = {
   currencies: PropTypes.object,
   bitcoin: PropTypes.object,
   itemsPerPage: PropTypes.number,
   filter: PropTypes.func,
   page: PropTypes.func,
   match: PropTypes.object,
+  location: PropTypes.object,
+  history: PropTypes.object,
 };
+
+export const CryptoListGrid = withRouter(CryptoListGridComponent);

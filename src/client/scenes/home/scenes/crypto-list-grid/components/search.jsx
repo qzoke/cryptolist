@@ -19,21 +19,7 @@ export class Search extends React.Component {
 
   changeSearchQuery(event) {
     event.preventDefault();
-    let search = this.state.searchText;
-    let query = null;
-    if (search.length) {
-      query = {
-        _or: [
-          {
-            currencySymbol_like: `%${search}%`,
-          },
-          {
-            currencyName_like: `%${search}%`,
-          },
-        ],
-      };
-    }
-    this.props.updateQuery(query);
+    this.props.updateQuery(this.state.searchText);
   }
 
   render() {
@@ -44,6 +30,7 @@ export class Search extends React.Component {
           placeholder="Search"
           name="searchText"
           onChange={this.changeSearchText}
+          defaultValue={this.props.search}
         />
         <Button color="link">
           <FontAwesomeIcon icon="search" />
@@ -55,4 +42,5 @@ export class Search extends React.Component {
 
 Search.propTypes = {
   updateQuery: PropTypes.func,
+  search: PropTypes.string,
 };

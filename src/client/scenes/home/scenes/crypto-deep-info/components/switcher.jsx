@@ -16,7 +16,6 @@ export class Switcher extends React.Component {
     const PropsMarkets = () => (
       <Markets {...this.props} currencySymbol={this.props.currency.currencySymbol} />
     );
-    console.log(this.props);
     const pathHead = `/${match.params.quote}/${match.params.base}`;
     const pathname = this.props.location.pathname.toLowerCase();
     return (

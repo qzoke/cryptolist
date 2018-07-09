@@ -8,7 +8,7 @@ export const CryptoListItem = ({ currency, quoteSymbol }) => {
     <Link
       key={currency.id}
       className="currency-list-item"
-      to={`/${quoteSymbol}/${currency.symbol}/info`}
+      to={`/${quoteSymbol}/${currency.symbol}/info${location.search}`}
     >
       <div className="currency-icon">
         <span className="currency-icon">
@@ -35,4 +35,5 @@ export const CryptoListItem = ({ currency, quoteSymbol }) => {
 CryptoListItem.propTypes = {
   currency: PropTypes.object,
   quoteSymbol: PropTypes.string,
+  location: PropTypes.object,
 };
