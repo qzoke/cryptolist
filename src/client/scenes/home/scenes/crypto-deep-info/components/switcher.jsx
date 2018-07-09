@@ -16,18 +16,35 @@ export class Switcher extends React.Component {
     const PropsMarkets = () => (
       <Markets {...this.props} currencySymbol={this.props.currency.currencySymbol} />
     );
+    console.log(this.props);
     const pathHead = `/${match.params.quote}/${match.params.base}`;
+    const pathname = this.props.location.pathname.toLowerCase();
     return (
       <div>
         <Nav tabs>
           <NavItem>
-            <Link to={`${pathHead}/info`}>Info</Link>
+            <Link
+              className={`nav-link ${pathname.endsWith('info') ? 'active' : ''}`}
+              to={`${pathHead}/info`}
+            >
+              Info
+            </Link>
           </NavItem>
           <NavItem>
-            <Link to={`${pathHead}/chart`}>Chart</Link>
+            <Link
+              className={`nav-link ${pathname.endsWith('chart') ? 'active' : ''}`}
+              to={`${pathHead}/chart`}
+            >
+              Chart
+            </Link>
           </NavItem>
           <NavItem>
-            <Link to={`${pathHead}/markets`}>Markets</Link>
+            <Link
+              className={`nav-link ${pathname.endsWith('markets') ? 'active' : ''}`}
+              to={`${pathHead}/markets`}
+            >
+              Markets
+            </Link>
           </NavItem>
         </Nav>
         <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
@@ -41,4 +58,5 @@ export class Switcher extends React.Component {
 Switcher.propTypes = {
   currency: PropTypes.object,
   match: PropTypes.object,
+  location: PropTypes.object,
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const quotes = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];
@@ -35,15 +34,10 @@ export class QuoteCurrencySwitcher extends React.Component {
         toggle={this.toggle}
       >
         <DropdownToggle color="" caret>
-          {this.props.currentQuoteSymbol}
+          {quote}
         </DropdownToggle>
         <DropdownMenu>{inputs}</DropdownMenu>
       </ButtonDropdown>
     );
   }
 }
-
-QuoteCurrencySwitcher.propTypes = {
-  currentQuoteSymbol: PropTypes.string.isRequired,
-  changeQuoteSymbol: PropTypes.func.isRequired,
-};

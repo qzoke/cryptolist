@@ -9,7 +9,12 @@ import { marketCapFormat } from '../../components/market-cap-formatter';
 
 const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
 const CURRENCY_QUERY = gql`
-  query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilter) {
+  query AllCurrencies(
+    $sort: [CurrencySorter]
+    $page: Page
+    $filter: CurrencyFilter
+    $selectedCurrency: String
+  ) {
     currencies(sort: $sort, page: $page, filter: $filter) {
       totalCount
       data {
@@ -32,6 +37,29 @@ const CURRENCY_QUERY = gql`
               baseVolume
               quoteVolume
             }
+          }
+        }
+      }
+    }
+    selectedCurrency: currency(currencySymbol: $selectedCurrency) {
+      id
+      currencyName
+      currentSupply
+      totalSupply
+      currencySymbol
+      marketCap
+      marketCapRank
+      markets(aggregation: VWAP) {
+        data {
+          id
+          marketSymbol
+          ticker {
+            last
+            percentChange
+            dayLow
+            dayHigh
+            baseVolume
+            quoteVolume
           }
         }
       }
@@ -65,26 +93,17 @@ export class HomeSceneComponent extends React.Component {
     this.state = { currency: null };
   }
 
-  static getSelectedCurrency(symbol, list) {
-    return list.find(curr => curr.currencySymbol === symbol);
-  }
-
   static getDerivedStateFromProps(props) {
-    if (props.currencies) {
-      let currency = HomeSceneComponent.getSelectedCurrency(
-        props.match.params.base,
-        props.currencies.data
-      );
-
+    if (props.currency) {
       return {
-        currency: marketCapFormat(currency, props.bitcoin, props.match.params.quote),
+        currency: marketCapFormat(props.currency, props.bitcoin, props.match.params.quote),
       };
     }
     return null;
   }
 
   render() {
-    if (!this.props.currencies || !this.props.bitcoin) {
+    if (!this.props.currencies || !this.props.bitcoin || !this.props.currency) {
       return <Loading />;
     }
 
@@ -106,26 +125,31 @@ export class HomeSceneComponent extends React.Component {
 HomeSceneComponent.propTypes = {
   currencies: PropTypes.object,
   bitcoin: PropTypes.object,
+  currency: PropTypes.object,
   match: PropTypes.object,
 };
 
 const withCurrency = graphql(CURRENCY_QUERY, {
-  options: () => ({
-    variables: {
-      page: {
-        limit: ITEMS_PER_PAGE,
-        skip: 0,
+  options: ({ match }) => {
+    return {
+      variables: {
+        selectedCurrency: match.params.base,
+        page: {
+          limit: ITEMS_PER_PAGE,
+          skip: 0,
+        },
+        sort: {
+          marketCapRank: 'ASC',
+        },
+        filter: null,
       },
-      sort: {
-        marketCapRank: 'ASC',
-      },
-      filter: null,
-    },
-  }),
-  props: ({ data: { currencies, bitcoin, fetchMore, variables } }) => {
+    };
+  },
+  props: ({ data: { currencies, bitcoin, selectedCurrency, fetchMore, variables } }) => {
     return {
       currencies: currencies,
       bitcoin: bitcoin,
+      currency: selectedCurrency,
       page(skip) {
         let page = {
           skip: skip,

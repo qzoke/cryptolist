@@ -20,10 +20,7 @@ export class Layout extends React.Component {
       <div className="layout">
         <div className="content">
           <div className="container">
-            <AppNav
-              changeQuoteSymbol={this.changeQuoteSymbol}
-              currentQuoteSymbol={this.state.quoteSymbol}
-            />
+            <AppNav />
           </div>
           <div className="container mt-3">
             <Route path="/" component={HomepageRedirector} />
