@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 const quotes = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];

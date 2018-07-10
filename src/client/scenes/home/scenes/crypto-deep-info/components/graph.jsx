@@ -5,6 +5,7 @@ import { adHocRequest } from '../../../../../client-factory.js';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
+const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
 const INITIAL_START_TIME =
@@ -22,7 +23,18 @@ query CandlestickData(
 ) {
   currency(currencySymbol: $currencySymbol) {
     id
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+    vwap: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+      data {
+        id
+        marketSymbol
+        candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+          start
+          end
+          data
+        }
+      }
+    }
+    markets(filter: { quoteSymbol_eq: $quoteSymbol }) {
       data {
         id
         marketSymbol
@@ -93,21 +105,47 @@ export class GraphComponent extends React.Component {
 
   render() {
     if (!this.props.data.currency) return <div />;
-    if (this.props.data.currency.markets.data.length === 0) {
+    if (this.props.data.currency.vwap.data.length === 0) {
       return (
         <div>
           No markets found for selected currency pair. Please select a different quote currency
         </div>
       );
     }
-    let data = this.props.data.currency.markets.data[0].candles.data.map(c => {
-      return {
+    let hasMarkets = !!this.props.data.currency.markets.data.length;
+    let data = this.props.data.currency.vwap.data[0].candles.data.map((c, idx) => {
+      let marketVals = hasMarkets
+        ? this.props.data.currency.markets.data.reduce((reducer, market) => {
+            reducer[market.marketSymbol.split(':')[0]] = market.candles.data[idx]
+              ? market.candles.data[idx][4]
+              : null;
+            return reducer;
+          }, {})
+        : {};
+      let vwap = {
         name: `${moment(c[0] * 1000).format('H:m MMM DD')}`,
+        timestamp: c[0],
         VWAP: c[4],
         volume: c[6],
       };
+      return Object.assign({}, vwap, marketVals);
     });
 
+    let exchangeNames = this.props.data.currency.markets.data.map(
+      market => market.marketSymbol.split(':')[0]
+    );
+    let marketList = exchangeNames.map((name, i) => (
+      <Line
+        type="linear"
+        yAxisId="VWAP"
+        dataKey={this.state.charts[name] ? name : `${name} `}
+        stroke={colors[colors.length % i]}
+        animationDuration={500}
+        dot={false}
+        activeDot={false}
+        key={name}
+      />
+    ));
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
@@ -138,7 +176,7 @@ export class GraphComponent extends React.Component {
               dataKey="VWAP"
               scale="linear"
               type="number"
-              domain={['datamin', 'datamax']}
+              domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
               style={{ fontSize: '0.75em' }}
             />
             <YAxis
@@ -169,6 +207,7 @@ export class GraphComponent extends React.Component {
               dot={false}
               activeDot={false}
             />
+            {marketList}
           </ComposedChart>
         </div>
       </div>
