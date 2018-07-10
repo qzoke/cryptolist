@@ -5,6 +5,7 @@ import { adHocRequest } from '../../../../../client-factory.js';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
+import { Loading } from '../../../../../components/loading';
 const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
@@ -22,25 +23,18 @@ query CandlestickData(
   $resolution: CandleResolution!
 ) {
   currency(currencySymbol: $currencySymbol) {
-    id
     vwap: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
       data {
-        id
         marketSymbol
         candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          start
-          end
           data
         }
       }
     }
     markets(filter: { quoteSymbol_eq: $quoteSymbol }) {
       data {
-        id
         marketSymbol
         candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          start
-          end
           data
         }
       }
@@ -58,6 +52,8 @@ export class GraphComponent extends React.Component {
     this.isValidStart = this.isValidStart.bind(this);
     this.isValidEnd = this.isValidEnd.bind(this);
     this.toggleChart = this.toggleChart.bind(this);
+    this.highlightExchange = this.highlightExchange.bind(this);
+    this.unhighlightExchange = this.unhighlightExchange.bind(this);
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
@@ -66,6 +62,7 @@ export class GraphComponent extends React.Component {
         volume: true,
         VWAP: true,
       },
+      selectedExchange: '',
     };
   }
 
@@ -101,6 +98,14 @@ export class GraphComponent extends React.Component {
     let enabledCharts = this.state.charts;
     enabledCharts[key] = !enabledCharts[key];
     this.setState({ charts: enabledCharts });
+  }
+
+  highlightExchange(selectedExchange) {
+    this.setState({ selectedExchange });
+  }
+
+  unhighlightExchange() {
+    this.setState({ selectedExchange: '' });
   }
 
   render() {
@@ -144,6 +149,7 @@ export class GraphComponent extends React.Component {
         dot={false}
         activeDot={false}
         key={name}
+        strokeWidth={this.state.selectedExchange === name ? 3 : 1}
       />
     ));
     return (
@@ -190,7 +196,12 @@ export class GraphComponent extends React.Component {
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Legend wrapperStyle={{ fontSize: '0.75em' }} onClick={this.toggleChart} />
+            <Legend
+              wrapperStyle={{ fontSize: '0.75em' }}
+              onClick={this.toggleChart}
+              onMouseEnter={q => this.highlightExchange(q.dataKey)}
+              onMouseLeave={this.unhighlightExchange}
+            />
             <Bar
               dataKey={this.state.charts.volume ? 'volume' : 'volume '}
               yAxisId="volume"
@@ -206,6 +217,7 @@ export class GraphComponent extends React.Component {
               animationDuration={500}
               dot={false}
               activeDot={false}
+              strokeWidth={this.state.selectedExchange === 'VWAP' ? 3 : 1}
             />
             {marketList}
           </ComposedChart>
@@ -277,7 +289,7 @@ const withCurrencyQuery = (WrappedComponent, query) => {
     }
 
     render() {
-      if (!this.state.data.currency) return <div />;
+      if (!this.state.data.currency) return <Loading />;
       return <WrappedComponent {...this.props} data={this.state.data} getData={this.getData} />;
     }
   }
