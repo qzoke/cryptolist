@@ -82,7 +82,7 @@ export class GraphComponent extends React.Component {
   }
 
   updateEndTime(endTime) {
-    if (endTime - this.state.endTime <= this.state.resolution.seconds) return;
+    if (endTime - this.state.startTime <= this.state.resolution.seconds) return;
     endTime = moment(endTime).unix() * 1000;
     this.setState({ endTime });
     this.props.getData({ endTime, startTime: this.state.startTime });

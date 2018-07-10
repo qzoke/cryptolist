@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar, NavItem, NavbarBrand, Collapse, NavbarToggler } from 'reactstrap';
 import { QuoteCurrencySwitcher } from './quote-currency-switcher';
+import PropTypes from 'prop-types';
 
 export class AppNav extends React.Component {
   state = {
@@ -22,7 +23,10 @@ export class AppNav extends React.Component {
         <Collapse navbar isOpen={this.state.isOpen}>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <QuoteCurrencySwitcher />
+              <QuoteCurrencySwitcher
+                quoteSymbol={this.props.quoteSymbol}
+                onClick={this.props.onQuoteChange}
+              />
             </NavItem>
           </Nav>
         </Collapse>
@@ -30,3 +34,8 @@ export class AppNav extends React.Component {
     );
   }
 }
+
+AppNav.propTypes = {
+  onQuoteChange: PropTypes.func,
+  quoteSymbol: PropTypes.string,
+};

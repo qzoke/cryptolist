@@ -1,6 +1,6 @@
 import React from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 const quotes = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];
 
@@ -18,14 +18,20 @@ export class QuoteCurrencySwitcher extends React.Component {
   }
 
   render() {
-    let [quote, base, ...destination] = window.location.pathname.split('/').filter(s => s.length);
+    let quote = this.props.quoteSymbol;
     if (!quote) quote = 'usd';
+
     const inputs = quotes.map(x => {
       const isDisabled = x === quote;
       return (
-        <div className="dropdown-item" key={x} disabled={isDisabled}>
-          <Link to={`/${x.toLowerCase()}/${base}/${destination.join('/')}`}>{x}</Link>
-        </div>
+        <DropdownItem
+          className="dropdown-item"
+          key={x}
+          disabled={isDisabled}
+          onClick={() => this.props.onClick(x.toLowerCase())}
+        >
+          {x}
+        </DropdownItem>
       );
     });
     return (
@@ -42,3 +48,8 @@ export class QuoteCurrencySwitcher extends React.Component {
     );
   }
 }
+
+QuoteCurrencySwitcher.propTypes = {
+  quoteSymbol: PropTypes.string,
+  onClick: PropTypes.func,
+};
