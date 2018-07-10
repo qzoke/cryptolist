@@ -117,10 +117,15 @@ export class GraphComponent extends React.Component {
         </div>
       );
     }
-    let hasMarkets = !!this.props.data.currency.markets.data.length;
-    let data = this.props.data.currency.vwap.data[0].candles.data.map((c, idx) => {
+
+    let currency = this.props.data.currency;
+    let vwapMarket = currency.vwap.data[0];
+    let otherMarkets = currency.markets.data;
+    let hasMarkets = !!otherMarkets.length;
+
+    let data = vwapMarket.candles.data.map((candle, idx) => {
       let marketVals = hasMarkets
-        ? this.props.data.currency.markets.data.reduce((reducer, market) => {
+        ? otherMarkets.reduce((reducer, market) => {
             reducer[market.marketSymbol.split(':')[0]] = market.candles.data[idx]
               ? market.candles.data[idx][4]
               : null;
@@ -128,17 +133,15 @@ export class GraphComponent extends React.Component {
           }, {})
         : {};
       let vwap = {
-        name: `${moment(c[0] * 1000).format('H:m MMM DD')}`,
-        timestamp: c[0],
-        VWAP: c[4],
-        volume: c[6],
+        name: `${moment(candle[0] * 1000).format('H:m MMM DD')}`,
+        timestamp: candle[0],
+        VWAP: candle[4],
+        volume: candle[6],
       };
       return Object.assign({}, vwap, marketVals);
     });
 
-    let exchangeNames = this.props.data.currency.markets.data.map(
-      market => market.marketSymbol.split(':')[0]
-    );
+    let exchangeNames = otherMarkets.map(market => market.marketSymbol.split(':')[0]);
     let marketList = exchangeNames.map((name, i) => (
       <Line
         type="linear"
