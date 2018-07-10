@@ -23,9 +23,9 @@ export class QuoteCurrencySwitcher extends React.Component {
     const inputs = quotes.map(x => {
       const isDisabled = x === quote;
       return (
-        <DropdownItem key={x} disabled={isDisabled}>
+        <div className="dropdown-item" key={x} disabled={isDisabled}>
           <Link to={`/${x.toLowerCase()}/${base}/${destination.join('/')}`}>{x}</Link>
-        </DropdownItem>
+        </div>
       );
     });
     return (
