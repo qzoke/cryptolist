@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Loading } from '../../components/loading';
 import { marketCapFormat } from '../../components/market-cap-formatter';
-import queryString from 'qs';
+import qs from 'qs';
 
 const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
 const CURRENCY_QUERY = gql`
@@ -132,26 +132,26 @@ HomeSceneComponent.propTypes = {
 
 const withCurrency = graphql(CURRENCY_QUERY, {
   options: ({ match, location }) => {
-    let qs = queryString.parse(location.search);
+    let query = qs.parse(location.search, { ignoreQueryPrefix: true });
     return {
       variables: {
         selectedCurrency: match.params.base,
         page: {
           limit: ITEMS_PER_PAGE,
-          skip: qs.page ? (qs.page - 1) * ITEMS_PER_PAGE : 0,
+          skip: query.page ? (query.page - 1) * ITEMS_PER_PAGE : 0,
         },
         sort: {
           marketCapRank: 'ASC',
         },
         filter: (() => {
-          if (qs.search) {
+          if (query.search) {
             return {
               _or: [
                 {
-                  currencySymbol_like: `%${qs.search}%`,
+                  currencySymbol_like: `%${query.search}%`,
                 },
                 {
-                  currencyName_like: `%${qs.search}%`,
+                  currencyName_like: `%${query.search}%`,
                 },
               ],
             };

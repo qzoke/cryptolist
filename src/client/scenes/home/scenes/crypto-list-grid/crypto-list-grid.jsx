@@ -4,7 +4,7 @@ import { marketCapFormat } from './components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
 import { CryptoListItem } from './components/crypto-list-item';
 import { Search } from './components/search';
-import queryString from 'qs';
+import qs from 'qs';
 import { withRouter } from 'react-router-dom';
 
 export class CryptoListGridComponent extends React.Component {
@@ -15,31 +15,29 @@ export class CryptoListGridComponent extends React.Component {
   }
 
   filter(search) {
-    let query = queryString.parse(this.props.location.search);
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
     if (search) {
       query.search = search;
       query.page = undefined;
     } else query.search = undefined;
-
-    let formattedQuery = queryString.stringify(query);
+    let formattedQuery = qs.stringify(query);
     this.props.history.push(
       `${this.props.location.pathname}${formattedQuery ? `?${formattedQuery}` : ''}`
     );
   }
 
   page(page) {
-    let query = queryString.parse(this.props.location.search);
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
     if (page) query.page = page;
     else query.page = undefined;
-
-    let formattedQuery = queryString.stringify(query);
+    let formattedQuery = qs.stringify(query);
     this.props.history.push(
       `${this.props.location.pathname}${formattedQuery ? `?${formattedQuery}` : ''}`
     );
   }
 
   render() {
-    const qs = queryString.parse(this.props.location.search);
+    const query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
     const currencyList = marketCapFormat(
       this.props.currencies.data,
       this.props.bitcoin,
@@ -55,12 +53,12 @@ export class CryptoListGridComponent extends React.Component {
 
     return (
       <div className="crypto-list-grid">
-        <Search updateQuery={this.filter} search={qs.search} />
+        <Search updateQuery={this.filter} search={query.search} />
         {currencyList}
         <PaginationBar
           totalCount={this.props.currencies.totalCount}
           limit={this.props.itemsPerPage}
-          page={parseInt(qs.page) || 1}
+          page={parseInt(query.page) || 1}
           goToPage={this.page}
         />
       </div>
