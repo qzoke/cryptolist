@@ -72,7 +72,7 @@ export class MarketsComponent extends React.Component {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.base}`,
+        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
       };
     });
 
@@ -80,7 +80,7 @@ export class MarketsComponent extends React.Component {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.base}`,
+        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
       };
     });
 
