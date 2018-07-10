@@ -6,8 +6,8 @@ import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid 
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
 import { Loading } from '../../../../../components/loading';
-const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
+const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
 const INITIAL_START_TIME =
   moment()

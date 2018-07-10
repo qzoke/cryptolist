@@ -5,7 +5,6 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { Loading } from '../../../../../components/loading';
 import { ResponsivePie } from '@nivo/pie';
-import { MarketComparisonGraph } from './market-comparison-graph';
 
 // const colors = ['#F87A0B', '#002626', '#0E4749', '#95C623', '#E6FAFC'];
 // const colors = ['#222222', '#474747', '#727272', '#939393', '#bababa']; // greyscale
@@ -72,7 +71,9 @@ export class MarketsComponent extends React.Component {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
+        label: `${
+          volume[0]
+        }: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
       };
     });
 
@@ -80,7 +81,9 @@ export class MarketsComponent extends React.Component {
       return {
         id: volume[0],
         value: volume[1],
-        label: `${volume[0]}: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
+        label: `${
+          volume[0]
+        }: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
       };
     });
 
@@ -175,7 +178,6 @@ export class MarketsComponent extends React.Component {
             />
           </div>
         </div>
-        <MarketComparisonGraph {...this.props} />
       </div>
     );
   }

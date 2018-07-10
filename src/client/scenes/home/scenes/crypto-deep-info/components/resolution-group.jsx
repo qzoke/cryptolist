@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 export const Resolutions = [
   { display: '1m', value: '_1m', seconds: 60 },
@@ -13,20 +13,42 @@ export const Resolutions = [
   { display: '1D', value: '_1d', seconds: 60 * 60 * 24 },
 ];
 
-export const ResolutionGroup = ({ updateResolution, resolution }) => {
-  let buttons = Resolutions.map(r => (
-    <Button
-      key={r.value}
-      active={resolution.value === r.value}
-      onClick={() => updateResolution(r)}
-      size="sm"
-    >
-      {r.display}
-    </Button>
-  ));
+export class ResolutionGroup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      open: false,
+    };
+  }
 
-  return <ButtonGroup>{buttons}</ButtonGroup>;
-};
+  toggle() {
+    this.setState(prevState => ({
+      open: !prevState.open,
+    }));
+  }
+  render() {
+    let buttons = Resolutions.map(r => (
+      <DropdownItem
+        key={r.value}
+        active={this.props.resolution.value === r.value}
+        onClick={() => this.props.updateResolution(r)}
+        size="sm"
+      >
+        {r.display}
+      </DropdownItem>
+    ));
+
+    return (
+      <Dropdown isOpen={this.state.open} toggle={this.toggle}>
+        <DropdownToggle className="btn-sm" caret>
+          {this.props.resolution.display}
+        </DropdownToggle>
+        <DropdownMenu>{buttons}</DropdownMenu>
+      </Dropdown>
+    );
+  }
+}
 
 ResolutionGroup.propTypes = {
   updateResolution: PropTypes.func,
