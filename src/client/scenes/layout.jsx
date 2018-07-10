@@ -6,10 +6,11 @@ import { HomepageRedirector } from '../components/homepage-redirector';
 import PropTypes from 'prop-types';
 
 export class LayoutComponent extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.changeQuoteSymbol = this.changeQuoteSymbol.bind(this);
-    this.state = { quoteSymbol: 'USD' };
+    let [quoteSymbol] = props.location.pathname.split('/').filter(p => !!p.length);
+    this.state = { quoteSymbol };
   }
 
   changeQuoteSymbol(newQuoteSymbol) {
