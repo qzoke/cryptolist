@@ -45,10 +45,15 @@ export class GraphComponent extends React.Component {
     this.updateResolution = this.updateResolution.bind(this);
     this.isValidStart = this.isValidStart.bind(this);
     this.isValidEnd = this.isValidEnd.bind(this);
+    this.toggleChart = this.toggleChart.bind(this);
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
+      charts: {
+        volume: true,
+        VWAP: true,
+      },
     };
   }
 
@@ -77,6 +82,13 @@ export class GraphComponent extends React.Component {
   updateResolution(resolution) {
     this.setState({ resolution });
     this.props.getData({ resolution });
+  }
+
+  toggleChart(selected) {
+    let key = selected.dataKey.trim();
+    let enabledCharts = this.state.charts;
+    enabledCharts[key] = !enabledCharts[key];
+    this.setState({ charts: enabledCharts });
   }
 
   render() {
@@ -140,9 +152,9 @@ export class GraphComponent extends React.Component {
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Legend wrapperStyle={{ fontSize: '0.75em' }} />
+            <Legend wrapperStyle={{ fontSize: '0.75em' }} onClick={this.toggleChart} />
             <Bar
-              dataKey="volume"
+              dataKey={this.state.charts.volume ? 'volume' : 'volume '}
               yAxisId="volume"
               barSize={20}
               fill="#e1e2e6"
@@ -151,7 +163,7 @@ export class GraphComponent extends React.Component {
             <Line
               type="linear"
               yAxisId="VWAP"
-              dataKey="VWAP"
+              dataKey={this.state.charts.VWAP ? 'VWAP' : 'VWAP '}
               stroke="#f87a0b"
               animationDuration={500}
               dot={false}
