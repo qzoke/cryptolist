@@ -26,8 +26,18 @@ export class CryptoDeepInfo extends React.Component {
     return (
       <div className="crypto-deep-info">
         <div className="hero">
-          <h1 className="name">{currency.currencyName}</h1>
+          <h2 className="name">{currency.currencyName}</h2>
           <h3 className="symbol">({currency.currencySymbol})</h3>
+          <div className="price-container">
+            <span className="price">{currency.price}</span>
+            <span
+              className={`change ${
+                Math.sign(currency.percentChange < 0) ? 'negative' : 'positive'
+              }`}
+            >
+              {currency.percentChange}%
+            </span>
+          </div>
           {currency.computedMarket ? (
             <div className="computed-market">
               <FontAwesomeIcon id="calculated" icon="calculator" />
@@ -42,14 +52,6 @@ export class CryptoDeepInfo extends React.Component {
               </Tooltip>
             </div>
           ) : null}
-        </div>
-        <div className="price-container">
-          <span className="price">{currency.price}</span>
-          <span
-            className={`change ${Math.sign(currency.percentChange < 0) ? 'negative' : 'positive'}`}
-          >
-            {currency.percentChange}%
-          </span>
         </div>
         <Switcher {...this.props} currency={currency} />
       </div>

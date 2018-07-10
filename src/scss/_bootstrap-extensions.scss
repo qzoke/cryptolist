@@ -1,1 +1,25 @@
 // customization of boostrap components goes here
+
+.form-control {
+  padding: 0.05rem 0.75rem;
+  border-radius: 0;
+  margin-bottom: 0.8em;
+}
+
+.pagination-sm .page-item:first-child .page-link,
+.pagination-sm .page-item:last-child .page-link {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.nav-tabs a.nav-link {
+  padding: 0.2em 0.5em;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.btn,
+.dropdown-menu,
+.tooltip-inner {
+  border-radius: 0;
+}

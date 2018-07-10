@@ -91,7 +91,7 @@ export class GraphComponent extends React.Component {
     let data = this.props.data.currency.markets.data[0].candles.data.map(c => {
       return {
         name: `${moment(c[0] * 1000).format('H:m MMM DD')}`,
-        close: c[4],
+        VWAP: c[4],
         volume: c[6],
       };
     });
@@ -120,13 +120,14 @@ export class GraphComponent extends React.Component {
             </div>
           </div>
           <ComposedChart width={800} height={400} data={data}>
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
             <YAxis
-              yAxisId="close"
-              dataKey="close"
+              yAxisId="VWAP"
+              dataKey="VWAP"
               scale="linear"
               type="number"
               domain={['datamin', 'datamax']}
+              style={{ fontSize: '0.75em' }}
             />
             <YAxis
               yAxisId="volume"
@@ -135,10 +136,11 @@ export class GraphComponent extends React.Component {
               scale="linear"
               orientation="right"
               domain={['datamin', dataMax => dataMax * 3]}
+              style={{ fontSize: '0.75em' }}
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Legend />
+            <Legend wrapperStyle={{ fontSize: '0.75em' }} />
             <Bar
               dataKey="volume"
               yAxisId="volume"
@@ -148,8 +150,8 @@ export class GraphComponent extends React.Component {
             />
             <Line
               type="linear"
-              yAxisId="close"
-              dataKey="close"
+              yAxisId="VWAP"
+              dataKey="VWAP"
               stroke="#f87a0b"
               animationDuration={500}
               dot={false}

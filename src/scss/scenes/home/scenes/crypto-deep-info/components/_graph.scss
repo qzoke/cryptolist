@@ -1,8 +1,36 @@
 .currency-info-container.graph {
+  padding: 0;
   .controls {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     padding-bottom: 1em;
+    .btn-group .btn {
+      font-size: 0.8em;
+      height: 2.5em;
+      background: $gray-500;
+      border: none;
+      &:hover,
+      &.active {
+        background: $gray-600;
+      }
+    }
+  }
+
+  // Chart stuff
+  .recharts-wrapper {
+    .recharts-tooltip-wrapper {
+      opacity: 0.8;
+    }
+    p.recharts-tooltip-label {
+      font-size: 0.75em;
+    }
+    ul.recharts-tooltip-item-list {
+      padding: 0.5em 0 0 0 !important;
+    }
+    li.recharts-tooltip-item {
+      font-size: 0.85em;
+      line-height: 0.85em;
+    }
   }
 
   // REACT DATE PICKER

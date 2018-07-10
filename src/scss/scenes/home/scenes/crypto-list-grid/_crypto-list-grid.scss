@@ -4,8 +4,11 @@
   .currency-list-item {
     display: flex;
     flex-direction: row;
-    padding: 0.5em 0;
+    padding: 0.5em;
     border-bottom: 1px solid $gray-300;
+    &:last-child {
+      border-bottom: none;
+    }
     &:hover {
       background-color: $gray-100;
       cursor: pointer;
