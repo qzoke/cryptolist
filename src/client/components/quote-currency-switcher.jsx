@@ -19,6 +19,7 @@ export class QuoteCurrencySwitcher extends React.Component {
 
   render() {
     let [quote, base, ...destination] = window.location.pathname.split('/').filter(s => s.length);
+    if (!quote) quote = 'usd';
     const inputs = quotes.map(x => {
       const isDisabled = x === quote;
       return (

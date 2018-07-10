@@ -4,7 +4,7 @@ import { marketCapFormat } from './components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
 import { CryptoListItem } from './components/crypto-list-item';
 import { Search } from './components/search';
-import queryString from 'query-string';
+import queryString from 'qs';
 import { withRouter } from 'react-router-dom';
 
 export class CryptoListGridComponent extends React.Component {

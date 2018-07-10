@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Loading } from '../../components/loading';
 import { marketCapFormat } from '../../components/market-cap-formatter';
-import queryString from 'query-string';
+import queryString from 'qs';
 
 const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
 const CURRENCY_QUERY = gql`

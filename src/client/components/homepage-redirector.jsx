@@ -7,11 +7,11 @@ export const HomepageRedirector = () => {
     let changed = false;
 
     if (!quote) {
-      quote = 'USD';
+      quote = 'usd';
       changed = true;
     }
     if (!base) {
-      base = 'BTC';
+      base = 'btc';
       changed = true;
     }
 
