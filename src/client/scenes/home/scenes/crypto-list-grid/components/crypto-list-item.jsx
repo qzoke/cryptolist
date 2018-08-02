@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { MiniGraph } from './mini-graph';
 import { Link } from 'react-router-dom';
 
-export const CryptoListItem = ({ currency, quoteSymbol }) => {
+export const CryptoListItem = ({ currency, quoteSymbol, location }) => {
+  let [, , ...restOfPath] = location.pathname.split('/').filter(x => x);
   return (
     <Link
       key={currency.id}
       className="currency-list-item"
-      to={`/${quoteSymbol}/${currency.symbol.toLowerCase()}/info${location.search}`}
+      to={`/${quoteSymbol}/${currency.symbol.toLowerCase()}/${restOfPath.join('/')}${
+        location.search
+      }`}
     >
       <div className="currency-icon">
         <span className="currency-icon">
