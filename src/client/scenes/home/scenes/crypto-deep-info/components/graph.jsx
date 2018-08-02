@@ -7,7 +7,7 @@ import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
 import { Loading } from '../../../../../components/loading';
 
-const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
+const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
 const INITIAL_START_TIME =
   moment()
@@ -147,7 +147,7 @@ export class GraphComponent extends React.Component {
         type="linear"
         yAxisId="VWAP"
         dataKey={this.state.charts[name] ? name : `${name} `}
-        stroke={colors[colors.length % i]}
+        stroke={colors[i % colors.length]}
         animationDuration={500}
         dot={false}
         activeDot={false}
@@ -216,7 +216,7 @@ export class GraphComponent extends React.Component {
               type="linear"
               yAxisId="VWAP"
               dataKey={this.state.charts.VWAP ? 'VWAP' : 'VWAP '}
-              stroke="#f87a0b"
+              stroke="#585858"
               animationDuration={500}
               dot={false}
               activeDot={false}
