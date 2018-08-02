@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { adHocRequest } from '../../../../../client-factory.js';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
 import { Loading } from '../../../../../components/loading';
+import { Query } from 'regraph-request';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
@@ -76,21 +76,21 @@ export class GraphComponent extends React.Component {
 
   updateStartTime(startTime) {
     if (this.state.endTime - startTime <= this.state.resolution.seconds) return;
-    startTime = moment(startTime).unix() * 1000;
-    this.setState({ startTime });
-    this.props.getData({ startTime, endTime: this.state.endTime });
+    startTime = moment(startTime).unix();
+    this.setState({ startTime: startTime * 1000 });
+    this.props.getData({ startTime, endTime: this.state.endTime / 1000 });
   }
 
   updateEndTime(endTime) {
     if (endTime - this.state.startTime <= this.state.resolution.seconds) return;
-    endTime = moment(endTime).unix() * 1000;
-    this.setState({ endTime });
-    this.props.getData({ endTime, startTime: this.state.startTime });
+    endTime = moment(endTime).unix();
+    this.setState({ endTime: endTime * 1000 });
+    this.props.getData({ endTime, startTime: this.state.startTime / 1000 });
   }
 
   updateResolution(resolution) {
     this.setState({ resolution });
-    this.props.getData({ resolution });
+    this.props.getData({ resolution: resolution.value });
   }
 
   toggleChart(selected) {
@@ -109,7 +109,7 @@ export class GraphComponent extends React.Component {
   }
 
   render() {
-    if (!this.props.data.currency) return <div />;
+    if (!this.props.data.currency) return <Loading />;
     if (this.props.data.currency.vwap.data.length === 0) {
       return (
         <div>
@@ -235,73 +235,10 @@ GraphComponent.propTypes = {
   data: PropTypes.object,
 };
 
-const withCurrencyQuery = (WrappedComponent, query) => {
-  class WithCurrencyQuery extends React.Component {
-    constructor(props) {
-      super(props);
-      this.getData = this.getData.bind(this);
-      this.state = {
-        data: {},
-        quoteSymbol: props.match.params.quote,
-        currencySymbol: props.match.params.base,
-        resolution: INITIAL_RESOLUTION,
-        startTime: INITIAL_START_TIME,
-        endTime: INITIAL_END_TIME,
-      };
-      this.getData({
-        currencySymbol: props.match.params.base,
-        quoteSymbol: props.match.params.quote,
-      });
-    }
-
-    componentDidUpdate(prevProps) {
-      if (
-        this.state.quoteSymbol !== this.props.match.params.quote ||
-        this.state.currencySymbol !== this.props.match.params.base
-      )
-        this.getData({
-          currencySymbol: prevProps.currencySymbol,
-          quoteSymbol: prevProps.quoteSymbol,
-        });
-    }
-
-    getData({
-      startTime = this.state.startTime,
-      endTime = this.state.endTime,
-      currencySymbol = this.state.currencySymbol,
-      quoteSymbol = this.state.quoteSymbol,
-      resolution = this.state.resolution,
-    }) {
-      let variables = {
-        quoteSymbol,
-        currencySymbol,
-        resolution: resolution.value,
-        startTime: startTime / 1000,
-        endTime: endTime / 1000,
-      };
-      adHocRequest(query, variables).then(res => {
-        this.setState({
-          data: res.data,
-          quoteSymbol,
-          currencySymbol,
-          startTime,
-          endTime,
-          resolution,
-        });
-      });
-    }
-
-    render() {
-      if (!this.state.data.currency) return <Loading />;
-      return <WrappedComponent {...this.props} data={this.state.data} getData={this.getData} />;
-    }
-  }
-
-  WithCurrencyQuery.propTypes = {
-    match: PropTypes.object.isRequired,
-  };
-
-  return WithCurrencyQuery;
-};
-
-export const Graph = withCurrencyQuery(GraphComponent, CANDLE_QUERY);
+export const Graph = Query(GraphComponent, CANDLE_QUERY, props => ({
+  startTime: INITIAL_START_TIME / 1000,
+  endTime: INITIAL_END_TIME / 1000,
+  resolution: INITIAL_RESOLUTION.value,
+  quoteSymbol: props.match.params.quote,
+  currencySymbol: props.match.params.base,
+}));

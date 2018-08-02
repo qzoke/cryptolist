@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { adHocRequest } from '../../../../../client-factory.js';
+import { Query } from 'regraph-request';
 
 const STROKE_WIDTH = 3;
 const numberOfDays = 1;
@@ -112,52 +112,15 @@ MiniGraphComponent.propTypes = {
   isPositive: PropTypes.bool,
 };
 
-const withCurrencyQuery = (WrappedComponent, query) => {
-  class WithCurrencyQuery extends React.Component {
-    constructor(props) {
-      super(props);
-      this.getData = this.getData.bind(this);
-      this.state = {
-        data: {},
-        quote: props.quote,
-      };
-      this.getData(props.currencyId, props.quote);
-    }
-
-    componentDidUpdate(prevProps) {
-      if (this.state.quote !== this.props.quote)
-        this.getData(prevProps.currencyId, prevProps.quote);
-    }
-
-    getData(currency, quote) {
-      let variables = {
-        symbol: currency,
-        quoteSymbol: quote,
-        start: moment()
-          .subtract(numberOfDays, 'day')
-          .utc()
-          .unix(),
-        end: moment()
-          .utc()
-          .unix(),
-        resolution: '_1h',
-      };
-      adHocRequest(query, variables).then(res => {
-        this.setState({ data: res.data, quote });
-      });
-    }
-
-    render() {
-      return <WrappedComponent {...this.props} data={this.state.data} />;
-    }
-  }
-
-  WithCurrencyQuery.propTypes = {
-    quote: PropTypes.string,
-    currencyId: PropTypes.string,
-  };
-
-  return WithCurrencyQuery;
-};
-
-export const MiniGraph = withCurrencyQuery(MiniGraphComponent, CURRENCY_QUERY);
+export const MiniGraph = Query(MiniGraphComponent, CURRENCY_QUERY, props => ({
+  symbol: props.currencyId,
+  quoteSymbol: props.quote,
+  start: moment()
+    .subtract(numberOfDays, 'day')
+    .utc()
+    .unix(),
+  end: moment()
+    .utc()
+    .unix(),
+  resolution: '_1h',
+}));
