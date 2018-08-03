@@ -29,7 +29,9 @@ export class CryptoDeepInfo extends React.Component {
   stringifyNumber(number) {
     let numberAsString = '' + number;
     let lastNumber = numberAsString[numberAsString.length - 1];
-    let ending = endings[lastNumber];
+    let ending;
+    if (number > 10 && number < 20) ending = 'th';
+    else ending = endings[lastNumber];
     return numberAsString + ending;
   }
 
