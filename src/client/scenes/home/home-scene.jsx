@@ -1,6 +1,6 @@
 import React from 'react';
-import { CryptoListGrid } from './scenes/crypto-list-grid/crypto-list-grid';
-import { CryptoDeepInfo } from './scenes/crypto-deep-info/crypto-deep-info';
+import { CryptoListGrid } from '../crypto-list-grid/crypto-list-grid';
+import { CryptoDeepInfo } from '../crypto-deep-info/crypto-deep-info';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';

@@ -4,7 +4,7 @@ import moment from 'moment';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
-import { Loading } from '../../../../../components/loading';
+import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];

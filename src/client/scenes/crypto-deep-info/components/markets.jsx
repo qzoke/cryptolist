@@ -3,7 +3,7 @@ import {} from 'reactstrap';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { Loading } from '../../../../../components/loading';
+import { Loading } from '../../../components/loading';
 import { ResponsivePie } from '@nivo/pie';
 
 // const colors = ['#F87A0B', '#002626', '#0E4749', '#95C623', '#E6FAFC'];
