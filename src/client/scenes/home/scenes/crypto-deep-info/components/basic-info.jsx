@@ -5,25 +5,24 @@ export const BasicInfo = props => {
   let currency = props.currency;
   return (
     <div className="currency-info-container basic-info">
-      <div className="row headers">
-        <div className="col">Market Cap Rank</div>
-        <div className="col">Market Cap</div>
+      <div className="row">
+        <h5 className="col">Supply</h5>
       </div>
       <div className="row values">
-        <div className="col">{currency.marketCapRank}</div>
-        <div className="col">{currency.marketCap}</div>
+        <div className="col">Circulating</div>
+        <div className="col value">{currency.currentSupply.toLocaleString()}</div>
+        <div className="col" />
+        <div className="col">Remaining</div>
+        <div className="col value">
+          {(currency.totalSupply - currency.currentSupply).toLocaleString()}
+        </div>
       </div>
-      <div className="row supply headers">
-        <div className="col">Total Supply</div>
-        <div className="col">Current Supply</div>
-        <div className="col">Remaining Supply</div>
-        <div className="col">Percent remaining</div>
-      </div>
-      <div className="row supply values">
-        <div className="col">{currency.totalSupply}</div>
-        <div className="col">{currency.currentSupply}</div>
-        <div className="col">{currency.totalSupply - currency.currentSupply}</div>
-        <div className="col">
+      <div className="row values">
+        <div className="col">Total</div>
+        <div className="col value">{currency.totalSupply.toLocaleString()}</div>
+        <div className="col" />
+        <div className="col">Remaining %</div>
+        <div className="col value">
           {((1 - currency.currentSupply / currency.totalSupply) * 100).toFixed(2)}%
         </div>
       </div>
