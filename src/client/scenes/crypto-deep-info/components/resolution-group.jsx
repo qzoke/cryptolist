@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 export const Resolutions = [
-  { display: '1m', value: '_1m', seconds: 60 },
-  { display: '5m', value: '_5m', seconds: 60 * 5 },
-  { display: '15m', value: '_15m', seconds: 60 * 15 },
-  { display: '30m', value: '_30m', seconds: 60 * 30 },
+  // { display: '1m', value: '_1m', seconds: 60 },
+  // { display: '5m', value: '_5m', seconds: 60 * 5 },
+  // { display: '15m', value: '_15m', seconds: 60 * 15 },
+  // { display: '30m', value: '_30m', seconds: 60 * 30 },
   { display: '1H', value: '_1h', seconds: 60 * 60 },
   { display: '2H', value: '_2h', seconds: 60 * 60 * 2 },
   { display: '4H', value: '_4h', seconds: 60 * 60 * 4 },

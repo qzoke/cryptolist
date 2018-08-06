@@ -4,5 +4,12 @@
     border: 1px solid #ccc;
     height: 45vh;
     overflow: scroll;
+
+    .positive {
+      color: $cl-green;
+    }
+    .negative {
+      color: $cl-pink;
+    }
   }
 }

@@ -15,7 +15,7 @@ export const HomepageRedirector = () => {
       changed = true;
     }
 
-    if (changed) return <Redirect to={`/${quote}/${base}/info`} />;
+    if (changed) return <Redirect to={`/${quote}/${base}/chart`} />;
   }
   return <div />;
 };

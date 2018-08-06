@@ -6,6 +6,7 @@ import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
 import DateTime from 'react-datetime';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
+import { HistoricalData } from './historical-data';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
@@ -97,7 +98,7 @@ export class GraphComponent extends React.Component {
     let key = selected.dataKey.trim();
     let enabledCharts = this.state.charts;
     enabledCharts[key] = !enabledCharts[key];
-    this.setState({ charts: enabledCharts });
+    this.setState({ charts: enabledCharts, selectedExchange: key });
   }
 
   highlightExchange(selectedExchange) {
@@ -158,19 +159,21 @@ export class GraphComponent extends React.Component {
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
-          <div className="controls">
-            <ResolutionGroup
-              updateResolution={this.updateResolution}
-              resolution={this.state.resolution}
-            />
-            <div className="startTime">
+          <div className="controls row">
+            <div className="col-sm-2">
+              <ResolutionGroup
+                updateResolution={this.updateResolution}
+                resolution={this.state.resolution}
+              />
+            </div>
+            <div className="startTime col-sm-4">
               <DateTime
                 value={this.state.startTime}
                 onChange={this.updateStartTime}
                 isValidDate={this.isValidStart}
               />
             </div>
-            <div className="endTime">
+            <div className="endTime col-sm-4">
               <DateTime
                 value={this.state.endTime}
                 onChange={this.updateEndTime}
@@ -224,6 +227,14 @@ export class GraphComponent extends React.Component {
             />
             {marketList}
           </ComposedChart>
+        </div>
+        <div className="historical-data-container">
+          <HistoricalData
+            {...this.props}
+            startTime={this.state.startTime}
+            endTime={this.state.endTime}
+            resolution={this.state.resolution}
+          />
         </div>
       </div>
     );

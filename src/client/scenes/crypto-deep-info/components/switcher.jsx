@@ -25,18 +25,18 @@ export class Switcher extends React.Component {
         <Nav tabs>
           <NavItem>
             <Link
-              className={`nav-link ${pathname.endsWith('info') ? 'active' : ''}`}
-              to={`${pathHead}/info${qs}`}
-            >
-              Info
-            </Link>
-          </NavItem>
-          <NavItem>
-            <Link
               className={`nav-link ${pathname.endsWith('chart') ? 'active' : ''}`}
               to={`${pathHead}/chart${qs}`}
             >
               Chart
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link
+              className={`nav-link ${pathname.endsWith('info') ? 'active' : ''}`}
+              to={`${pathHead}/info${qs}`}
+            >
+              Info
             </Link>
           </NavItem>
           <NavItem>
@@ -48,8 +48,8 @@ export class Switcher extends React.Component {
             </Link>
           </NavItem>
         </Nav>
-        <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
         <Route path={`${pathHead}/chart`} render={PropsGraph} />
+        <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
         <Route path={`${pathHead}/markets`} render={PropsMarkets} />
       </div>
     );

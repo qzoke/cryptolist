@@ -1,16 +1,7 @@
+import { formatPrice } from '../library/currency-tools';
+
 const asCurrency = (value, quoteSymbol, precision) => {
-  switch (quoteSymbol) {
-    case 'USD':
-      return '$' + value.toLocaleString();
-    case 'GBP':
-      return '£' + value.toLocaleString();
-    case 'EUR':
-      return '€' + value.toLocaleString();
-    case 'USDT':
-      return value.toLocaleString() + 'USDT';
-    default:
-      return value.toFixed(precision ? precision : 4) + quoteSymbol;
-  }
+  return formatPrice(value, quoteSymbol, precision);
 };
 
 const calculatePriceFromBtc = (priceInBtc, priceOfBtc) => {
