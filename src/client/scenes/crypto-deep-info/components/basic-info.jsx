@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { HistoricalData } from './historical-data';
 
 export const BasicInfo = props => {
   let currency = props.currency;
@@ -21,10 +22,13 @@ export const BasicInfo = props => {
         <div className="col">Total</div>
         <div className="col value">{currency.totalSupply.toLocaleString()}</div>
         <div className="col" />
-        <div className="col">Remaining %</div>
+        <div className="col">% Remaining</div>
         <div className="col value">
           {((1 - currency.currentSupply / currency.totalSupply) * 100).toFixed(2)}%
         </div>
+      </div>
+      <div className="historical-data-container">
+        <HistoricalData {...props} />
       </div>
     </div>
   );
