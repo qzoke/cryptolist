@@ -1,10 +1,23 @@
 .historical-data {
   margin-top: 3em;
+  .header.row {
+    .number {
+      text-align: right;
+    }
+    > div {
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+  }
   .contents {
     .row {
       border-bottom: 1px solid $gray-200;
       font-size: 0.8em;
       padding: 0.15em 0;
+
+      .number {
+        text-align: right;
+      }
     }
 
     .positive {

@@ -40,11 +40,11 @@ let HistoricalDataItem = ({ startUnix, quoteVolume, percentChange, open, quote }
   return (
     <div className="row">
       <div className="col-sm-3">{moment(startUnix * 1000).format('D/M/YY H:m')}</div>
-      <div className="col-sm-3">{quoteVolume ? formatPrice(quoteVolume, quote) : ''}</div>
-      <div className={`col-sm-3 ${isPositiveChange ? 'positive' : 'negative'}`}>
+      <div className="col-sm-3 number">{quoteVolume ? formatPrice(quoteVolume, quote) : ''}</div>
+      <div className={`col-sm-3 number ${isPositiveChange ? 'positive' : 'negative'}`}>
         {percentChange}
       </div>
-      <div className="col-sm-3">{open ? formatPrice(open, quote) : ''}</div>
+      <div className="col-sm-3 number">{open ? formatPrice(open, quote, 8) : ''}</div>
     </div>
   );
 };
@@ -106,11 +106,11 @@ export class HistoricalDataComponent extends React.Component {
           </div>
         </div>
         <div className="col-sm-12">
-          <div className="row">
+          <div className="row header">
             <div className="col-sm-3">Time</div>
-            <div className="col-sm-3">Volume ({quote.toUpperCase()})</div>
-            <div className="col-sm-3">Percent change</div>
-            <div className="col-sm-3">Price</div>
+            <div className="col-sm-3 number">Volume ({quote.toUpperCase()})</div>
+            <div className="col-sm-3 number">Percent Change</div>
+            <div className="col-sm-3 number">Price</div>
           </div>
         </div>
         <div className="contents col-sm-12">{list}</div>
