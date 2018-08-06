@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Tooltip } from 'reactstrap';
 import { Loading } from '../../../components/loading';
-import { Query } from 'regraph-request';
+import { Query } from '../../../client-factory';
 import { getPairFromMatch } from '../../../library/path-tools';
 import { formatPrice } from '../../../library/currency-tools';
 
