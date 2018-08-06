@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { Tooltip } from 'reactstrap';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
 import { getPairFromMatch } from '../../../library/path-tools';
-import { formatDisplayPrice } from '../../../library/currency-tools';
+import { formatPrice } from '../../../library/currency-tools';
 
+const LIMIT = 50;
 const CANDLE_QUERY = `
 query HistoricalData (
   $currencySymbol: String!,
   $quote: String!,
-  $resolution: CandleResolution!
+  $resolution: CandleResolution!,
+  $limit: Int!
 ) {
   currency(currencySymbol: $currencySymbol) {
     markets(filter: { quoteSymbol_eq: $quote }, aggregation:VWAP) {
@@ -18,7 +21,7 @@ query HistoricalData (
         marketSymbol
         timeseries(
           resolution: $resolution,
-          limit: 50,
+          limit: $limit,
         ) {
           startUnix
           volume
@@ -37,11 +40,11 @@ let HistoricalDataItem = ({ startUnix, quoteVolume, percentChange, open, quote }
   return (
     <div className="row">
       <div className="col-sm-3">{moment(startUnix * 1000).format('D/M/YY H:m')}</div>
-      <div className="col-sm-3">{quoteVolume ? formatDisplayPrice(quoteVolume, quote) : ''}</div>
+      <div className="col-sm-3">{quoteVolume ? formatPrice(quoteVolume, quote) : ''}</div>
       <div className={`col-sm-3 ${isPositiveChange ? 'positive' : 'negative'}`}>
         {percentChange}
       </div>
-      <div className="col-sm-3">{open ? formatDisplayPrice(open, quote) : ''}</div>
+      <div className="col-sm-3">{open ? formatPrice(open, quote) : ''}</div>
     </div>
   );
 };
@@ -54,35 +57,67 @@ HistoricalDataItem.propTypes = {
   quote: PropTypes.string,
 };
 
-export const HistoricalDataComponent = ({ data, match }) => {
-  let list;
-  console.log();
-  let { quote } = getPairFromMatch(match);
-  if (!data.currency) list = <Loading />;
-  else {
-    let market = data.currency.markets.data.find(m => m.marketSymbol.endsWith(quote.toUpperCase()));
-    if (!market) return null;
-    list = market.timeseries.map(t => (
-      <HistoricalDataItem {...t} quote={quote} key={t.startUnix} />
-    ));
+export class HistoricalDataComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+
+    this.state = {
+      tooltipOpen: false,
+    };
   }
-  return (
-    <div className="historical-data row">
-      <div className="col-sm-4">
-        <h5>Historical Data</h5>
-      </div>
-      <div className="col-sm-12">
-        <div className="row">
-          <div className="col-sm-3">Time</div>
-          <div className="col-sm-3">Volume ({quote.toUpperCase()})</div>
-          <div className="col-sm-3">Percent change</div>
-          <div className="col-sm-3">Price</div>
+
+  toggle() {
+    this.setState({
+      tooltipOpen: !this.state.tooltipOpen,
+    });
+  }
+
+  render() {
+    let list;
+    console.log();
+    let { quote } = getPairFromMatch(this.props.match);
+    if (!this.props.data.currency) list = <Loading />;
+    else {
+      let market = this.props.data.currency.markets.data.find(m =>
+        m.marketSymbol.endsWith(quote.toUpperCase())
+      );
+      if (!market) return null;
+      list = market.timeseries.map(t => (
+        <HistoricalDataItem {...t} quote={quote} key={t.startUnix} />
+      ));
+    }
+    return (
+      <div className="historical-data row">
+        <div className="col-sm-4" id="info">
+          <h5>Historical Data</h5>
         </div>
+        <div className="col-sm-1 pull-right">
+          <div className="pull-right">
+            <Tooltip
+              placement="right"
+              isOpen={this.state.tooltipOpen}
+              target="info"
+              toggle={this.toggle}
+            >
+              Last {LIMIT} candles for the selected resolution
+            </Tooltip>
+          </div>
+        </div>
+        <div className="col-sm-12">
+          <div className="row">
+            <div className="col-sm-3">Time</div>
+            <div className="col-sm-3">Volume ({quote.toUpperCase()})</div>
+            <div className="col-sm-3">Percent change</div>
+            <div className="col-sm-3">Price</div>
+          </div>
+        </div>
+        <div className="contents col-sm-12">{list}</div>
       </div>
-      <div className="contents col-sm-12">{list}</div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 HistoricalDataComponent.propTypes = {
   data: PropTypes.object,
@@ -99,5 +134,6 @@ export const HistoricalData = Query(HistoricalDataComponent, CANDLE_QUERY, props
     currencySymbol: base.toUpperCase(),
     quote: quote.toUpperCase(),
     resolution: props.resolution.value,
+    limit: LIMIT,
   };
 });

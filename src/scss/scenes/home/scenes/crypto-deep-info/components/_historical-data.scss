@@ -1,9 +1,11 @@
 .historical-data {
   margin-top: 3em;
   .contents {
-    border: 1px solid #ccc;
-    height: 45vh;
-    overflow: scroll;
+    .row {
+      border-bottom: 1px solid $gray-200;
+      font-size: 0.8em;
+      padding: 0.15em 0;
+    }
 
     .positive {
       color: $cl-green;
