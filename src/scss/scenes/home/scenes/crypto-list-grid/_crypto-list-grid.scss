@@ -4,11 +4,7 @@
   .currency-list-item {
     display: flex;
     flex-direction: row;
-    padding: 0.5em;
-    border-bottom: 1px solid $gray-300;
-    &:last-child {
-      border-bottom: none;
-    }
+    padding: 0.7em 0.5em;
     &:hover {
       background-color: $gray-100;
       cursor: pointer;
@@ -16,14 +12,17 @@
     }
 
     .currency-info {
+      .name {
+        font-size: 0.9em;
+      }
       .price {
-        font-size: 0.8em;
+        font-size: 0.7em;
         color: $gray-700;
       }
     }
 
     .currency-icon {
-      font-size: 1.3em;
+      font-size: 1.2em;
       margin-right: 0.7em;
       width: 1.3em;
     }

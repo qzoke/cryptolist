@@ -1,6 +1,7 @@
 .historical-data {
   margin-top: 3em;
   .header.row {
+    border-bottom: 1px solid $gray-300;
     .number {
       text-align: right;
     }
@@ -10,16 +11,19 @@
     }
   }
   .contents {
+    height: 20vh;
+    overflow: scroll;
+    box-shadow: inset 0px -40px 30px -40px $gray-300;
     .row {
-      border-bottom: 1px solid $gray-200;
       font-size: 0.8em;
-      padding: 0.15em 0;
-
+      padding: 0.3em 0;
+      &:hover {
+        background: $gray-200;
+      }
       .number {
         text-align: right;
       }
     }
-
     .positive {
       color: $cl-green;
     }

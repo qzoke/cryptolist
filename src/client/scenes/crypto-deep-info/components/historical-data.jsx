@@ -89,15 +89,12 @@ export class HistoricalDataComponent extends React.Component {
     }
     return (
       <div className="historical-data row">
-        <div className="col-sm-4" id="info">
-          <h5>Historical Data</h5>
-        </div>
         <div className="col-sm-1 pull-right">
           <div className="pull-right">
             <Tooltip
-              placement="right"
+              placement="top"
               isOpen={this.state.tooltipOpen}
-              target="info"
+              target="header"
               toggle={this.toggle}
             >
               Last {LIMIT} candles for the selected resolution
@@ -105,7 +102,7 @@ export class HistoricalDataComponent extends React.Component {
           </div>
         </div>
         <div className="col-sm-12">
-          <div className="row header">
+          <div className="row header" id="header">
             <div className="col-sm-3">Time</div>
             <div className="col-sm-3 number">Volume ({quote.toUpperCase()})</div>
             <div className="col-sm-3 number">Percent Change</div>
