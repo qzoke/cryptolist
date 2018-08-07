@@ -5,14 +5,17 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Layout } from './scenes/layout';
 import { createClient } from './client-factory';
 import { createIconFactory } from './icon-factory';
+import { RegraphRequest } from 'regraph-request';
 
 createIconFactory();
 
 ReactDom.render(
   <ApolloProvider client={createClient(false)}>
-    <Router>
-      <Layout />
-    </Router>
+    <RegraphRequest value="https://alpha.blocktap.io/graphql">
+      <Router>
+        <Layout />
+      </Router>
+    </RegraphRequest>
   </ApolloProvider>,
   document.getElementById('app')
 );

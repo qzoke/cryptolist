@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Query } from '../../../client-factory';
+import { Query } from 'regraph-request';
 
 const STROKE_WIDTH = 3;
 const numberOfDays = 1;

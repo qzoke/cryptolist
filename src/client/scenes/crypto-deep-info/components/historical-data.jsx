@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Tooltip } from 'reactstrap';
 import { Loading } from '../../../components/loading';
-import { Query } from '../../../client-factory';
+import { Query } from 'regraph-request';
 import { getPairFromMatch } from '../../../library/path-tools';
 import { formatPrice } from '../../../library/currency-tools';
 
@@ -76,7 +76,6 @@ export class HistoricalDataComponent extends React.Component {
 
   render() {
     let list;
-    console.log();
     let { quote } = getPairFromMatch(this.props.match);
     if (!this.props.data.currency) list = <Loading />;
     else {
@@ -122,7 +121,6 @@ export class HistoricalDataComponent extends React.Component {
 HistoricalDataComponent.propTypes = {
   data: PropTypes.object,
   match: PropTypes.object,
-  getData: PropTypes.func,
   resolution: PropTypes.object,
   endTime: PropTypes.number,
   startTime: PropTypes.number,
