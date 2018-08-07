@@ -1,13 +1,16 @@
 export const formatPrice = (price, quote, precision = 4) => {
+  let readable = x =>
+    x.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
   switch (quote.toUpperCase()) {
     case 'USD':
-      return '$' + price.toLocaleString();
+      return '$' + readable(price);
     case 'GBP':
-      return '£' + price.toLocaleString();
+      return '£' + readable(price);
     case 'EUR':
-      return '€' + price.toLocaleString();
+      return '€' + readable(price);
     case 'USDT':
-      return price.toLocaleString() + 'USDT';
+      return readable(price) + 'USDT';
     default:
       return price.toFixed(precision) + quote.toUpperCase();
   }
