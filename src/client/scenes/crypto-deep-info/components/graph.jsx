@@ -9,10 +9,11 @@ import { Query } from 'regraph-request';
 import { HistoricalData } from './historical-data';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
-const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1h');
+const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
+console.log(INITIAL_RESOLUTION);
 const INITIAL_START_TIME =
   moment()
-    .subtract(7, 'd')
+    .subtract(3, 'months')
     .unix() * 1000;
 const INITIAL_END_TIME = moment().unix() * 1000;
 const CANDLE_QUERY = `
