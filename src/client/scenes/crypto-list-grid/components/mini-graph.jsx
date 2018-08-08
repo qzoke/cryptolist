@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Query } from 'regraph-request';
 
-const STROKE_WIDTH = 3;
+const STROKE_WIDTH = 2;
 const numberOfDays = 1;
 const CURRENCY_QUERY = `
   query CurrencyQuery(
@@ -79,26 +79,27 @@ const generatePoints = ({ data, height, width }) => {
   }));
 };
 
-const generatePathFromPoints = ({ points, height, width }) => {
+const generatePathFromPoints = ({ points, width }) => {
   if (!points.length) return;
   let paths = points.map(price => `L${price.x},${price.y}`);
-  let startingPosition = `M0,${height}`;
-  return `${startingPosition}${paths.join('')}L${width},${
-    points[points.length - 1].y
-  }L${width},${height}`;
+  let startingPosition = `M${paths[0].substring(1)}`;
+  return `${startingPosition}${paths.join('')}L${width},${points[points.length - 1].y}`;
 };
 
 export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   let points = generatePoints({ data, height, width });
   if (!points) return null;
-  let path = generatePathFromPoints({ points, height, width });
+  let path = generatePathFromPoints({ points, width });
   if (!path) return null;
-  let fill = `${path}Z`;
 
   return (
     <svg className="mini-graph" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
-      <path d={path} stroke={isPositive ? '#74A321' : '#FF7777'} strokeWidth={STROKE_WIDTH} />
-      <path d={fill} fill={isPositive ? '#E0F9B2' : '#FDD6D6'} />
+      <path
+        d={path}
+        fill="transparent"
+        stroke={isPositive ? '#74A321' : '#FF7777'}
+        strokeWidth={STROKE_WIDTH}
+      />
     </svg>
   );
 };

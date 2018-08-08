@@ -31,6 +31,7 @@ export class Search extends React.Component {
           name="searchText"
           onChange={this.changeSearchText}
           defaultValue={this.props.search}
+          autoComplete="off"
         />
         <Button color="link">
           <FontAwesomeIcon icon="search" />
