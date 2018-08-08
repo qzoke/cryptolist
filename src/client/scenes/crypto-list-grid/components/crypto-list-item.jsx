@@ -13,10 +13,11 @@ export const CryptoListItem = ({ currency, quoteSymbol, location }) => {
         location.search
       }`}
     >
-      <div className="currency-icon">
-        <span className="currency-icon">
+      <div className="currency-icon-rank">
+        <div className="currency-icon">
           <i className={'cc ' + currency.symbol.toUpperCase()} />
-        </span>
+        </div>
+        <div className="currency-rank">{currency.marketCapRank}</div>
       </div>
       <div className="currency-info">
         <div className="name">{currency.name}</div>

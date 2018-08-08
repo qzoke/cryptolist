@@ -21,10 +21,25 @@
       }
     }
 
-    .currency-icon {
-      font-size: 1.2em;
-      margin-right: 0.7em;
-      width: 1.3em;
+    .currency-icon-rank {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      width: 2.3em;
+
+      .currency-icon {
+        font-size: 1.2em;
+        // margin-right: 0.7em;
+        // width: 1.3em;
+        line-height: 1em;
+      }
+
+      .currency-rank {
+        font-size: 0.6em;
+        color: $gray-600;
+      }
     }
 
     .currency-graph {

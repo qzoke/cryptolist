@@ -3,18 +3,7 @@ import PropTypes from 'prop-types';
 import { Switcher } from './components/switcher';
 import { Tooltip } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-const endings = {
-  '0': 'th',
-  '1': 'st',
-  '2': 'nd',
-  '3': 'rd',
-  '4': 'th',
-  '5': 'th',
-  '6': 'th',
-  '7': 'th',
-  '8': 'th',
-  '9': 'th',
-};
+import { stringifyNumber } from '../../library/string-tools';
 
 export class CryptoDeepInfo extends React.Component {
   constructor(props) {
@@ -24,15 +13,6 @@ export class CryptoDeepInfo extends React.Component {
     this.state = {
       tooltipOpen: false,
     };
-  }
-
-  stringifyNumber(number) {
-    let numberAsString = '' + number;
-    let lastNumber = numberAsString[numberAsString.length - 1];
-    let ending;
-    if (number > 10 && number < 20) ending = 'th';
-    else ending = endings[lastNumber];
-    return numberAsString + ending;
   }
 
   toggle() {
@@ -60,7 +40,7 @@ export class CryptoDeepInfo extends React.Component {
           </div>
           <div className="market-cap-container col-sm-3">
             <div>{currency.marketCap}</div>
-            <div>Market Cap ({this.stringifyNumber(currency.marketCapRank)})</div>
+            <div>Market Cap ({stringifyNumber(currency.marketCapRank)})</div>
           </div>
           {currency.computedMarket ? (
             <div className="computed-market col-sm-1">
