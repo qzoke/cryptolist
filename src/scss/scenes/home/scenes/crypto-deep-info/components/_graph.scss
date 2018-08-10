@@ -12,6 +12,14 @@
         background: $gray-600;
       }
     }
+    .startTime,
+    .endTime {
+      position: absolute;
+      z-index: 1;
+      button {
+        font-size: 0.8em;
+      }
+    }
   }
 
   // Chart stuff
@@ -50,7 +58,7 @@
     z-index: 99999 !important;
     background: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f9f9f9;
+    border: 1px solid $gray-500;
   }
   .rdtOpen .rdtPicker {
     display: block;

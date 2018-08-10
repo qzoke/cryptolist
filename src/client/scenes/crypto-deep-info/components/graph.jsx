@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 import moment from 'moment';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
@@ -56,10 +57,14 @@ export class GraphComponent extends React.Component {
     this.toggleChart = this.toggleChart.bind(this);
     this.highlightExchange = this.highlightExchange.bind(this);
     this.unhighlightExchange = this.unhighlightExchange.bind(this);
+    this.toggleStartTime = this.toggleStartTime.bind(this);
+    this.toggleEndTime = this.toggleEndTime.bind(this);
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
+      startShown: false,
+      endShown: false,
       charts: {
         volume: true,
         VWAP: true,
@@ -108,6 +113,16 @@ export class GraphComponent extends React.Component {
 
   unhighlightExchange() {
     this.setState({ selectedExchange: '' });
+  }
+
+  toggleStartTime(e) {
+    e.preventDefault();
+    this.setState({ startShown: !this.state.startShown });
+  }
+
+  toggleEndTime(e) {
+    e.preventDefault();
+    this.setState({ endShown: !this.state.endShown });
   }
 
   render() {
@@ -167,19 +182,32 @@ export class GraphComponent extends React.Component {
                 resolution={this.state.resolution}
               />
             </div>
-            <div className="startTime col-sm-4">
-              <DateTime
-                value={this.state.startTime}
-                onChange={this.updateStartTime}
-                isValidDate={this.isValidStart}
-              />
+            <div className="startTime offset-sm-1 col-sm-4">
+              <Button onClick={this.toggleStartTime}>
+                {moment(this.state.startTime).format('D/M/YY H:m')}
+              </Button>
+              {this.state.startShown && (
+                <DateTime
+                  value={this.state.startTime}
+                  onChange={this.updateStartTime}
+                  isValidDate={this.isValidStart}
+                  input={false}
+                />
+              )}
             </div>
-            <div className="endTime col-sm-4">
-              <DateTime
-                value={this.state.endTime}
-                onChange={this.updateEndTime}
-                isValidDate={this.isValidEnd}
-              />
+            {' - '}
+            <div className="endTime offset-sm-3 col-sm-4">
+              <Button onClick={this.toggleEndTime}>
+                {moment(this.state.endTime).format('D/M/YY H:m')}
+              </Button>
+              {this.state.endShown && (
+                <DateTime
+                  value={this.state.endTime}
+                  onChange={this.updateEndTime}
+                  isValidDate={this.isValidEnd}
+                  input={false}
+                />
+              )}
             </div>
           </div>
           <ComposedChart width={800} height={400} data={data}>
