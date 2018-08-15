@@ -11,13 +11,21 @@ import { DATETIME_FORMAT } from './chart-utils';
 const LIMIT = 50;
 const CANDLE_QUERY = `
 query HistoricalData (
-  $currencySymbol: String!,
-  $quote: String!,
-  $resolution: CandleResolution!,
+  $currencySymbol: String!
+  $quote: String!
+  $resolution: CandleResolution!
   $limit: Int!
+  $aggregation:Aggregation
+  $exchangeSymbol:String
 ) {
   currency(currencySymbol: $currencySymbol) {
-    markets(filter: { quoteSymbol_eq: $quote }, aggregation:VWAP) {
+    markets(filter: {
+      _and: [
+        { quoteSymbol_eq: $quote},
+        { exchangeSymbol_like: $exchangeSymbol}
+      ]}
+      aggregation: $aggregation
+    ) {
       data {
         marketSymbol
         timeseries(
@@ -30,6 +38,12 @@ query HistoricalData (
           percentChange
           open
         }
+      }
+    }
+    exchanges:markets(filter:{quoteSymbol_eq:$quote}){
+      totalCount
+      data {
+        marketSymbol
       }
     }
   }
@@ -75,21 +89,70 @@ export class HistoricalDataComponent extends React.Component {
     });
   }
 
+  changeExchange({ target }) {
+    let { value: exchange } = target;
+    let vars;
+    if (exchange === 'VWAP') {
+      vars = {
+        aggregation: 'VWAP',
+        exchangeSymbol: '%',
+      };
+    } else {
+      vars = {
+        aggregation: null,
+        exchangeSymbol: exchange,
+      };
+    }
+    this.props.getData(vars);
+  }
+
   render() {
-    let list;
+    let list, exchanges;
     let { quote } = getPairFromMatch(this.props.match);
-    if (!this.props.data.currency) list = <Loading />;
-    else {
+
+    if (!this.props.data.currency) {
+      list = <Loading />;
+      exchanges = null;
+    } else {
       let market = this.props.data.currency.markets.data.find(m =>
         m.marketSymbol.endsWith(quote.toUpperCase())
       );
       if (!market) return null;
+
       list = market.timeseries.map(t => (
         <HistoricalDataItem {...t} quote={quote} key={t.startUnix} />
       ));
+
+      exchanges = this.props.data.currency.exchanges.data.map(exchange => {
+        let name = exchange.marketSymbol.split(':')[0];
+        return (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        );
+      });
+      exchanges.unshift(
+        <option key="VWAP" value="VWAP">
+          VWAP
+        </option>
+      );
     }
+
     return (
       <div className="historical-data row">
+        <div className="col-sm-6">
+          <h3>Historical Data</h3>
+        </div>
+        <div className="col-sm-6">
+          <select
+            name="exchange"
+            id="exchange"
+            className="float-right"
+            onChange={this.changeExchange.bind(this)}
+          >
+            {exchanges}
+          </select>
+        </div>
         <div className="col-sm-1 pull-right">
           <div className="pull-right">
             <Tooltip
@@ -118,6 +181,7 @@ export class HistoricalDataComponent extends React.Component {
 
 HistoricalDataComponent.propTypes = {
   data: PropTypes.object,
+  getData: PropTypes.func,
   match: PropTypes.object,
   resolution: PropTypes.object,
   endTime: PropTypes.number,
@@ -131,5 +195,7 @@ export const HistoricalData = Query(HistoricalDataComponent, CANDLE_QUERY, props
     quote: quote.toUpperCase(),
     resolution: props.resolution.value,
     limit: LIMIT,
+    aggregation: 'VWAP',
+    exchangeSymbol: '%',
   };
 });
