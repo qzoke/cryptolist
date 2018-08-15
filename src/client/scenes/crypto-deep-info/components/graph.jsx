@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import moment from 'moment';
 import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { ResolutionGroup, Resolutions } from './resolution-group.jsx';
-import DateTime from 'react-datetime';
+import { Resolutions } from './resolution-group.jsx';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
 import { HistoricalData } from './historical-data';
+import { ChartUtils } from './chart-utils';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
@@ -51,22 +50,14 @@ export class GraphComponent extends React.Component {
     this.updateStartTime = this.updateStartTime.bind(this);
     this.updateEndTime = this.updateEndTime.bind(this);
     this.updateResolution = this.updateResolution.bind(this);
-    this.isValidStart = this.isValidStart.bind(this);
-    this.isValidEnd = this.isValidEnd.bind(this);
     this.toggleChart = this.toggleChart.bind(this);
     this.highlightExchange = this.highlightExchange.bind(this);
     this.unhighlightExchange = this.unhighlightExchange.bind(this);
-    this.toggleStartTime = this.toggleStartTime.bind(this);
-    this.toggleEndTime = this.toggleEndTime.bind(this);
-    this.hideDateTimes = this.hideDateTimes.bind(this);
-    this.startTimeRef = React.createRef();
-    this.endTimeRef = React.createRef();
+
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
-      startShown: false,
-      endShown: false,
       charts: {
         volume: true,
         VWAP: true,
@@ -75,25 +66,17 @@ export class GraphComponent extends React.Component {
     };
   }
 
-  isValidStart(current) {
-    return current.unix() * 1000 < this.state.endTime && current.unix() <= moment().unix();
-  }
-
-  isValidEnd(current) {
-    return current.unix() * 1000 > this.state.startTime && current.unix() <= moment().unix();
-  }
-
   updateStartTime(startTime) {
     if (this.state.endTime - startTime <= this.state.resolution.seconds) return;
     startTime = moment(startTime).unix();
-    this.setState({ startTime: startTime * 1000, startShown: false });
+    this.setState({ startTime: startTime * 1000 });
     this.props.getData({ startTime, endTime: this.state.endTime / 1000 });
   }
 
   updateEndTime(endTime) {
     if (endTime - this.state.startTime <= this.state.resolution.seconds) return;
     endTime = moment(endTime).unix();
-    this.setState({ endTime: endTime * 1000, endShown: false });
+    this.setState({ endTime: endTime * 1000 });
     this.props.getData({ endTime, startTime: this.state.startTime / 1000 });
   }
 
@@ -115,34 +98,6 @@ export class GraphComponent extends React.Component {
 
   unhighlightExchange() {
     this.setState({ selectedExchange: '' });
-  }
-
-  toggleStartTime(e) {
-    e.preventDefault();
-    this.setState({ startShown: !this.state.startShown });
-  }
-
-  toggleEndTime(e) {
-    e.preventDefault();
-    this.setState({ endShown: !this.state.endShown });
-  }
-
-  componentDidMount() {
-    document.addEventListener('mousedown', this.hideDateTimes, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.hideDateTimes, false);
-  }
-
-  hideDateTimes(e) {
-    if (this.startTimeRef.contains(e.target) || this.endTimeRef.contains(e.target)) {
-      return;
-    }
-    this.setState({
-      startShown: false,
-      endShown: false,
-    });
   }
 
   render() {
@@ -195,41 +150,14 @@ export class GraphComponent extends React.Component {
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
-          <div className="controls row">
-            <div className="col-sm-2">
-              <ResolutionGroup
-                updateResolution={this.updateResolution}
-                resolution={this.state.resolution}
-              />
-            </div>
-            <div className="startTime offset-sm-1 col-sm-4" ref={ref => (this.startTimeRef = ref)}>
-              <Button onClick={this.toggleStartTime}>
-                {moment(this.state.startTime).format('D/M/YY H:m')}
-              </Button>
-              {this.state.startShown && (
-                <DateTime
-                  value={this.state.startTime}
-                  onChange={this.updateStartTime}
-                  isValidDate={this.isValidStart}
-                  input={false}
-                />
-              )}
-            </div>
-            {' - '}
-            <div className="endTime offset-sm-3 col-sm-4" ref={ref => (this.endTimeRef = ref)}>
-              <Button onClick={this.toggleEndTime}>
-                {moment(this.state.endTime).format('D/M/YY H:m')}
-              </Button>
-              {this.state.endShown && (
-                <DateTime
-                  value={this.state.endTime}
-                  onChange={this.updateEndTime}
-                  isValidDate={this.isValidEnd}
-                  input={false}
-                />
-              )}
-            </div>
-          </div>
+          <ChartUtils
+            startTime={this.state.startTime}
+            endTime={this.state.endTime}
+            resolution={this.state.resolution}
+            updateStartTime={this.updateStartTime}
+            updateEndTime={this.updateEndTime}
+            updateResolution={this.updateResolution}
+          />
           <ComposedChart width={800} height={400} data={data}>
             <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
             <YAxis
