@@ -80,7 +80,10 @@ export class ChartUtils extends React.Component {
             resolution={this.props.resolution}
           />
         </div>
-        <div className="startTime offset-sm-1 col-sm-4">
+        <div
+          className="startTime offset-sm-1 col-sm-4"
+          style={{ position: 'absolute' /* Bug fix for safari */ }}
+        >
           <Button onClick={this.toggleStartTime}>
             {moment(this.props.startTime).format(DATETIME_FORMAT)}
           </Button>
@@ -95,8 +98,10 @@ export class ChartUtils extends React.Component {
             </div>
           )}
         </div>
-        {' - '}
-        <div className="endTime offset-sm-3 col-sm-4">
+        <div
+          className="endTime offset-sm-3 col-sm-4"
+          style={{ position: 'absolute' /* Bug fix for safari */ }}
+        >
           <Button onClick={this.toggleEndTime}>
             {moment(this.props.endTime).format(DATETIME_FORMAT)}
           </Button>
