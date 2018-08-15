@@ -27,6 +27,7 @@ export class ResolutionGroup extends React.Component {
       open: !prevState.open,
     }));
   }
+
   render() {
     let buttons = Resolutions.map(r => (
       <DropdownItem

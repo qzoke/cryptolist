@@ -21,11 +21,11 @@ export class ChartUtils extends React.Component {
     super(props);
     this.isValidStart = this.isValidStart.bind(this);
     this.isValidEnd = this.isValidEnd.bind(this);
-    this.startTimeRef = React.createRef();
-    this.endTimeRef = React.createRef();
-    this.hideDateTimes = this.hideDateTimes.bind(this);
     this.toggleStartTime = this.toggleStartTime.bind(this);
     this.toggleEndTime = this.toggleEndTime.bind(this);
+    this.hideDateTimes = this.hideDateTimes.bind(this);
+    this.startTimeRef = React.createRef();
+    this.endTimeRef = React.createRef();
     this.state = {
       startShown: false,
       endShown: false,
