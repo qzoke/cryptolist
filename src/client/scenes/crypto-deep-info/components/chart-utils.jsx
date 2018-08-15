@@ -5,6 +5,8 @@ import { ResolutionGroup } from './resolution-group';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 
+export const DATETIME_FORMAT = 'M/D/YY H:m';
+
 export class ChartUtils extends React.Component {
   static propTypes = {
     startTime: PropTypes.number,
@@ -77,7 +79,7 @@ export class ChartUtils extends React.Component {
         </div>
         <div className="startTime offset-sm-1 col-sm-4" ref={ref => (this.startTimeRef = ref)}>
           <Button onClick={this.toggleStartTime}>
-            {moment(this.props.startTime).format('D/M/YY H:m')}
+            {moment(this.props.startTime).format(DATETIME_FORMAT)}
           </Button>
           {this.state.startShown && (
             <DateTime
@@ -91,7 +93,7 @@ export class ChartUtils extends React.Component {
         {' - '}
         <div className="endTime offset-sm-3 col-sm-4" ref={ref => (this.endTimeRef = ref)}>
           <Button onClick={this.toggleEndTime}>
-            {moment(this.props.endTime).format('D/M/YY H:m')}
+            {moment(this.props.endTime).format(DATETIME_FORMAT)}
           </Button>
           {this.state.endShown && (
             <DateTime

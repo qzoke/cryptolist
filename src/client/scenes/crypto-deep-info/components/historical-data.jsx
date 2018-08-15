@@ -6,6 +6,7 @@ import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
 import { getPairFromMatch } from '../../../library/path-tools';
 import { formatPrice } from '../../../library/currency-tools';
+import { DATETIME_FORMAT } from './chart-utils';
 
 const LIMIT = 50;
 const CANDLE_QUERY = `
@@ -39,7 +40,7 @@ let HistoricalDataItem = ({ startUnix, quoteVolume, percentChange, open, quote }
   let isPositiveChange = percentChange >= 0;
   return (
     <div className="row">
-      <div className="col-sm-3">{moment(startUnix * 1000).format('D/M/YY H:m')}</div>
+      <div className="col-sm-3">{moment(startUnix * 1000).format(DATETIME_FORMAT)}</div>
       <div className="col-sm-3 number">{quoteVolume ? formatPrice(quoteVolume, quote) : ''}</div>
       <div className={`col-sm-3 number ${isPositiveChange ? 'positive' : 'negative'}`}>
         {percentChange}
