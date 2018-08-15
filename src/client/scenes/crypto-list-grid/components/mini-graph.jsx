@@ -70,13 +70,21 @@ const generatePoints = ({ data, height, width }) => {
     } else return;
   }
 
-  let high = Math.max(...prices);
-  let low = Math.min(...prices);
+  let prunedPrices = prices.filter(p => p);
+  let high = Math.max(...prunedPrices);
+  let low = Math.min(...prunedPrices);
+
   let denominator = high - low;
-  return prices.map((price, index) => ({
-    x: index / (24 * numberOfDays) * width,
-    y: height + STROKE_WIDTH / 2 - (price - low) / denominator * height,
-  }));
+  let lastPrice = 0;
+  return prices.map((price, index) => {
+    price = price ? price : lastPrice;
+    let p = {
+      x: index / (24 * numberOfDays) * width,
+      y: height + STROKE_WIDTH / 2 - (price - low) / denominator * height,
+    };
+    lastPrice = price;
+    return p;
+  });
 };
 
 const generatePathFromPoints = ({ points, width }) => {
