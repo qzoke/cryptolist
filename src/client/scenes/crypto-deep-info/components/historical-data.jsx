@@ -140,14 +140,14 @@ export class HistoricalDataComponent extends React.Component {
 
     return (
       <div className="historical-data row">
-        <div className="col-sm-6">
-          <h3>Historical Data</h3>
+        <div className="col-sm-4" id="header">
+          <h5>Historical Data</h5>
         </div>
-        <div className="col-sm-6">
+        <div className="col-sm-2 offset-sm-6">
           <select
             name="exchange"
             id="exchange"
-            className="float-right"
+            className="float-right form-control"
             onChange={this.changeExchange.bind(this)}
           >
             {exchanges}
@@ -156,7 +156,7 @@ export class HistoricalDataComponent extends React.Component {
         <div className="col-sm-1 pull-right">
           <div className="pull-right">
             <Tooltip
-              placement="top"
+              placement="right"
               isOpen={this.state.tooltipOpen}
               target="header"
               toggle={this.toggle}
@@ -166,7 +166,7 @@ export class HistoricalDataComponent extends React.Component {
           </div>
         </div>
         <div className="col-sm-12">
-          <div className="row header" id="header">
+          <div className="row header">
             <div className="col-sm-3">Time</div>
             <div className="col-sm-3 number">Volume ({quote.toUpperCase()})</div>
             <div className="col-sm-3 number">Percent Change</div>
