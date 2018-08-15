@@ -42,12 +42,12 @@ export class ChartUtils extends React.Component {
 
   toggleStartTime(e) {
     e.preventDefault();
-    this.setState({ startShown: !this.state.startShown });
+    this.setState({ startShown: !this.state.startShown, endShown: false });
   }
 
   toggleEndTime(e) {
     e.preventDefault();
-    this.setState({ endShown: !this.state.endShown });
+    this.setState({ endShown: !this.state.endShown, startShown: false });
   }
 
   componentDidMount() {
@@ -59,7 +59,10 @@ export class ChartUtils extends React.Component {
   }
 
   hideDateTimes(e) {
-    if (this.startTimeRef.contains(e.target) || this.endTimeRef.contains(e.target)) {
+    if (
+      (this.startTimeRef && this.startTimeRef.contains && this.startTimeRef.contains(e.target)) ||
+      (this.endTimeRef && this.endTimeRef.contains && this.endTimeRef.contains(e.target))
+    ) {
       return;
     }
     this.setState({
@@ -77,31 +80,35 @@ export class ChartUtils extends React.Component {
             resolution={this.props.resolution}
           />
         </div>
-        <div className="startTime offset-sm-1 col-sm-4" ref={ref => (this.startTimeRef = ref)}>
+        <div className="startTime offset-sm-1 col-sm-4">
           <Button onClick={this.toggleStartTime}>
             {moment(this.props.startTime).format(DATETIME_FORMAT)}
           </Button>
           {this.state.startShown && (
-            <DateTime
-              value={this.props.startTime}
-              onChange={this.props.updateStartTime}
-              isValidDate={this.isValidStart}
-              input={false}
-            />
+            <div ref={ref => (this.startTimeRef = ref)}>
+              <DateTime
+                value={this.props.startTime}
+                onChange={this.props.updateStartTime}
+                isValidDate={this.isValidStart}
+                input={false}
+              />
+            </div>
           )}
         </div>
         {' - '}
-        <div className="endTime offset-sm-3 col-sm-4" ref={ref => (this.endTimeRef = ref)}>
+        <div className="endTime offset-sm-3 col-sm-4">
           <Button onClick={this.toggleEndTime}>
             {moment(this.props.endTime).format(DATETIME_FORMAT)}
           </Button>
           {this.state.endShown && (
-            <DateTime
-              value={this.props.endTime}
-              onChange={this.props.updateEndTime}
-              isValidDate={this.isValidEnd}
-              input={false}
-            />
+            <div ref={ref => (this.endTimeRef = ref)} className="poop">
+              <DateTime
+                value={this.props.endTime}
+                onChange={this.props.updateEndTime}
+                isValidDate={this.isValidEnd}
+                input={false}
+              />
+            </div>
           )}
         </div>
       </div>
