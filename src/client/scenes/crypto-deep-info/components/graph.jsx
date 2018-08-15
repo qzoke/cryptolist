@@ -11,7 +11,6 @@ import { HistoricalData } from './historical-data';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
-console.log(INITIAL_RESOLUTION);
 const INITIAL_START_TIME =
   moment()
     .subtract(3, 'months')
@@ -59,6 +58,9 @@ export class GraphComponent extends React.Component {
     this.unhighlightExchange = this.unhighlightExchange.bind(this);
     this.toggleStartTime = this.toggleStartTime.bind(this);
     this.toggleEndTime = this.toggleEndTime.bind(this);
+    this.hideDateTimes = this.hideDateTimes.bind(this);
+    this.startTimeRef = React.createRef();
+    this.endTimeRef = React.createRef();
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
@@ -84,14 +86,14 @@ export class GraphComponent extends React.Component {
   updateStartTime(startTime) {
     if (this.state.endTime - startTime <= this.state.resolution.seconds) return;
     startTime = moment(startTime).unix();
-    this.setState({ startTime: startTime * 1000 });
+    this.setState({ startTime: startTime * 1000, startShown: false });
     this.props.getData({ startTime, endTime: this.state.endTime / 1000 });
   }
 
   updateEndTime(endTime) {
     if (endTime - this.state.startTime <= this.state.resolution.seconds) return;
     endTime = moment(endTime).unix();
-    this.setState({ endTime: endTime * 1000 });
+    this.setState({ endTime: endTime * 1000, endShown: false });
     this.props.getData({ endTime, startTime: this.state.startTime / 1000 });
   }
 
@@ -123,6 +125,24 @@ export class GraphComponent extends React.Component {
   toggleEndTime(e) {
     e.preventDefault();
     this.setState({ endShown: !this.state.endShown });
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.hideDateTimes, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.hideDateTimes, false);
+  }
+
+  hideDateTimes(e) {
+    if (this.startTimeRef.contains(e.target) || this.endTimeRef.contains(e.target)) {
+      return;
+    }
+    this.setState({
+      startShown: false,
+      endShown: false,
+    });
   }
 
   render() {
@@ -182,7 +202,7 @@ export class GraphComponent extends React.Component {
                 resolution={this.state.resolution}
               />
             </div>
-            <div className="startTime offset-sm-1 col-sm-4">
+            <div className="startTime offset-sm-1 col-sm-4" ref={ref => (this.startTimeRef = ref)}>
               <Button onClick={this.toggleStartTime}>
                 {moment(this.state.startTime).format('D/M/YY H:m')}
               </Button>
@@ -196,7 +216,7 @@ export class GraphComponent extends React.Component {
               )}
             </div>
             {' - '}
-            <div className="endTime offset-sm-3 col-sm-4">
+            <div className="endTime offset-sm-3 col-sm-4" ref={ref => (this.endTimeRef = ref)}>
               <Button onClick={this.toggleEndTime}>
                 {moment(this.state.endTime).format('D/M/YY H:m')}
               </Button>
