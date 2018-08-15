@@ -81,8 +81,11 @@ export class GraphComponent extends React.Component {
   }
 
   updateResolution(resolution) {
-    this.setState({ resolution });
-    this.props.getData({ resolution: resolution.value });
+    let currentCandleCount =
+      (this.state.endTime - this.state.startTime) / 1000 / this.state.resolution.seconds;
+    let newStartTime = this.state.endTime / 1000 - currentCandleCount * resolution.seconds;
+    this.setState({ resolution, startTime: newStartTime * 1000 });
+    this.props.getData({ startTime: newStartTime, resolution: resolution.value });
   }
 
   toggleChart(selected) {
