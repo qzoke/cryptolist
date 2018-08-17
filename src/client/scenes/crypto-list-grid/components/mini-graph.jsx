@@ -6,47 +6,47 @@ import { Query } from 'regraph-request';
 const STROKE_WIDTH = 2;
 const numberOfDays = 1;
 const CURRENCY_QUERY = `
-  query CurrencyQuery(
-    $symbol: String
-    $quoteSymbol: String
-    $start: Int
-    $end: Int
-    $resolution: CandleResolution!
-  ) {
-    currency(currencySymbol: $symbol) {
-      id
-      markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-            data
-          }
-        }
-      }
-      btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          candles(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-            data
-          }
+query CurrencyQuery(
+  $symbol: String!
+  $quoteSymbol: String
+  $start: Int
+  $end: Int
+  $resolution: CandleResolution!
+) {
+  currency(currencySymbol: $symbol) {
+    id
+    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+      data {
+        id
+        marketSymbol
+        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+          open
         }
       }
     }
-    btcPrice: currency(currencySymbol: "BTC") {
-      id
-      markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-          }
+    btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
+      data {
+        id
+        marketSymbol
+        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+          open
         }
       }
     }
   }
+  btcPrice: currency(currencySymbol: "BTC") {
+    id
+    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
+      data {
+        id
+        marketSymbol
+        ticker {
+          last
+        }
+      }
+    }
+  }
+}
 `;
 
 const generatePoints = ({ data, height, width }) => {
@@ -58,15 +58,15 @@ const generatePoints = ({ data, height, width }) => {
     btcMarketData = currency.btcMarket.data;
 
   if (!marketsData.length) {
-    if (btcMarketData.length && btcMarketData[0].candles) {
+    if (btcMarketData.length && btcMarketData[0].timeseries) {
       let quotePrice = data.btcPrice.markets.data[0].ticker.last;
-      prices = btcMarketData[0].candles.data.map(candle => {
-        return candle[1] * quotePrice;
+      prices = btcMarketData[0].timeseries.map(timeseries => {
+        return timeseries.open * quotePrice;
       });
     } else return;
   } else {
-    if (marketsData[0].candles) {
-      prices = marketsData[0].candles.data.map(x => x[1]);
+    if (marketsData[0].timeseries) {
+      prices = marketsData[0].timeseries.map(x => x.open);
     } else return;
   }
 

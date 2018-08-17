@@ -17,7 +17,7 @@ const INITIAL_START_TIME =
 const INITIAL_END_TIME = moment().unix() * 1000;
 const CANDLE_QUERY = `
 query CandlestickData(
-  $currencySymbol: String,
+  $currencySymbol: String!,
   $quoteSymbol: String,
   $startTime: Int,
   $endTime: Int,
@@ -27,16 +27,20 @@ query CandlestickData(
     vwap: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
       data {
         marketSymbol
-        candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          data
+        timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+          open
+          startUnix
+          volume
         }
       }
     }
     markets(filter: { quoteSymbol_eq: $quoteSymbol }) {
       data {
         marketSymbol
-        candles (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          data
+        timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+          open
+          startUnix
+          volume
         }
       }
     }
@@ -118,20 +122,20 @@ export class GraphComponent extends React.Component {
     let otherMarkets = currency.markets.data;
     let hasMarkets = !!otherMarkets.length;
 
-    let data = vwapMarket.candles.data.map((candle, idx) => {
+    let data = vwapMarket.timeseries.map((candle, idx) => {
       let marketVals = hasMarkets
         ? otherMarkets.reduce((reducer, market) => {
-            reducer[market.marketSymbol.split(':')[0]] = market.candles.data[idx]
-              ? market.candles.data[idx][4]
+            reducer[market.marketSymbol.split(':')[0]] = market.timeseries[idx]
+              ? market.timeseries[idx].open
               : null;
             return reducer;
           }, {})
         : {};
       let vwap = {
-        name: `${moment(candle[0] * 1000).format('H:m MMM DD')}`,
-        timestamp: candle[0],
-        VWAP: candle[4],
-        volume: candle[6],
+        name: `${moment(candle.startUnix * 1000).format('H:m MMM DD')}`,
+        timestamp: candle.startUnix,
+        VWAP: candle.open,
+        volume: candle.volume,
       };
       return Object.assign({}, vwap, marketVals);
     });
@@ -150,6 +154,7 @@ export class GraphComponent extends React.Component {
         strokeWidth={this.state.selectedExchange === name ? 3 : 1}
       />
     ));
+
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
