@@ -39,8 +39,8 @@ export class CryptoListGridComponent extends React.Component {
   render() {
     const query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
     const currencyList = marketCapFormat(
-      this.props.currencies.data,
-      this.props.bitcoin,
+      this.props.data.currencies.data,
+      this.props.data.bitcoin,
       this.props.match.params.quote
     ).map(currency => (
       <CryptoListItem
@@ -56,7 +56,7 @@ export class CryptoListGridComponent extends React.Component {
         <Search updateQuery={this.filter} search={query.search} />
         {currencyList}
         <PaginationBar
-          totalCount={this.props.currencies.totalCount}
+          totalCount={this.props.data.currencies.totalCount}
           limit={this.props.itemsPerPage}
           page={parseInt(query.page) || 1}
           goToPage={this.page}
@@ -67,8 +67,7 @@ export class CryptoListGridComponent extends React.Component {
 }
 
 CryptoListGridComponent.propTypes = {
-  currencies: PropTypes.object,
-  bitcoin: PropTypes.object,
+  data: PropTypes.object,
   itemsPerPage: PropTypes.number,
   filter: PropTypes.func,
   page: PropTypes.func,

@@ -2,19 +2,18 @@ import React from 'react';
 import { CryptoListGrid } from '../crypto-list-grid/crypto-list-grid';
 import { CryptoDeepInfo } from '../crypto-deep-info/crypto-deep-info';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Loading } from '../../components/loading';
 import { marketCapFormat } from '../../components/market-cap-formatter';
 import qs from 'qs';
+import { Query } from 'regraph-request';
 
 const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
-const CURRENCY_QUERY = gql`
+const CURRENCY_QUERY = `
   query AllCurrencies(
     $sort: [CurrencySorter]
     $page: Page
     $filter: CurrencyFilter
-    $selectedCurrency: String
+    $selectedCurrency: String!
   ) {
     currencies(sort: $sort, page: $page, filter: $filter) {
       totalCount
@@ -42,7 +41,7 @@ const CURRENCY_QUERY = gql`
         }
       }
     }
-    selectedCurrency: currency(currencySymbol: $selectedCurrency) {
+    currency(currencySymbol: $selectedCurrency) {
       id
       currencyName
       currentSupply
@@ -95,16 +94,20 @@ export class HomeSceneComponent extends React.Component {
   }
 
   static getDerivedStateFromProps(props) {
-    if (props.currency) {
+    if (props.data.currency) {
       return {
-        currency: marketCapFormat(props.currency, props.bitcoin, props.match.params.quote),
+        currency: marketCapFormat(
+          props.data.currency,
+          props.data.bitcoin,
+          props.match.params.quote
+        ),
       };
     }
     return null;
   }
 
   render() {
-    if (!this.props.currencies || !this.props.bitcoin || !this.props.currency) {
+    if (!this.props.data.currencies || !this.props.data.bitcoin || !this.props.data.currency) {
       return <Loading />;
     }
 
@@ -124,50 +127,35 @@ export class HomeSceneComponent extends React.Component {
 }
 
 HomeSceneComponent.propTypes = {
-  currencies: PropTypes.object,
-  bitcoin: PropTypes.object,
-  currency: PropTypes.object,
+  data: PropTypes.object,
   match: PropTypes.object,
 };
 
-const withCurrency = graphql(CURRENCY_QUERY, {
-  options: ({ match, location }) => {
-    let query = qs.parse(location.search, { ignoreQueryPrefix: true });
-    return {
-      variables: {
-        selectedCurrency: match.params.base,
-        page: {
-          limit: ITEMS_PER_PAGE,
-          skip: query.page ? (query.page - 1) * ITEMS_PER_PAGE : 0,
-        },
-        sort: {
-          marketCapRank: 'ASC',
-        },
-        filter: (() => {
-          if (query.search) {
-            return {
-              _or: [
-                {
-                  currencySymbol_like: `%${query.search}%`,
-                },
-                {
-                  currencyName_like: `%${query.search}%`,
-                },
-              ],
-            };
-          }
-          return null;
-        })(),
-      },
-    };
-  },
-  props: ({ data: { currencies, bitcoin, selectedCurrency } }) => {
-    return {
-      currencies: currencies,
-      bitcoin: bitcoin,
-      currency: selectedCurrency,
-    };
-  },
+export const HomeScene = Query(HomeSceneComponent, CURRENCY_QUERY, ({ match, location }) => {
+  let query = qs.parse(location.search, { ignoreQueryPrefix: true });
+  return {
+    selectedCurrency: match.params.base,
+    page: {
+      limit: ITEMS_PER_PAGE,
+      skip: query.page ? (query.page - 1) * ITEMS_PER_PAGE : 0,
+    },
+    sort: {
+      marketCapRank: 'ASC',
+    },
+    filter: (() => {
+      if (query.search) {
+        return {
+          _or: [
+            {
+              currencySymbol_like: `%${query.search}%`,
+            },
+            {
+              currencyName_like: `%${query.search}%`,
+            },
+          ],
+        };
+      }
+      return null;
+    })(),
+  };
 });
-
-export const HomeScene = withCurrency(HomeSceneComponent);

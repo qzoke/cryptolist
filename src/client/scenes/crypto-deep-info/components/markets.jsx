@@ -1,18 +1,17 @@
 import React from 'react';
 import {} from 'reactstrap';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import { ResponsivePie } from '@nivo/pie';
+import { Query } from 'regraph-request';
 
 // const colors = ['#F87A0B', '#002626', '#0E4749', '#95C623', '#E6FAFC'];
 // const colors = ['#222222', '#474747', '#727272', '#939393', '#bababa']; // greyscale
 // const colors = ['#EE8434', '#223843', '#A33B20', '#429321', '#EDD382']; // slightly preferred
 const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
-const MARKET_QUERY = gql`
-  query MarketQuery($currencySymbol: String) {
+const MARKET_QUERY = `
+  query MarketQuery($currencySymbol: String!) {
     currency(currencySymbol: $currencySymbol) {
       id
       markets {
@@ -188,12 +187,6 @@ MarketsComponent.propTypes = {
   match: PropTypes.object.isRequired,
 };
 
-const withMarkets = graphql(MARKET_QUERY, {
-  options: ({ currencySymbol }) => ({
-    variables: {
-      currencySymbol,
-    },
-  }),
-});
-
-export const Markets = withMarkets(MarketsComponent);
+export const Markets = Query(MarketsComponent, MARKET_QUERY, ({ currencySymbol }) => ({
+  currencySymbol,
+}));
