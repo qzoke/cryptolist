@@ -24,24 +24,20 @@ query CandlestickData(
   $resolution: CandleResolution!
 ) {
   currency(currencySymbol: $currencySymbol) {
-    vwap: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
-      data {
-        marketSymbol
-        timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          open
-          startUnix
-          volume
-        }
+    vwa: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
+      marketSymbol
+      timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+        open
+        startUnix
+        volume
       }
     }
     markets(filter: { quoteSymbol_eq: $quoteSymbol }) {
-      data {
-        marketSymbol
-        timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-          open
-          startUnix
-          volume
-        }
+      marketSymbol
+      timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+        open
+        startUnix
+        volume
       }
     }
   }
@@ -64,7 +60,7 @@ export class GraphComponent extends React.Component {
       endTime: INITIAL_END_TIME,
       charts: {
         volume: true,
-        VWAP: true,
+        VWA: true,
       },
       selectedExchange: '',
     };
@@ -109,7 +105,7 @@ export class GraphComponent extends React.Component {
 
   render() {
     if (!this.props.data.currency) return <Loading />;
-    if (this.props.data.currency.vwap.data.length === 0) {
+    if (this.props.data.currency.vwa.length === 0) {
       return (
         <div>
           No markets found for selected currency pair. Please select a different quote currency
@@ -118,11 +114,11 @@ export class GraphComponent extends React.Component {
     }
 
     let currency = this.props.data.currency;
-    let vwapMarket = currency.vwap.data[0];
-    let otherMarkets = currency.markets.data;
+    let vwaMarket = currency.vwa[0];
+    let otherMarkets = currency.markets;
     let hasMarkets = !!otherMarkets.length;
 
-    let data = vwapMarket.timeseries.map((candle, idx) => {
+    let data = vwaMarket.timeseries.map((candle, idx) => {
       let marketVals = hasMarkets
         ? otherMarkets.reduce((reducer, market) => {
             reducer[market.marketSymbol.split(':')[0]] = market.timeseries[idx]
@@ -131,20 +127,20 @@ export class GraphComponent extends React.Component {
             return reducer;
           }, {})
         : {};
-      let vwap = {
+      let vwa = {
         name: `${moment(candle.startUnix * 1000).format('H:m MMM DD')}`,
         timestamp: candle.startUnix,
-        VWAP: candle.open,
+        VWA: candle.open,
         volume: candle.volume,
       };
-      return Object.assign({}, vwap, marketVals);
+      return Object.assign({}, vwa, marketVals);
     });
 
     let exchangeNames = otherMarkets.map(market => market.marketSymbol.split(':')[0]);
     let marketList = exchangeNames.map((name, i) => (
       <Line
         type="linear"
-        yAxisId="VWAP"
+        yAxisId="VWA"
         dataKey={this.state.charts[name] ? name : `${name} `}
         stroke={colors[i % colors.length]}
         animationDuration={500}
@@ -169,8 +165,8 @@ export class GraphComponent extends React.Component {
           <ComposedChart width={800} height={400} data={data}>
             <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
             <YAxis
-              yAxisId="VWAP"
-              dataKey="VWAP"
+              yAxisId="VWA"
+              dataKey="VWA"
               scale="linear"
               type="number"
               domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
@@ -202,13 +198,13 @@ export class GraphComponent extends React.Component {
             />
             <Line
               type="linear"
-              yAxisId="VWAP"
-              dataKey={this.state.charts.VWAP ? 'VWAP' : 'VWAP '}
+              yAxisId="VWA"
+              dataKey={this.state.charts.VWA ? 'VWA' : 'VWA '}
               stroke="#585858"
               animationDuration={500}
               dot={false}
               activeDot={false}
-              strokeWidth={this.state.selectedExchange === 'VWAP' ? 3 : 1}
+              strokeWidth={this.state.selectedExchange === 'VWA' ? 3 : 1}
             />
             {marketList}
           </ComposedChart>

@@ -15,17 +15,15 @@ const MARKET_QUERY = `
     currency(currencySymbol: $currencySymbol) {
       id
       markets {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-            dayLow
-            dayHigh
-            baseVolume
-            quoteVolume
-          }
+        id
+        marketSymbol
+        ticker {
+          last
+          percentChange
+          dayLow
+          dayHigh
+          baseVolume
+          quoteVolume
         }
       }
     }
@@ -63,8 +61,8 @@ export class MarketsComponent extends React.Component {
     if (!this.props.data.currency) return <Loading />;
     if (!this.props.data.currency.markets) return <div />;
 
-    let exchangeVolumeObjects = this.getExchangeVolume(this.props.data.currency.markets.data);
-    let quoteVolumeObjects = this.getQuoteVolume(this.props.data.currency.markets.data);
+    let exchangeVolumeObjects = this.getExchangeVolume(this.props.data.currency.markets);
+    let quoteVolumeObjects = this.getQuoteVolume(this.props.data.currency.markets);
 
     let exchangeVolumes = Object.entries(exchangeVolumeObjects).map(volume => {
       return {

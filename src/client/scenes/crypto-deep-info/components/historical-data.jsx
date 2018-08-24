@@ -26,25 +26,20 @@ query HistoricalData (
       ]}
       aggregation: $aggregation
     ) {
-      data {
-        marketSymbol
-        timeseries(
-          resolution: $resolution,
-          limit: $limit,
-        ) {
-          startUnix
-          volume
-          quoteVolume
-          percentChange
-          open
-        }
+      marketSymbol
+      timeseries(
+        resolution: $resolution,
+        limit: $limit,
+      ) {
+        startUnix
+        volume
+        quoteVolume
+        percentChange
+        open
       }
     }
     exchanges:markets(filter:{quoteSymbol_eq:$quote}){
-      totalCount
-      data {
-        marketSymbol
-      }
+      marketSymbol
     }
   }
 }
@@ -92,9 +87,9 @@ export class HistoricalDataComponent extends React.Component {
   changeExchange({ target }) {
     let { value: exchange } = target;
     let vars;
-    if (exchange === 'VWAP') {
+    if (exchange === 'VWA') {
       vars = {
-        aggregation: 'VWAP',
+        aggregation: 'VWA',
         exchangeSymbol: '%',
       };
     } else {
@@ -114,7 +109,7 @@ export class HistoricalDataComponent extends React.Component {
       list = <Loading />;
       exchanges = null;
     } else {
-      let market = this.props.data.currency.markets.data.find(m =>
+      let market = this.props.data.currency.markets.find(m =>
         m.marketSymbol.endsWith(quote.toUpperCase())
       );
       if (!market) return null;
@@ -123,7 +118,7 @@ export class HistoricalDataComponent extends React.Component {
         <HistoricalDataItem {...t} quote={quote} key={t.startUnix} />
       ));
 
-      exchanges = this.props.data.currency.exchanges.data.map(exchange => {
+      exchanges = this.props.data.currency.exchanges.map(exchange => {
         let name = exchange.marketSymbol.split(':')[0];
         return (
           <option key={name} value={name}>
@@ -132,8 +127,8 @@ export class HistoricalDataComponent extends React.Component {
         );
       });
       exchanges.unshift(
-        <option key="VWAP" value="VWAP">
-          VWAP
+        <option key="VWA" value="VWA">
+          VWA
         </option>
       );
     }
@@ -195,7 +190,7 @@ export const HistoricalData = Query(HistoricalDataComponent, CANDLE_QUERY, props
     quote: quote.toUpperCase(),
     resolution: props.resolution.value,
     limit: LIMIT,
-    aggregation: 'VWAP',
+    aggregation: 'VWA',
     exchangeSymbol: '%',
   };
 });

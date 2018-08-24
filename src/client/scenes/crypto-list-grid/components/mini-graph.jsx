@@ -15,34 +15,28 @@ query CurrencyQuery(
 ) {
   currency(currencySymbol: $symbol) {
     id
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
-      data {
-        id
-        marketSymbol
-        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-          open
-        }
+    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
+      id
+      marketSymbol
+      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+        open
       }
     }
-    btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWAP) {
-      data {
-        id
-        marketSymbol
-        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-          open
-        }
+    btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWA) {
+      id
+      marketSymbol
+      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+        open
       }
     }
   }
   btcPrice: currency(currencySymbol: "BTC") {
     id
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWAP) {
-      data {
-        id
-        marketSymbol
-        ticker {
-          last
-        }
+    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
+      id
+      marketSymbol
+      ticker {
+        last
       }
     }
   }
@@ -54,12 +48,12 @@ const generatePoints = ({ data, height, width }) => {
   height = height - STROKE_WIDTH / 2;
   let prices,
     currency = data.currency,
-    marketsData = currency.markets.data,
-    btcMarketData = currency.btcMarket.data;
+    marketsData = currency.markets,
+    btcMarketData = currency.btcMarket;
 
   if (!marketsData.length) {
     if (btcMarketData.length && btcMarketData[0].timeseries) {
-      let quotePrice = data.btcPrice.markets.data[0].ticker.last;
+      let quotePrice = data.btcPrice.markets[0].ticker.last;
       prices = btcMarketData[0].timeseries.map(timeseries => {
         return timeseries.open * quotePrice;
       });

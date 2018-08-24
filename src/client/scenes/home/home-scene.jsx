@@ -25,18 +25,16 @@ const CURRENCY_QUERY = `
         currencySymbol
         marketCap
         marketCapRank
-        markets(aggregation: VWAP) {
-          data {
-            id
-            marketSymbol
-            ticker {
-              last
-              percentChange
-              dayLow
-              dayHigh
-              baseVolume
-              quoteVolume
-            }
+        markets(aggregation: VWA) {
+          id
+          marketSymbol
+          ticker {
+            last
+            percentChange
+            dayLow
+            dayHigh
+            baseVolume
+            quoteVolume
           }
         }
       }
@@ -49,18 +47,16 @@ const CURRENCY_QUERY = `
       currencySymbol
       marketCap
       marketCapRank
-      markets(aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-            dayLow
-            dayHigh
-            baseVolume
-            quoteVolume
-          }
+      markets(aggregation: VWA) {
+        id
+        marketSymbol
+        ticker {
+          last
+          percentChange
+          dayLow
+          dayHigh
+          baseVolume
+          quoteVolume
         }
       }
     }
@@ -69,18 +65,16 @@ const CURRENCY_QUERY = `
       currencyName
       currentSupply
       currencySymbol
-      markets(aggregation: VWAP) {
-        data {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-            dayLow
-            dayHigh
-            baseVolume
-            quoteVolume
-          }
+      markets(aggregation: VWA) {
+        id
+        marketSymbol
+        ticker {
+          last
+          percentChange
+          dayLow
+          dayHigh
+          baseVolume
+          quoteVolume
         }
       }
     }

@@ -1,25 +1,26 @@
 import { marketCapFormat } from './market-cap-formatter';
 
 let btc = {
-  id: 'btcbtcbtc',
-  currencyName: 'Bitcoin',
-  currencySymbol: 'BTC',
-  currentSupply: 100000,
-  marketCapRank: 1,
-  marketCap: 16944950,
-  markets: {
-    data: [{
-      marketSymbol:'VWAP:BTC/USD',
-      ticker: {
-        last: 5969.32672657,
-        percentChange: -7.31,
-        dayLow: 5943.91447868,
-        dayHigh: 6490.24124109,
-        baseVolume: 7282.63104862,
-        quoteVolume: 44796931.24426494
-      }
-    }]
-  }},
+    id: 'btcbtcbtc',
+    currencyName: 'Bitcoin',
+    currencySymbol: 'BTC',
+    currentSupply: 100000,
+    marketCapRank: 1,
+    marketCap: 16944950,
+    markets: [
+      {
+        marketSymbol: 'VWA:BTC/USD',
+        ticker: {
+          last: 5969.32672657,
+          percentChange: -7.31,
+          dayLow: 5943.91447868,
+          dayHigh: 6490.24124109,
+          baseVolume: 7282.63104862,
+          quoteVolume: 44796931.24426494,
+        },
+      },
+    ],
+  },
   eth = {
     id: 'ethetheth',
     currencyName: 'Ethereum',
@@ -27,19 +28,19 @@ let btc = {
     currentSupply: 100000,
     marketCapRank: 2,
     marketCap: 10000,
-    markets: {
-      data: [{
-        marketSymbol:'VWAP:ETH/USD',
+    markets: [
+      {
+        marketSymbol: 'VWA:ETH/USD',
         ticker: {
           last: 100,
           percentChange: 1,
           dayLow: 99,
           dayHigh: 101,
           baseVolume: 123,
-          quoteVolume: 145
-        }
-      }]
-    }
+          quoteVolume: 145,
+        },
+      },
+    ],
   };
 
 test('no currencies, returns empty array', () => {
@@ -54,7 +55,6 @@ test('no currencies, returns empty array', () => {
   // assert
   expect(response.length).toBe(0);
 });
-
 
 test('list of currencies, returns valid response', () => {
   // arrange
@@ -90,7 +90,7 @@ test('list of currencies, returns valid response', () => {
 test('market with no ticker', () => {
   // arrange
   let newEth = eth;
-  newEth.markets.data[0].ticker = null;
+  newEth.markets[0].ticker = null;
   let currencies = [newEth];
   let bitcoinNode = btc;
   let quoteSymbol = 'USD';
@@ -106,8 +106,8 @@ test('market with no ticker', () => {
 test('alternate quote symbols', () => {
   // arrange
   let newEth = eth;
-  newEth.markets.data[0].marketSymbol = 'VWAP:ETH/USDT';
-  console.log(newEth.markets.data);
+  newEth.markets[0].marketSymbol = 'VWA:ETH/USDT';
+  console.log(newEth.markets);
   let currencies = [newEth];
   let bitcoinNode = btc;
   let quoteSymbol = 'USDT';

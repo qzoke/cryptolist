@@ -9,7 +9,7 @@ const calculatePriceFromBtc = (priceInBtc, priceOfBtc) => {
 };
 
 const getPriceOfBtc = (btcNode, quoteSymbol) => {
-  const btcMarket = btcNode.markets.data.find(market => market.marketSymbol.endsWith(quoteSymbol));
+  const btcMarket = btcNode.markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
   return btcMarket ? btcMarket.ticker.last : 1;
 };
 
@@ -22,9 +22,7 @@ const getPercentageChange = (markets, btcNode, quoteSymbol) => {
 
   // If native market does not exist, convert to btc
   const currencyBtcMarket = markets.find(market => market.marketSymbol.endsWith('BTC'));
-  const btcQuoteMarket = btcNode.markets.data.find(market =>
-    market.marketSymbol.endsWith(quoteSymbol)
-  );
+  const btcQuoteMarket = btcNode.markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
   if (currencyBtcMarket && btcQuoteMarket && currencyBtcMarket.ticker) {
     let btcChange = currencyBtcMarket.ticker.percentChange;
     let currencyToBtcChange = btcQuoteMarket.ticker.percentChange;
@@ -46,12 +44,12 @@ export const marketCapFormat = (currency, btcNode, quoteSymbol) => {
   quoteSymbol = quoteSymbol.toUpperCase();
   const priceOfBtc = getPriceOfBtc(btcNode, quoteSymbol);
 
-  const hasMarkets = !!currency.markets.data.length;
+  const hasMarkets = !!currency.markets.length;
   const market = hasMarkets
-    ? currency.markets.data.find(market => market.marketSymbol.endsWith(quoteSymbol))
+    ? currency.markets.find(market => market.marketSymbol.endsWith(quoteSymbol))
     : null;
-  const percentChange = getPercentageChange(currency.markets.data, btcNode, quoteSymbol);
-  const btcMarket = currency.markets.data.find(market => market.marketSymbol.endsWith('BTC'));
+  const percentChange = getPercentageChange(currency.markets, btcNode, quoteSymbol);
+  const btcMarket = currency.markets.find(market => market.marketSymbol.endsWith('BTC'));
   const priceInBtc = btcMarket && btcMarket.ticker ? btcMarket.ticker.last : 1;
   const volume = get24HourVolume(market, btcMarket, priceOfBtc, quoteSymbol);
 
