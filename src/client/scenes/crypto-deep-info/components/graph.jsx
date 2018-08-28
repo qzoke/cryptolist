@@ -179,7 +179,7 @@ export class GraphComponent extends React.Component {
               scale="linear"
               orientation="right"
               domain={['datamin', dataMax => dataMax * 3]}
-              style={{ fontSize: '0.75em' }}
+              style={{ fontSize: '0.75em', display: 'none' }}
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
