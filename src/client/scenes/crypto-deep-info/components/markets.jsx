@@ -60,7 +60,7 @@ export class MarketsComponent extends React.Component {
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    if (percent * 100 > 10)
+    if (percent * 100 > 5)
       return (
         <text
           x={x}
@@ -106,8 +106,7 @@ export class MarketsComponent extends React.Component {
                   data={exchangeVolumes}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius="40%"
-                  outerRadius="80%"
+                  outerRadius="100%"
                   label={this.renderCustomizedLabel}
                   labelLine={false}
                   isAnimationActive={false}
@@ -132,8 +131,7 @@ export class MarketsComponent extends React.Component {
                   data={quoteVolumes}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius="40%"
-                  outerRadius="80%"
+                  outerRadius="100%"
                   labelLine={false}
                   label={this.renderCustomizedLabel}
                   isAnimationActive={false}
