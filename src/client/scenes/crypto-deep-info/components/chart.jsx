@@ -1,14 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { ComposedChart, Legend, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { Resolutions } from './resolution-group.jsx';
+import {
+  ComposedChart,
+  Legend,
+  Line,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
+import { Resolutions } from './resolution-group';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
 import { HistoricalData } from './historical-data';
 import { ChartUtils } from './chart-utils';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
+const GREEN = '#74A321';
+const RED = '#FF7777';
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
 const INITIAL_START_TIME =
   moment()
@@ -44,7 +56,7 @@ query CandlestickData(
 }
 `;
 
-export class GraphComponent extends React.Component {
+export class ChartComponent extends React.Component {
   constructor(props) {
     super(props);
     this.updateStartTime = this.updateStartTime.bind(this);
@@ -150,6 +162,7 @@ export class GraphComponent extends React.Component {
         strokeWidth={this.state.selectedExchange === name ? 3 : 1}
       />
     ));
+    var lastPrice = 0;
 
     return (
       <div className="currency-info-container graph">
@@ -169,6 +182,7 @@ export class GraphComponent extends React.Component {
               dataKey="VWA"
               scale="linear"
               type="number"
+              orientation="right"
               domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
               style={{ fontSize: '0.75em' }}
             />
@@ -177,7 +191,6 @@ export class GraphComponent extends React.Component {
               dataKey="volume"
               type="number"
               scale="linear"
-              orientation="right"
               domain={['datamin', dataMax => dataMax * 3]}
               style={{ fontSize: '0.75em', display: 'none' }}
             />
@@ -193,9 +206,15 @@ export class GraphComponent extends React.Component {
               dataKey={this.state.charts.volume ? 'volume' : 'volume '}
               yAxisId="volume"
               barSize={20}
-              fill="#e1e2e6"
+              fill={GREEN}
               animationDuration={500}
-            />
+            >
+              {data.map(item => {
+                let cell = <Cell fill={item.VWA >= lastPrice ? GREEN : RED} key={item.timestamp} />;
+                lastPrice = item.VWA;
+                return cell;
+              })}
+            </Bar>
             <Line
               type="linear"
               yAxisId="VWA"
@@ -222,12 +241,12 @@ export class GraphComponent extends React.Component {
   }
 }
 
-GraphComponent.propTypes = {
+ChartComponent.propTypes = {
   getData: PropTypes.func,
   data: PropTypes.object,
 };
 
-export const Graph = Query(GraphComponent, CANDLE_QUERY, props => ({
+export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
   startTime: INITIAL_START_TIME / 1000,
   endTime: INITIAL_END_TIME / 1000,
   resolution: INITIAL_RESOLUTION.value,
