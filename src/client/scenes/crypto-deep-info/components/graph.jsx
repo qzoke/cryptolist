@@ -21,7 +21,7 @@ query CandlestickData(
   $quoteSymbol: String,
   $startTime: Int,
   $endTime: Int,
-  $resolution: CandleResolution!
+  $resolution: TimeResolution!
 ) {
   currency(currencySymbol: $currencySymbol) {
     vwa: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {

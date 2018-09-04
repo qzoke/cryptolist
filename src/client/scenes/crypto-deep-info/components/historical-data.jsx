@@ -13,7 +13,7 @@ const CANDLE_QUERY = `
 query HistoricalData (
   $currencySymbol: String!
   $quote: String!
-  $resolution: CandleResolution!
+  $resolution: TimeResolution!
   $limit: Int!
   $aggregation:Aggregation
   $exchangeSymbol:String

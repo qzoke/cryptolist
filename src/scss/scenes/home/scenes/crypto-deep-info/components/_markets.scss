@@ -3,6 +3,13 @@
   justify-content: space-between;
   flex-wrap: wrap;
   width: 48em;
+  .market-container {
+    height: 21em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   .volume-market {
     &.pie {
       width: 50%;

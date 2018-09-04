@@ -2,12 +2,9 @@ import React from 'react';
 import {} from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Loading } from '../../../components/loading';
-import { ResponsivePie } from '@nivo/pie';
+import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import { Query } from 'regraph-request';
 
-// const colors = ['#F87A0B', '#002626', '#0E4749', '#95C623', '#E6FAFC'];
-// const colors = ['#222222', '#474747', '#727272', '#939393', '#bababa']; // greyscale
-// const colors = ['#EE8434', '#223843', '#A33B20', '#429321', '#EDD382']; // slightly preferred
 const colors = ['#EE8434', '#335C67', '#A33B20', '#EDD382', '#306B34'];
 
 const MARKET_QUERY = `
@@ -64,115 +61,60 @@ export class MarketsComponent extends React.Component {
     let exchangeVolumeObjects = this.getExchangeVolume(this.props.data.currency.markets);
     let quoteVolumeObjects = this.getQuoteVolume(this.props.data.currency.markets);
 
-    let exchangeVolumes = Object.entries(exchangeVolumeObjects).map(volume => {
-      return {
-        id: volume[0],
-        value: volume[1],
-        label: `${
-          volume[0]
-        }: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
-      };
-    });
+    let exchangeVolumes = Object.entries(exchangeVolumeObjects).map(volume => ({
+      name: volume[0],
+      value: volume[1],
+    }));
 
-    let quoteVolumes = Object.entries(quoteVolumeObjects).map(volume => {
-      return {
-        id: volume[0],
-        value: volume[1],
-        label: `${
-          volume[0]
-        }: ${volume[1].toLocaleString()} ${this.props.match.params.base.toUpperCase()}`,
-      };
-    });
+    let quoteVolumes = Object.entries(quoteVolumeObjects).map(volume => ({
+      name: volume[0],
+      value: volume[1],
+    }));
 
     return (
       <div className="currency-info-container markets">
         <div className="volume-market pie">
           <h4>Volume / Exchange</h4>
-          <div style={{ height: '21em' }}>
-            <ResponsivePie
-              data={exchangeVolumes}
-              margin={{
-                top: 19,
-                right: 0,
-                bottom: 80,
-                left: 0,
-              }}
-              innerRadius={0.5}
-              padAngle={1}
-              colors={colors}
-              colorBy="id"
-              borderWidth={1}
-              borderColor="inherit:darker(0.2)"
-              radialLabelsTextXOffset={6}
-              radialLabelsTextColor="#333333"
-              radialLabelsLinkOffset={0}
-              radialLabelsLinkDiagonalLength={16}
-              radialLabelsLinkHorizontalLength={24}
-              radialLabelsLinkStrokeWidth={1}
-              radialLabelsLinkColor="inherit"
-              enableSlicesLabels={false}
-              animate={true}
-              motionStiffness={90}
-              motionDamping={15}
-              tooltip={function(e) {
-                return <span>{e.label}</span>;
-              }}
-              theme={{
-                tooltip: {
-                  container: {
-                    fontSize: '13px',
-                  },
-                },
-                labels: {
-                  textColor: '#555',
-                },
-              }}
-            />
+          <div className="market-container">
+            <PieChart width={300} height={300}>
+              <Pie
+                cx={150}
+                cy={150}
+                data={exchangeVolumes}
+                dataKey="value"
+                nameKey="name"
+                innerRadius="50%"
+                outerRadius="80%"
+                label={item => item.name}
+              >
+                {exchangeVolumes.map((entry, index) => (
+                  <Cell key={entry.name} fill={colors[index % colors.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
           </div>
         </div>
-
         <div className="volume-market pie">
           <h4>Volume / Quote</h4>
           <div style={{ height: '21em' }}>
-            <ResponsivePie
-              data={quoteVolumes}
-              margin={{
-                top: 19,
-                right: 0,
-                bottom: 80,
-                left: 0,
-              }}
-              innerRadius={0.5}
-              padAngle={1}
-              colors={colors}
-              colorBy="id"
-              borderWidth={1}
-              borderColor="inherit:darker(0.2)"
-              radialLabelsTextXOffset={6}
-              radialLabelsTextColor="#333333"
-              radialLabelsLinkOffset={0}
-              radialLabelsLinkDiagonalLength={16}
-              radialLabelsLinkHorizontalLength={24}
-              radialLabelsLinkStrokeWidth={1}
-              radialLabelsLinkColor="inherit"
-              enableSlicesLabels={false}
-              animate={true}
-              motionStiffness={90}
-              motionDamping={15}
-              tooltip={function(e) {
-                return <span>{e.label}</span>;
-              }}
-              theme={{
-                tooltip: {
-                  container: {
-                    fontSize: '13px',
-                  },
-                },
-                labels: {
-                  textColor: '#555',
-                },
-              }}
-            />
+            <PieChart width={300} height={300}>
+              <Pie
+                cx={150}
+                cy={150}
+                data={quoteVolumes}
+                dataKey="value"
+                nameKey="name"
+                innerRadius="50%"
+                outerRadius="80%"
+                label={item => item.name}
+              >
+                {exchangeVolumes.map((entry, index) => (
+                  <Cell key={entry.name} fill={colors[index % colors.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
           </div>
         </div>
       </div>

@@ -6,7 +6,13 @@
     "type": "git",
     "url": "git+https://github.com/altangent/cryptolist.git"
   },
-  "keywords": ["cryptocurrency", "market", "marketcap", "bitcoin", "litecoin"],
+  "keywords": [
+    "cryptocurrency",
+    "market",
+    "marketcap",
+    "bitcoin",
+    "litecoin"
+  ],
   "bugs": {
     "url": "https://github.com/altangent/cryptolist/issues"
   },
@@ -17,37 +23,28 @@
   "scripts": {
     "start": "NODE_ENV=production node src/server/server",
     "build": "npm-run-all build:*",
-    "build:app":
-      "NODE_ENV=production browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js",
+    "build:app": "NODE_ENV=production browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js",
     "build:app-compress": "uglifyjs -c -o ./dist/app/bundle.js ./dist/app/bundle.js",
     "build:scss": "node-sass -o dist/css --output-style compressed src/scss/app.scss",
     "test": "jest",
     "coverage": "jest --coverage",
     "watch": "npm-run-all --parallel watch:*",
-    "watch:app":
-      "browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js && watchify src/client/app.jsx --debug -v --extension=.jsx -o ./dist/app/bundle.js",
-    "watch:scss":
-      "node-sass -o dist/css src/scss/app.scss && node-sass -w -o dist/css src/scss/app.scss",
+    "watch:app": "browserify src/client/app.jsx --extension=.jsx -o ./dist/app/bundle.js && watchify src/client/app.jsx --debug -v --extension=.jsx -o ./dist/app/bundle.js",
+    "watch:scss": "node-sass -o dist/css src/scss/app.scss && node-sass -w -o dist/css src/scss/app.scss",
     "watch:server": "nodemon --ignore dist --ignore src/client src/server/server",
-    "docker:build":
-      "docker build -t \"altangent/cryptolist:$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\" ,]//g')\" .",
-    "docker:push":
-      "docker push \"altangent/cryptolist:$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\" ,]//g')\""
+    "docker:build": "docker build -t \"altangent/cryptolist:$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\" ,]//g')\" .",
+    "docker:push": "docker push \"altangent/cryptolist:$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\" ,]//g')\""
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "0.0.17",
-    "@nivo/core": "^0.42.1",
-    "@nivo/line": "^0.42.1",
-    "@nivo/pie": "^0.42.1",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
     "compression": "^1.7.2",
     "cryptocoins-icons": "github:altangent/cryptocoins",
     "express": "^4.16.2",
     "moment": "^2.21.0",
-    "nivo": "^0.31.0",
     "npm": "^5.7.1",
     "prop-types": "^15.6.1",
     "qs": "^6.5.2",
@@ -86,11 +83,17 @@
     "watchify": "^3.11.0"
   },
   "browserify": {
-    "transform": [["babelify"]]
+    "transform": [
+      [
+        "babelify"
+      ]
+    ]
   },
   "jest": {
     "testRegex": ".*\\.spec\\.js$",
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/**/*.{js,jsx}"]
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ]
   }
 }
