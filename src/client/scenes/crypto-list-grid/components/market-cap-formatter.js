@@ -79,6 +79,8 @@ export const marketCapFormat = (currencies, btcNode, quoteSymbol) => {
       price: asCurrency(lastPrice, quoteSymbol, 8),
       percentChange: percentChange,
       volume: volume,
+      markets: currency.markets,
+      btcMarket: currency.btcMarket,
     };
   });
 };

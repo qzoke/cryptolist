@@ -42,14 +42,17 @@ export class CryptoListGridComponent extends React.Component {
       this.props.data.currencies.data,
       this.props.data.bitcoin,
       this.props.match.params.quote
-    ).map(currency => (
-      <CryptoListItem
-        key={currency.id}
-        currency={currency}
-        quoteSymbol={this.props.match.params.quote}
-        location={this.props.location}
-      />
-    ));
+    ).map(currency => {
+      return (
+        <CryptoListItem
+          key={currency.id}
+          currency={currency}
+          bitcoin={this.props.data.bitcoin}
+          quoteSymbol={this.props.match.params.quote}
+          location={this.props.location}
+        />
+      );
+    });
 
     return (
       <div className="crypto-list-grid">

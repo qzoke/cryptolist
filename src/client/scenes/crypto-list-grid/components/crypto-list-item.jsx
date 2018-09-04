@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { MiniGraph } from './mini-graph';
 import { Link } from 'react-router-dom';
 
-export const CryptoListItem = ({ currency, quoteSymbol, location }) => {
+export const CryptoListItem = ({ currency, bitcoin, quoteSymbol, location }) => {
   let [, , ...restOfPath] = location.pathname.split('/').filter(x => x);
   return (
     <Link
@@ -25,8 +25,9 @@ export const CryptoListItem = ({ currency, quoteSymbol, location }) => {
       </div>
       <div className="currency-graph">
         <MiniGraph
-          currencyId={currency.symbol}
-          quote={quoteSymbol}
+          quoteSymbol={quoteSymbol}
+          currency={currency}
+          bitcoin={bitcoin}
           width={80}
           height={30}
           isPositive={currency.percentChange >= 0}
@@ -38,6 +39,7 @@ export const CryptoListItem = ({ currency, quoteSymbol, location }) => {
 
 CryptoListItem.propTypes = {
   currency: PropTypes.object,
+  bitcoin: PropTypes.object,
   quoteSymbol: PropTypes.string,
   location: PropTypes.object,
 };

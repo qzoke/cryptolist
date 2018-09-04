@@ -6,40 +6,23 @@ import { Loading } from '../../components/loading';
 import { marketCapFormat } from '../../components/market-cap-formatter';
 import qs from 'qs';
 import { Query } from 'regraph-request';
+import moment from 'moment';
+import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
 const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
 const CURRENCY_QUERY = `
-  query AllCurrencies(
-    $sort: [CurrencySorter]
-    $page: Page
-    $filter: CurrencyFilter
-    $selectedCurrency: String!
-  ) {
-    currencies(sort: $sort, page: $page, filter: $filter) {
-      totalCount
-      data {
-        id
-        currencyName
-        currentSupply
-        totalSupply
-        currencySymbol
-        marketCap
-        marketCapRank
-        markets(aggregation: VWA) {
-          id
-          marketSymbol
-          ticker {
-            last
-            percentChange
-            dayLow
-            dayHigh
-            baseVolume
-            quoteVolume
-          }
-        }
-      }
-    }
-    currency(currencySymbol: $selectedCurrency) {
+query AllCurrencies(
+  $sort: [CurrencySorter]
+  $page: Page
+  $filter: CurrencyFilter
+  $selectedCurrency: String!
+  $start: Int
+  $end: Int
+  $resolution: TimeResolution!
+) {
+  currencies(sort: $sort, page: $page, filter: $filter) {
+    totalCount
+    data {
       id
       currencyName
       currentSupply
@@ -50,24 +33,9 @@ const CURRENCY_QUERY = `
       markets(aggregation: VWA) {
         id
         marketSymbol
-        ticker {
-          last
-          percentChange
-          dayLow
-          dayHigh
-          baseVolume
-          quoteVolume
-        }
-      }
-    }
-    bitcoin: currency(currencySymbol: "BTC") {
-      id
-      currencyName
-      currentSupply
-      currencySymbol
-      markets(aggregation: VWA) {
-        id
-        marketSymbol
+        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+        	open
+      	}
         ticker {
           last
           percentChange
@@ -79,6 +47,50 @@ const CURRENCY_QUERY = `
       }
     }
   }
+  currency(currencySymbol: $selectedCurrency) {
+    id
+    currencyName
+    currentSupply
+    totalSupply
+    currencySymbol
+    marketCap
+    marketCapRank
+    markets(aggregation: VWA) {
+      id
+      marketSymbol
+      ticker {
+        last
+        percentChange
+        dayLow
+        dayHigh
+        baseVolume
+        quoteVolume
+      }
+    }
+  }
+  bitcoin: currency(currencySymbol: "BTC") {
+    id
+    currencyName
+    currentSupply
+    currencySymbol
+    markets(aggregation: VWA) {
+      id
+      marketSymbol
+      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
+        open
+      }
+      ticker {
+        last
+        percentChange
+        dayLow
+        dayHigh
+        baseVolume
+        quoteVolume
+      }
+    }
+  }
+}
+
 `;
 
 export class HomeSceneComponent extends React.Component {
@@ -136,6 +148,14 @@ export const HomeScene = Query(HomeSceneComponent, CURRENCY_QUERY, ({ match, loc
     sort: {
       marketCapRank: 'ASC',
     },
+    start: moment()
+      .subtract(NUMBER_OF_DAYS, 'day')
+      .utc()
+      .unix(),
+    end: moment()
+      .utc()
+      .unix(),
+    resolution: '_1h',
     filter: (() => {
       if (query.search) {
         return {

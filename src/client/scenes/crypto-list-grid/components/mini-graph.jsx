@@ -1,79 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Query } from 'regraph-request';
 
 const STROKE_WIDTH = 2;
-const numberOfDays = 1;
-const CURRENCY_QUERY = `
-query CurrencyQuery(
-  $symbol: String!
-  $quoteSymbol: String
-  $start: Int
-  $end: Int
-  $resolution: CandleResolution!
-) {
-  currency(currencySymbol: $symbol) {
-    id
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
-      id
-      marketSymbol
-      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-        open
-      }
-    }
-    btcMarket: markets(filter: { quoteSymbol_eq: "BTC" }, aggregation: VWA) {
-      id
-      marketSymbol
-      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-        open
-      }
-    }
-  }
-  btcPrice: currency(currencySymbol: "BTC") {
-    id
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
-      id
-      marketSymbol
-      ticker {
-        last
-      }
-    }
-  }
-}
-`;
+export const NUMBER_OF_DAYS = 1;
 
-const generatePoints = ({ data, height, width }) => {
-  if (!data.currency || !data.currency.markets || !data.currency.btcMarket) return;
+const generatePoints = ({ markets, btcMarkets, quoteSymbol, height, width }) => {
+  if (!markets) return;
   height = height - STROKE_WIDTH / 2;
-  let prices,
-    currency = data.currency,
-    marketsData = currency.markets,
-    btcMarketData = currency.btcMarket;
 
-  if (!marketsData.length) {
-    if (btcMarketData.length && btcMarketData[0].timeseries) {
-      let quotePrice = data.btcPrice.markets[0].ticker.last;
-      prices = btcMarketData[0].timeseries.map(timeseries => {
-        return timeseries.open * quotePrice;
-      });
-    } else return;
+  let prices;
+  let findMarketWithQuote = market =>
+    market.marketSymbol.split('/')[1] == quoteSymbol.toUpperCase();
+  let market = markets.find(findMarketWithQuote);
+
+  if (market) {
+    prices = market.timeseries.map(t => t.open);
   } else {
-    if (marketsData[0].timeseries) {
-      prices = marketsData[0].timeseries.map(x => x.open);
-    } else return;
+    if (!btcMarkets.length) return;
+    let toBTCMarket = markets.find(market => market.marketSymbol.split('/')[1] == 'BTC');
+    let btcToQuoteMarket = btcMarkets.find(findMarketWithQuote);
+    if (!toBTCMarket || !btcToQuoteMarket) return;
+    prices = toBTCMarket.timeseries.map((t, i) => {
+      return t.open * btcToQuoteMarket.timeseries[i].open;
+    });
   }
 
   let prunedPrices = prices.filter(p => p);
   let high = Math.max(...prunedPrices);
   let low = Math.min(...prunedPrices);
-
   let denominator = high - low;
   let lastPrice = 0;
+
   return prices.map((price, index) => {
     price = price ? price : lastPrice;
     let p = {
-      x: index / (24 * numberOfDays) * width,
+      x: index / (24 * NUMBER_OF_DAYS) * width, // 24 = hr/day
       y: height + STROKE_WIDTH / 2 - (price - low) / denominator * height,
     };
     lastPrice = price;
@@ -88,8 +49,14 @@ const generatePathFromPoints = ({ points, width }) => {
   return `${startingPosition}${paths.join('')}L${width},${points[points.length - 1].y}`;
 };
 
-export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
-  let points = generatePoints({ data, height, width });
+export const MiniGraph = ({ currency, quoteSymbol, bitcoin, width, height, isPositive }) => {
+  let points = generatePoints({
+    ...currency,
+    btcMarkets: bitcoin.markets,
+    quoteSymbol,
+    height,
+    width,
+  });
   if (!points) return null;
   let path = generatePathFromPoints({ points, width });
   if (!path) return null;
@@ -106,24 +73,11 @@ export const MiniGraphComponent = ({ data, width, height, isPositive }) => {
   );
 };
 
-MiniGraphComponent.propTypes = {
-  currencyId: PropTypes.string,
-  quote: PropTypes.string,
-  data: PropTypes.object,
+MiniGraph.propTypes = {
+  currency: PropTypes.object,
+  quoteSymbol: PropTypes.string,
+  bitcoin: PropTypes.object,
   width: PropTypes.number,
   height: PropTypes.number,
   isPositive: PropTypes.bool,
 };
-
-export const MiniGraph = Query(MiniGraphComponent, CURRENCY_QUERY, props => ({
-  symbol: props.currencyId,
-  quoteSymbol: props.quote,
-  start: moment()
-    .subtract(numberOfDays, 'day')
-    .utc()
-    .unix(),
-  end: moment()
-    .utc()
-    .unix(),
-  resolution: '_1h',
-}));
