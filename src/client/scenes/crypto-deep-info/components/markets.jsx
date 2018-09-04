@@ -110,6 +110,7 @@ export class MarketsComponent extends React.Component {
                   outerRadius="80%"
                   label={this.renderCustomizedLabel}
                   labelLine={false}
+                  isAnimationActive={false}
                 >
                   {exchangeVolumes.map((entry, index) => (
                     <Cell key={entry.name} fill={colors[index % colors.length]} />
@@ -135,6 +136,7 @@ export class MarketsComponent extends React.Component {
                   outerRadius="80%"
                   labelLine={false}
                   label={this.renderCustomizedLabel}
+                  isAnimationActive={false}
                 >
                   {exchangeVolumes.map((entry, index) => (
                     <Cell key={entry.name} fill={colors[index % colors.length]} />
