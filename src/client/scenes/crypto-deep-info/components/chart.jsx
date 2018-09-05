@@ -19,8 +19,9 @@ import { HistoricalData } from './historical-data';
 import { ChartUtils } from './chart-utils';
 
 const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
-const GREEN = '#74A321';
-const RED = '#FF7777';
+const GREEN_DARK = '#74A321';
+const GREEN = '#74A32180';
+const RED = '#FF777780';
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
 const INITIAL_START_TIME =
   moment()
@@ -206,7 +207,7 @@ export class ChartComponent extends React.Component {
               dataKey={this.state.charts.volume ? 'volume' : 'volume '}
               yAxisId="volume"
               barSize={20}
-              fill={GREEN}
+              fill={GREEN_DARK}
               animationDuration={500}
             >
               {data.map(item => {
