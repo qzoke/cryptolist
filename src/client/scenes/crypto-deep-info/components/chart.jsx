@@ -11,6 +11,7 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  ResponsiveContainer,
 } from 'recharts';
 import { Resolutions } from './resolution-group';
 import { Loading } from '../../../components/loading';
@@ -176,58 +177,64 @@ export class ChartComponent extends React.Component {
             updateEndTime={this.updateEndTime}
             updateResolution={this.updateResolution}
           />
-          <ComposedChart width={800} height={400} data={data}>
-            <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
-            <YAxis
-              yAxisId="VWA"
-              dataKey="VWA"
-              scale="linear"
-              type="number"
-              orientation="right"
-              domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
-              style={{ fontSize: '0.75em' }}
-            />
-            <YAxis
-              yAxisId="volume"
-              dataKey="volume"
-              type="number"
-              scale="linear"
-              domain={['datamin', dataMax => dataMax * 3]}
-              style={{ fontSize: '0.75em', display: 'none' }}
-            />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend
-              wrapperStyle={{ fontSize: '0.75em' }}
-              onClick={this.toggleChart}
-              onMouseEnter={q => this.highlightExchange(q.dataKey)}
-              onMouseLeave={this.unhighlightExchange}
-            />
-            <Bar
-              dataKey={this.state.charts.volume ? 'volume' : 'volume '}
-              yAxisId="volume"
-              barSize={20}
-              fill={GREEN_DARK}
-              animationDuration={500}
-            >
-              {data.map(item => {
-                let cell = <Cell fill={item.VWA >= lastPrice ? GREEN : RED} key={item.timestamp} />;
-                lastPrice = item.VWA;
-                return cell;
-              })}
-            </Bar>
-            <Line
-              type="linear"
-              yAxisId="VWA"
-              dataKey={this.state.charts.VWA ? 'VWA' : 'VWA '}
-              stroke="#585858"
-              animationDuration={500}
-              dot={false}
-              activeDot={false}
-              strokeWidth={this.state.selectedExchange === 'VWA' ? 3 : 1}
-            />
-            {marketList}
-          </ComposedChart>
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" aspect={1.7}>
+              <ComposedChart data={data}>
+                <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
+                <YAxis
+                  yAxisId="VWA"
+                  dataKey="VWA"
+                  scale="linear"
+                  type="number"
+                  orientation="right"
+                  domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
+                  style={{ fontSize: '0.75em' }}
+                />
+                <YAxis
+                  yAxisId="volume"
+                  dataKey="volume"
+                  type="number"
+                  scale="linear"
+                  domain={['datamin', dataMax => dataMax * 3]}
+                  style={{ fontSize: '0.75em', display: 'none' }}
+                />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend
+                  wrapperStyle={{ fontSize: '0.75em' }}
+                  onClick={this.toggleChart}
+                  onMouseEnter={q => this.highlightExchange(q.dataKey)}
+                  onMouseLeave={this.unhighlightExchange}
+                />
+                <Bar
+                  dataKey={this.state.charts.volume ? 'volume' : 'volume '}
+                  yAxisId="volume"
+                  barSize={20}
+                  fill={GREEN_DARK}
+                  animationDuration={500}
+                >
+                  {data.map(item => {
+                    let cell = (
+                      <Cell fill={item.VWA >= lastPrice ? GREEN : RED} key={item.timestamp} />
+                    );
+                    lastPrice = item.VWA;
+                    return cell;
+                  })}
+                </Bar>
+                <Line
+                  type="linear"
+                  yAxisId="VWA"
+                  dataKey={this.state.charts.VWA ? 'VWA' : 'VWA '}
+                  stroke="#585858"
+                  animationDuration={500}
+                  dot={false}
+                  activeDot={false}
+                  strokeWidth={this.state.selectedExchange === 'VWA' ? 3 : 1}
+                />
+                {marketList}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
         </div>
         <div className="historical-data-container">
           <HistoricalData
