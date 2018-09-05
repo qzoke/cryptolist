@@ -166,6 +166,13 @@ export class ChartComponent extends React.Component {
     ));
     var lastPrice = 0;
 
+    // Generate ticks manually
+    let skip = Math.ceil(data.length / 5);
+    let ticks = [];
+    for (let index = 0; index < data.length; index += skip) {
+      ticks.push(data[index].name);
+    }
+
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
@@ -180,7 +187,7 @@ export class ChartComponent extends React.Component {
           <div className="chart-container">
             <ResponsiveContainer width="100%" aspect={1.7}>
               <ComposedChart data={data}>
-                <XAxis dataKey="name" style={{ fontSize: '0.75em' }} />
+                <XAxis dataKey="name" ticks={ticks} style={{ fontSize: '0.75em' }} />
                 <YAxis
                   yAxisId="VWA"
                   dataKey="VWA"
