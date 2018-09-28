@@ -123,10 +123,7 @@ export class ChartUtils extends React.Component {
           <ButtonGroup size="sm">
             <Button
               color={this.props.selectedChart === 'line' ? 'secondary' : 'link'}
-              onClick={() => {
-                this.props.updateSelectedChart('line');
-                console.log('clicked foo');
-              }}
+              onClick={() => this.props.updateSelectedChart('line')}
             >
               <FontAwesomeIcon icon="chart-line" />
             </Button>

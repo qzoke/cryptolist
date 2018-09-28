@@ -91,7 +91,7 @@ export class CandleChart extends React.Component {
               yAxisId="VWA"
               dataKey="VWA"
               stroke="#585858"
-              animationDuration={500}
+              isAnimationActive={false}
               dot={false}
               activeDot={false}
               opacity={0}
