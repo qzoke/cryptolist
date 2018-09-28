@@ -8,6 +8,7 @@ import { LineChart } from './line-chart';
 import { CandleChart } from './candle-chart';
 import { ChartUtils } from './chart-utils';
 import { HistoricalData } from './historical-data';
+import qs from 'qs';
 
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
 const INITIAL_START_TIME =
@@ -58,11 +59,13 @@ export class ChartComponent extends React.Component {
     this.updateResolution = this.updateResolution.bind(this);
     this.updateSelectedChart = this.updateSelectedChart.bind(this);
 
+    let query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
+
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
-      selectedChart: 'candle',
+      selectedChart: query.chart || 'candle',
     };
   }
 
@@ -89,7 +92,10 @@ export class ChartComponent extends React.Component {
   }
 
   updateSelectedChart(selectedChart) {
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    query.chart = selectedChart;
     this.setState({ selectedChart });
+    this.props.history.push(`${this.props.location.pathname}?${qs.stringify(query)}`);
   }
 
   render() {
@@ -137,6 +143,8 @@ export class ChartComponent extends React.Component {
 ChartComponent.propTypes = {
   getData: PropTypes.func,
   data: PropTypes.object,
+  location: PropTypes.object,
+  history: PropTypes.object,
 };
 
 export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
