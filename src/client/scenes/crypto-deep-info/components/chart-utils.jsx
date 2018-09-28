@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
+import { Button, ButtonGroup } from 'reactstrap';
 import { ResolutionGroup } from './resolution-group';
 import DateTime from 'react-datetime';
 import moment from 'moment';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 export const DATETIME_FORMAT = 'M/D/YY H:m';
 
@@ -15,6 +16,8 @@ export class ChartUtils extends React.Component {
     updateResolution: PropTypes.func,
     updateStartTime: PropTypes.func,
     updateEndTime: PropTypes.func,
+    selectedChart: PropTypes.string,
+    updateSelectedChart: PropTypes.func,
   };
 
   constructor(props) {
@@ -99,14 +102,14 @@ export class ChartUtils extends React.Component {
           )}
         </div>
         <div
-          className="endTime offset-sm-3 col-sm-4"
+          className="endTime offset-sm-3 col-sm-2"
           style={{ position: 'absolute' /* Bug fix for safari */ }}
         >
           <Button onClick={this.toggleEndTime}>
             {moment(this.props.endTime).format(DATETIME_FORMAT)}
           </Button>
           {this.state.endShown && (
-            <div ref={ref => (this.endTimeRef = ref)} className="poop">
+            <div ref={ref => (this.endTimeRef = ref)}>
               <DateTime
                 value={this.props.endTime}
                 onChange={this.props.updateEndTime}
@@ -115,6 +118,25 @@ export class ChartUtils extends React.Component {
               />
             </div>
           )}
+        </div>
+        <div className="col-sm-2 offset-sm-3 align-self-end">
+          <ButtonGroup size="sm">
+            <Button
+              color={this.props.selectedChart === 'line' ? 'secondary' : 'link'}
+              onClick={() => {
+                this.props.updateSelectedChart('line');
+                console.log('clicked foo');
+              }}
+            >
+              <FontAwesomeIcon icon="chart-line" />
+            </Button>
+            <Button
+              color={this.props.selectedChart === 'candle' ? 'secondary' : 'link'}
+              onClick={() => this.props.updateSelectedChart('candle')}
+            >
+              <FontAwesomeIcon icon="chart-bar" />
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
     );

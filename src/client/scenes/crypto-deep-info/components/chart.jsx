@@ -1,28 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import {
-  ComposedChart,
-  Legend,
-  Line,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-} from 'recharts';
 import { Resolutions } from './resolution-group';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
-import { HistoricalData } from './historical-data';
+import { LineChart } from './line-chart';
+import { CandleChart } from './candle-chart';
 import { ChartUtils } from './chart-utils';
+import { HistoricalData } from './historical-data';
 
-const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
-const GREEN_DARK = '#74A321';
-const GREEN = '#74A32180';
-const RED = '#FF777780';
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
 const INITIAL_START_TIME =
   moment()
@@ -42,6 +28,9 @@ query CandlestickData(
       marketSymbol
       timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
         open
+        high
+        low
+        close
         startUnix
         volume
       }
@@ -50,6 +39,9 @@ query CandlestickData(
       marketSymbol
       timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
         open
+        high
+        low
+        close
         startUnix
         volume
       }
@@ -64,19 +56,13 @@ export class ChartComponent extends React.Component {
     this.updateStartTime = this.updateStartTime.bind(this);
     this.updateEndTime = this.updateEndTime.bind(this);
     this.updateResolution = this.updateResolution.bind(this);
-    this.toggleChart = this.toggleChart.bind(this);
-    this.highlightExchange = this.highlightExchange.bind(this);
-    this.unhighlightExchange = this.unhighlightExchange.bind(this);
+    this.updateSelectedChart = this.updateSelectedChart.bind(this);
 
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
-      charts: {
-        volume: true,
-        VWA: true,
-      },
-      selectedExchange: '',
+      selectedChart: 'candle',
     };
   }
 
@@ -102,19 +88,8 @@ export class ChartComponent extends React.Component {
     this.props.getData({ startTime: newStartTime, resolution: resolution.value });
   }
 
-  toggleChart(selected) {
-    let key = selected.dataKey.trim();
-    let enabledCharts = this.state.charts;
-    enabledCharts[key] = !enabledCharts[key];
-    this.setState({ charts: enabledCharts, selectedExchange: key });
-  }
-
-  highlightExchange(selectedExchange) {
-    this.setState({ selectedExchange });
-  }
-
-  unhighlightExchange() {
-    this.setState({ selectedExchange: '' });
+  updateSelectedChart(selectedChart) {
+    this.setState({ selectedChart });
   }
 
   render() {
@@ -127,52 +102,6 @@ export class ChartComponent extends React.Component {
       );
     }
 
-    let currency = this.props.data.currency;
-    let vwaMarket = currency.vwa[0];
-    let otherMarkets = currency.markets;
-    let hasMarkets = !!otherMarkets.length;
-
-    let data = vwaMarket.timeseries.map((candle, idx) => {
-      let marketVals = hasMarkets
-        ? otherMarkets.reduce((reducer, market) => {
-            reducer[market.marketSymbol.split(':')[0]] = market.timeseries[idx]
-              ? market.timeseries[idx].open
-              : null;
-            return reducer;
-          }, {})
-        : {};
-      let vwa = {
-        name: `${moment(candle.startUnix * 1000).format('H:m MMM DD')}`,
-        timestamp: candle.startUnix,
-        VWA: candle.open,
-        volume: candle.volume,
-      };
-      return Object.assign({}, vwa, marketVals);
-    });
-
-    let exchangeNames = otherMarkets.map(market => market.marketSymbol.split(':')[0]);
-    let marketList = exchangeNames.map((name, i) => (
-      <Line
-        type="linear"
-        yAxisId="VWA"
-        dataKey={this.state.charts[name] ? name : `${name} `}
-        stroke={colors[i % colors.length]}
-        animationDuration={500}
-        dot={false}
-        activeDot={false}
-        key={name}
-        strokeWidth={this.state.selectedExchange === name ? 3 : 1}
-      />
-    ));
-    var lastPrice = 0;
-
-    // Generate ticks manually
-    let skip = Math.ceil(data.length / 5);
-    let ticks = [];
-    for (let index = 0; index < data.length; index += skip) {
-      ticks.push(data[index].name);
-    }
-
     return (
       <div className="currency-info-container graph">
         <div className="volume-market line">
@@ -183,73 +112,22 @@ export class ChartComponent extends React.Component {
             updateStartTime={this.updateStartTime}
             updateEndTime={this.updateEndTime}
             updateResolution={this.updateResolution}
+            selectedChart={this.state.selectedChart}
+            updateSelectedChart={this.updateSelectedChart}
           />
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" aspect={1.7}>
-              <ComposedChart data={data}>
-                <XAxis dataKey="name" ticks={ticks} style={{ fontSize: '0.75em' }} />
-                <YAxis
-                  yAxisId="VWA"
-                  dataKey="VWA"
-                  scale="linear"
-                  type="number"
-                  orientation="right"
-                  domain={[datamin => datamin * 0.975, datamax => datamax * 1.025]}
-                  style={{ fontSize: '0.75em' }}
-                />
-                <YAxis
-                  yAxisId="volume"
-                  dataKey="volume"
-                  type="number"
-                  scale="linear"
-                  domain={['datamin', dataMax => dataMax * 3]}
-                  style={{ fontSize: '0.75em', display: 'none' }}
-                />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Legend
-                  wrapperStyle={{ fontSize: '0.75em' }}
-                  onClick={this.toggleChart}
-                  onMouseEnter={q => this.highlightExchange(q.dataKey)}
-                  onMouseLeave={this.unhighlightExchange}
-                />
-                <Bar
-                  dataKey={this.state.charts.volume ? 'volume' : 'volume '}
-                  yAxisId="volume"
-                  barSize={20}
-                  fill={GREEN_DARK}
-                  animationDuration={500}
-                >
-                  {data.map(item => {
-                    let cell = (
-                      <Cell fill={item.VWA >= lastPrice ? GREEN : RED} key={item.timestamp} />
-                    );
-                    lastPrice = item.VWA;
-                    return cell;
-                  })}
-                </Bar>
-                <Line
-                  type="linear"
-                  yAxisId="VWA"
-                  dataKey={this.state.charts.VWA ? 'VWA' : 'VWA '}
-                  stroke="#585858"
-                  animationDuration={500}
-                  dot={false}
-                  activeDot={false}
-                  strokeWidth={this.state.selectedExchange === 'VWA' ? 3 : 1}
-                />
-                {marketList}
-              </ComposedChart>
-            </ResponsiveContainer>
+          {this.state.selectedChart === 'candle' && (
+            <CandleChart currency={this.props.data.currency} />
+          )}
+
+          {this.state.selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
+          <div className="historical-data-container">
+            <HistoricalData
+              {...this.props}
+              startTime={this.state.startTime}
+              endTime={this.state.endTime}
+              resolution={this.state.resolution}
+            />
           </div>
-        </div>
-        <div className="historical-data-container">
-          <HistoricalData
-            {...this.props}
-            startTime={this.state.startTime}
-            endTime={this.state.endTime}
-            resolution={this.state.resolution}
-          />
         </div>
       </div>
     );

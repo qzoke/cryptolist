@@ -2,16 +2,6 @@
   padding: 0;
   .controls {
     padding-bottom: 1em;
-    .btn-group .btn {
-      font-size: 0.8em;
-      height: 2.5em;
-      background: $gray-500;
-      border: none;
-      &:hover,
-      &.active {
-        background: $gray-600;
-      }
-    }
     .startTime,
     .endTime {
       position: absolute;
