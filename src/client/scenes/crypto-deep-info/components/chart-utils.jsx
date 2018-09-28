@@ -122,16 +122,16 @@ export class ChartUtils extends React.Component {
         <div className="col-sm-2 offset-sm-3 align-self-end">
           <ButtonGroup size="sm">
             <Button
-              color={this.props.selectedChart === 'line' ? 'secondary' : 'link'}
-              onClick={() => this.props.updateSelectedChart('line')}
-            >
-              <FontAwesomeIcon icon="chart-line" />
-            </Button>
-            <Button
               color={this.props.selectedChart === 'candle' ? 'secondary' : 'link'}
               onClick={() => this.props.updateSelectedChart('candle')}
             >
               <FontAwesomeIcon icon="chart-bar" />
+            </Button>
+            <Button
+              color={this.props.selectedChart === 'line' ? 'secondary' : 'link'}
+              onClick={() => this.props.updateSelectedChart('line')}
+            >
+              <FontAwesomeIcon icon="chart-line" />
             </Button>
           </ButtonGroup>
         </div>
