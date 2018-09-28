@@ -6,7 +6,6 @@ import {
   Line,
   ErrorBar,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   Tooltip,
@@ -14,7 +13,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const GREEN_DARK = '#74A321';
 const GREEN = '#74A321';
 const RED = '#FF7777';
 const VOLUME_COLOR = '#cccccc66';
@@ -56,8 +54,6 @@ export class CandleChart extends React.Component {
     for (let index = 0; index < data.length; index += skip) {
       ticks.push(data[index].name);
     }
-
-    let lastPrice = 0;
 
     return (
       <div className="chart-container">

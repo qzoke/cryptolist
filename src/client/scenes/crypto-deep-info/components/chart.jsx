@@ -62,7 +62,7 @@ export class ChartComponent extends React.Component {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
-      selectedChart: 'candle',
+      selectedChart: 'line',
     };
   }
 
