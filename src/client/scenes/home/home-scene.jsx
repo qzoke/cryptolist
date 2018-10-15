@@ -9,7 +9,7 @@ import { Query } from 'regraph-request';
 import moment from 'moment';
 import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
-const ITEMS_PER_PAGE = Math.trunc((screen.height - 260) / 70);
+const ITEMS_PER_PAGE = Math.trunc((window.innerHeight - 180) / 68);
 const CURRENCY_QUERY = `
 query AllCurrencies(
   $sort: [CurrencySorter]
@@ -118,14 +118,12 @@ export class HomeSceneComponent extends React.Component {
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-3 crypto-list-container">
-            <CryptoListGrid {...this.props} itemsPerPage={ITEMS_PER_PAGE} />
-          </div>
-          <div className="col-md-9 crypto-info-container">
-            <CryptoDeepInfo {...this.props} currency={this.state.currency} />
-          </div>
+      <div className="row">
+        <div className="col-md-3 crypto-list-container">
+          <CryptoListGrid {...this.props} itemsPerPage={ITEMS_PER_PAGE} />
+        </div>
+        <div className="col-md-9 crypto-info-container">
+          <CryptoDeepInfo {...this.props} currency={this.state.currency} />
         </div>
       </div>
     );

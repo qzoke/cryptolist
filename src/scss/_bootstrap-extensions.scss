@@ -1,5 +1,9 @@
 // customization of boostrap components goes here
 
+.container-fluid {
+  max-width: 2048px;
+}
+
 .form-control {
   padding: 0.05rem 0.75rem;
   border-radius: 0;

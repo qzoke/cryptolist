@@ -24,19 +24,21 @@ export class Search extends React.Component {
 
   render() {
     return (
-      <Form className="search" onSubmit={this.changeSearchQuery}>
-        <Input
-          type="text"
-          placeholder="Search"
-          name="searchText"
-          onChange={this.changeSearchText}
-          defaultValue={this.props.search}
-          autoComplete="off"
-        />
-        <Button color="link">
-          <FontAwesomeIcon icon="search" />
-        </Button>
-      </Form>
+      <div className="row">
+        <Form className="search col-md-12" onSubmit={this.changeSearchQuery}>
+          <Input
+            type="text"
+            placeholder="Search"
+            name="searchText"
+            onChange={this.changeSearchText}
+            defaultValue={this.props.search}
+            autoComplete="off"
+          />
+          <Button color="link">
+            <FontAwesomeIcon icon="search" />
+          </Button>
+        </Form>
+      </div>
     );
   }
 }
