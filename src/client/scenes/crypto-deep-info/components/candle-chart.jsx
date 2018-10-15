@@ -16,6 +16,7 @@ import {
 const GREEN = '#74A321';
 const RED = '#FF7777';
 const VOLUME_COLOR = '#cccccc66';
+const colors = ['#90BADB', '#C595D0', '#FEA334', '#5ECF96', '#FF62EA', '#69FFE9', '#69FFE9'];
 
 const CustomTooltip = ({ payload }) => {
   if (!payload.length) return null;
@@ -58,19 +59,15 @@ export class CandleChart extends React.Component {
     let low = Math.abs(candle.low - max);
     let shadow = [low, high];
 
-    return {
+    let res = {
       name: `${moment(candle.startUnix * 1000).format('H:m MMM DD')}`,
-      timestamp: candle.startUnix,
       VWA: max,
       greenBody: isPositive ? body : null,
       redBody: !isPositive ? body : null,
       shadow,
-      open: candle.open,
-      high: candle.high,
-      low: candle.low,
-      close: candle.close,
-      volume: candle.volume,
     };
+
+    return Object.assign({}, res, candle);
   }
 
   render() {
@@ -84,6 +81,24 @@ export class CandleChart extends React.Component {
     for (let index = 0; index < data.length; index += skip) {
       ticks.push(data[index].name);
     }
+
+    console.log(this.props);
+
+    let indicators = Object.keys(this.props.indicators).map((indicator, i) => {
+      return (
+        <Line
+          type="linear"
+          yAxisId="VWA"
+          dataKey={indicator}
+          stroke={colors[i % colors.length]}
+          animationDuration={500}
+          dot={false}
+          activeDot={false}
+          key={name}
+          strokeWidth={2}
+        />
+      );
+    });
 
     return (
       <div className="chart-container">
@@ -136,6 +151,7 @@ export class CandleChart extends React.Component {
               />
               <ErrorBar dataKey="redBody" width={0} strokeWidth={4} stroke={RED} direction="y" />
             </Line>
+            {indicators}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -145,4 +161,5 @@ export class CandleChart extends React.Component {
 
 CandleChart.propTypes = {
   currency: PropTypes.object,
+  indicators: PropTypes.object,
 };

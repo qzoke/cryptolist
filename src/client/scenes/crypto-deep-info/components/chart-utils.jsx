@@ -1,10 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { ResolutionGroup } from './resolution-group';
+import { IndicatorGroup } from './indicator-group';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
+const CHART_STYLES = {
+  candle: {
+    displayName: 'Candle',
+    iconName: 'chart-bar',
+  },
+  line: {
+    displayName: 'Line',
+    iconName: 'chart-line',
+  },
+};
 
 export const DATETIME_FORMAT = 'M/D/YY H:m';
 
@@ -18,6 +30,10 @@ export class ChartUtils extends React.Component {
     updateEndTime: PropTypes.func,
     selectedChart: PropTypes.string,
     updateSelectedChart: PropTypes.func,
+    timeseries: PropTypes.object,
+    addIndicator: PropTypes.func,
+    removeIndicator: PropTypes.func,
+    indicators: PropTypes.object,
   };
 
   constructor(props) {
@@ -26,12 +42,14 @@ export class ChartUtils extends React.Component {
     this.isValidEnd = this.isValidEnd.bind(this);
     this.toggleStartTime = this.toggleStartTime.bind(this);
     this.toggleEndTime = this.toggleEndTime.bind(this);
+    this.toggleChartSelector = this.toggleChartSelector.bind(this);
     this.hideDateTimes = this.hideDateTimes.bind(this);
     this.startTimeRef = React.createRef();
     this.endTimeRef = React.createRef();
     this.state = {
       startShown: false,
       endShown: false,
+      chartSelectorShown: false,
     };
   }
 
@@ -51,6 +69,12 @@ export class ChartUtils extends React.Component {
   toggleEndTime(e) {
     e.preventDefault();
     this.setState({ endShown: !this.state.endShown, startShown: false });
+  }
+
+  toggleChartSelector() {
+    this.setState(prevState => ({
+      chartSelectorShown: !prevState.chartSelectorShown,
+    }));
   }
 
   componentDidMount() {
@@ -83,10 +107,11 @@ export class ChartUtils extends React.Component {
             resolution={this.props.resolution}
           />
         </div>
+        <div className="control">
+          <IndicatorGroup addIndicator={this.props.addIndicator} />
+        </div>
         <div className="startTime control">
-          <Button onClick={this.toggleStartTime}>
-            {moment(this.props.startTime).format(DATETIME_FORMAT)}
-          </Button>
+          <Button onClick={this.toggleStartTime}>Start</Button>
           {this.state.startShown && (
             <div ref={ref => (this.startTimeRef = ref)}>
               <DateTime
@@ -99,9 +124,7 @@ export class ChartUtils extends React.Component {
           )}
         </div>
         <div className="endTime control">
-          <Button onClick={this.toggleEndTime}>
-            {moment(this.props.endTime).format(DATETIME_FORMAT)}
-          </Button>
+          <Button onClick={this.toggleEndTime}>End</Button>
           {this.state.endShown && (
             <div ref={ref => (this.endTimeRef = ref)}>
               <DateTime
@@ -114,21 +137,35 @@ export class ChartUtils extends React.Component {
           )}
         </div>
         <div className="align-self-end control">
-          <ButtonGroup size="sm">
-            <Button
-              color={this.props.selectedChart === 'candle' ? 'secondary' : 'link'}
-              onClick={() => this.props.updateSelectedChart('candle')}
-            >
-              <FontAwesomeIcon icon="chart-bar" />
-            </Button>
-            <Button
-              color={this.props.selectedChart === 'line' ? 'secondary' : 'link'}
-              onClick={() => this.props.updateSelectedChart('line')}
-            >
-              <FontAwesomeIcon icon="chart-line" />
-            </Button>
-          </ButtonGroup>
+          <Dropdown isOpen={this.state.chartSelectorShown} toggle={this.toggleChartSelector}>
+            <DropdownToggle caret>
+              <FontAwesomeIcon icon={CHART_STYLES[this.props.selectedChart].iconName} />
+            </DropdownToggle>
+            <DropdownMenu>
+              {Object.keys(CHART_STYLES).map(key => {
+                return (
+                  <DropdownItem
+                    color={this.props.selectedChart === key ? 'secondary' : 'link'}
+                    onClick={() => this.props.updateSelectedChart(key)}
+                    key={key}
+                  >
+                    <FontAwesomeIcon icon={CHART_STYLES[key].iconName} />{' '}
+                    {CHART_STYLES[key].displayName}
+                  </DropdownItem>
+                );
+              })}
+            </DropdownMenu>
+          </Dropdown>
         </div>
+        {Object.keys(this.props.indicators).map(i => {
+          return (
+            <div className="control" key={i}>
+              <Button color="link" onClick={() => this.props.removeIndicator(i)}>
+                {i.toUpperCase()} <FontAwesomeIcon icon="times" />
+              </Button>
+            </div>
+          );
+        })}
       </div>
     );
   }

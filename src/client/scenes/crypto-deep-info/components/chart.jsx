@@ -16,39 +16,45 @@ const INITIAL_START_TIME =
     .subtract(3, 'months')
     .unix() * 1000;
 const INITIAL_END_TIME = moment().unix() * 1000;
-const CANDLE_QUERY = `
-query CandlestickData(
-  $currencySymbol: String!,
-  $quoteSymbol: String,
-  $startTime: Int,
-  $endTime: Int,
-  $resolution: TimeResolution!
-) {
+const DEFAULT_INDICATORS = {
+  sma10: 'sma(periods:10)',
+  sma20: 'sma(periods:20)',
+  sma50: 'sma(periods:50)',
+};
+let getCandleQuery = (indicators = DEFAULT_INDICATORS) =>
+  `query CandlestickData($currencySymbol: String!, $quoteSymbol: String, $startTime: Int, $endTime: Int, $resolution: TimeResolution!) {
   currency(currencySymbol: $currencySymbol) {
-    vwa: markets(filter: { quoteSymbol_eq: $quoteSymbol }, aggregation: VWA) {
-      marketSymbol
-      timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-        open
-        high
-        low
-        close
-        startUnix
-        volume
-      }
+    vwa: markets(filter: {quoteSymbol_eq: $quoteSymbol}, aggregation: VWA) {
+      ...ChartData
     }
-    markets(filter: { quoteSymbol_eq: $quoteSymbol }) {
-      marketSymbol
-      timeseries (resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
-        open
-        high
-        low
-        close
-        startUnix
-        volume
-      }
+    markets(filter: {quoteSymbol_eq: $quoteSymbol}) {
+      ...ChartData
     }
   }
 }
+
+fragment ChartData on Market {
+  marketSymbol
+  timeseries(resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+    open
+    high
+    low
+    close
+    startUnix
+    volume
+    ${Object.keys(indicators).length ? '...CustomTimeseries' : ''}
+  }
+}
+
+  ${
+    Object.keys(indicators).length
+      ? `fragment CustomTimeseries on TimeSeries {
+        ${Object.keys(indicators).map(key => {
+          return `${key}: ${indicators[key]}`;
+        })}
+      }`
+      : ''
+  }
 `;
 
 export class ChartComponent extends React.Component {
@@ -58,14 +64,14 @@ export class ChartComponent extends React.Component {
     this.updateEndTime = this.updateEndTime.bind(this);
     this.updateResolution = this.updateResolution.bind(this);
     this.updateSelectedChart = this.updateSelectedChart.bind(this);
-
-    let query = qs.parse(props.location.search, { ignoreQueryPrefix: true });
+    this.addIndicator = this.addIndicator.bind(this);
+    this.removeIndicator = this.removeIndicator.bind(this);
 
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
-      selectedChart: query.chart || 'candle',
+      indicators: DEFAULT_INDICATORS,
     };
   }
 
@@ -98,6 +104,26 @@ export class ChartComponent extends React.Component {
     this.props.history.push(`${this.props.location.pathname}?${qs.stringify(query)}`);
   }
 
+  addIndicator(name, period) {
+    name = name.toLowerCase();
+    let indicators = this.state.indicators;
+    indicators[`${name}${period}`] = `${name}(periods:${period})`;
+    this.setState({ indicators });
+    this.props.updateQuery(getCandleQuery(indicators), () => {
+      this.props.getData();
+    });
+  }
+
+  removeIndicator(name) {
+    name = name.toLowerCase();
+    let indicators = this.state.indicators;
+    delete indicators[name];
+    this.setState({ indicators });
+    this.props.updateQuery(getCandleQuery(indicators), () => {
+      this.props.getData();
+    });
+  }
+
   render() {
     if (!this.props.data.currency) return <Loading />;
     if (this.props.data.currency.vwa.length === 0) {
@@ -107,6 +133,9 @@ export class ChartComponent extends React.Component {
         </div>
       );
     }
+
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    let selectedChart = query.chart || 'candle';
 
     return (
       <div className="currency-info-container graph">
@@ -118,14 +147,17 @@ export class ChartComponent extends React.Component {
             updateStartTime={this.updateStartTime}
             updateEndTime={this.updateEndTime}
             updateResolution={this.updateResolution}
-            selectedChart={this.state.selectedChart}
+            selectedChart={selectedChart}
             updateSelectedChart={this.updateSelectedChart}
+            addIndicator={this.addIndicator}
+            indicators={this.state.indicators}
+            removeIndicator={this.removeIndicator}
           />
-          {this.state.selectedChart === 'candle' && (
-            <CandleChart currency={this.props.data.currency} />
+          {selectedChart === 'candle' && (
+            <CandleChart currency={this.props.data.currency} indicators={this.state.indicators} />
           )}
 
-          {this.state.selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
+          {selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
           <div className="historical-data-container">
             <HistoricalData
               {...this.props}
@@ -142,12 +174,13 @@ export class ChartComponent extends React.Component {
 
 ChartComponent.propTypes = {
   getData: PropTypes.func,
+  updateQuery: PropTypes.func,
   data: PropTypes.object,
   location: PropTypes.object,
   history: PropTypes.object,
 };
 
-export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
+export const Chart = Query(ChartComponent, getCandleQuery(), props => ({
   startTime: INITIAL_START_TIME / 1000,
   endTime: INITIAL_END_TIME / 1000,
   resolution: INITIAL_RESOLUTION.value,

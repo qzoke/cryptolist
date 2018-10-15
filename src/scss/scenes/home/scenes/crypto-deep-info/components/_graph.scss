@@ -4,11 +4,7 @@
     padding-bottom: 1em;
     .startTime,
     .endTime {
-      // position: absolute;
       z-index: 1;
-      button {
-        font-size: 0.8em;
-      }
     }
 
     .control {
@@ -20,6 +16,7 @@
       }
       .btn {
         height: 32px;
+        font-size: 0.8em;
       }
       padding-right: 3px;
     }
