@@ -32,6 +32,15 @@
     }
   }
 
+  .candle-tooltip {
+    background: white;
+    padding: 0.7em;
+    border: 1px solid #ccc;
+    .header {
+      font-weight: bold;
+    }
+  }
+
   // REACT DATE PICKER
   .rdt {
     position: relative;

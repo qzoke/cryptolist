@@ -17,6 +17,36 @@ const GREEN = '#74A321';
 const RED = '#FF7777';
 const VOLUME_COLOR = '#cccccc66';
 
+const CustomTooltip = ({ payload }) => {
+  if (!payload.length) return null;
+  let item = payload[0].payload;
+  return (
+    <div className="candle-tooltip">
+      <div>
+        <span className="header">{item.name}</span>
+      </div>
+      <div>
+        <span className="header">Volume:</span> {item.volume}
+      </div>
+      <div>
+        <span className="header">Open:</span> {item.open}
+      </div>
+      <div>
+        <span className="header">High:</span> {item.high}
+      </div>
+      <div>
+        <span className="header">Low:</span> {item.low}
+      </div>
+      <div>
+        <span className="header">Close:</span> {item.close}
+      </div>
+    </div>
+  );
+};
+CustomTooltip.propTypes = {
+  payload: PropTypes.array,
+};
+
 export class CandleChart extends React.Component {
   generateDatumFromCandle(candle) {
     let isPositive = candle.close >= candle.open;
@@ -78,7 +108,7 @@ export class CandleChart extends React.Component {
               style={{ display: 'none' }}
             />
             <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="volume"
               yAxisId="volume"
