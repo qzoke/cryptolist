@@ -77,16 +77,13 @@ export class ChartUtils extends React.Component {
   render() {
     return (
       <div className="controls row">
-        <div className="col-sm-2">
+        <div className="control">
           <ResolutionGroup
             updateResolution={this.props.updateResolution}
             resolution={this.props.resolution}
           />
         </div>
-        <div
-          className="startTime offset-sm-1 col-sm-4"
-          style={{ position: 'absolute' /* Bug fix for safari */ }}
-        >
+        <div className="startTime control">
           <Button onClick={this.toggleStartTime}>
             {moment(this.props.startTime).format(DATETIME_FORMAT)}
           </Button>
@@ -101,10 +98,7 @@ export class ChartUtils extends React.Component {
             </div>
           )}
         </div>
-        <div
-          className="endTime offset-sm-3 col-sm-2"
-          style={{ position: 'absolute' /* Bug fix for safari */ }}
-        >
+        <div className="endTime control">
           <Button onClick={this.toggleEndTime}>
             {moment(this.props.endTime).format(DATETIME_FORMAT)}
           </Button>
@@ -119,7 +113,7 @@ export class ChartUtils extends React.Component {
             </div>
           )}
         </div>
-        <div className="col-sm-2 offset-sm-3 align-self-end">
+        <div className="align-self-end control">
           <ButtonGroup size="sm">
             <Button
               color={this.props.selectedChart === 'candle' ? 'secondary' : 'link'}

@@ -24,13 +24,14 @@ export class CryptoDeepInfo extends React.Component {
   render() {
     let currency = this.props.currency;
     let isPositiveChange = Math.sign(currency.percentChange >= 0);
-
     return (
       <div className="crypto-deep-info">
         <div className="hero row">
           <div className="col-sm-4">
             <h2 className="name">{currency.currencyName}</h2>
-            <div className="symbol">({currency.currencySymbol})</div>
+            <div className="symbol">
+              ({currency.currencySymbol}/{this.props.match.params.quote.toUpperCase()})
+            </div>
           </div>
           <div className="price-container col-sm-4">
             <div className="price">{currency.price}</div>
@@ -66,4 +67,5 @@ export class CryptoDeepInfo extends React.Component {
 CryptoDeepInfo.propTypes = {
   data: PropTypes.object,
   currency: PropTypes.object,
+  match: PropTypes.object,
 };
