@@ -36,6 +36,7 @@
     "docker:push": "docker push \"altangent/cryptolist:$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\" ,]//g')\""
   },
   "dependencies": {
+    "@altangent/config-manager": "^1.0.2",
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "0.0.17",
@@ -44,6 +45,7 @@
     "compression": "^1.7.2",
     "cryptocoins-icons": "github:altangent/cryptocoins",
     "express": "^4.16.2",
+    "graphql-request": "^1.8.2",
     "moment": "^2.21.0",
     "npm": "^5.7.1",
     "prop-types": "^15.6.1",

@@ -13,6 +13,8 @@ app.use('/public/app', serveStatic(path.join(__dirname, '../../dist/app')));
 app.use('/public/css', serveStatic(path.join(__dirname, '../../dist/css')));
 app.use(bodyParser.json());
 
+app.use(require('./api/proxy'));
+
 // cryptocoins
 app.use(
   '/public/cryptocoins',
