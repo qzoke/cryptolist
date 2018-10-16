@@ -91,7 +91,7 @@ export class CandleChart extends React.Component {
           yAxisId="VWA"
           dataKey={indicator}
           stroke={colors[i % colors.length]}
-          animationDuration={500}
+          isAnimationActive={false}
           dot={false}
           activeDot={false}
           key={name}
@@ -124,12 +124,13 @@ export class CandleChart extends React.Component {
             />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip content={<CustomTooltip />} />
+            {indicators}
             <Bar
               dataKey="volume"
               yAxisId="volume"
               barSize={20}
               fill={VOLUME_COLOR}
-              animationDuration={500}
+              isAnimationActive={false}
             />
             <Line
               type="linear"
@@ -151,7 +152,6 @@ export class CandleChart extends React.Component {
               />
               <ErrorBar dataKey="redBody" width={0} strokeWidth={4} stroke={RED} direction="y" />
             </Line>
-            {indicators}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
