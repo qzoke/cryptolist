@@ -35,7 +35,7 @@ let getCandleQuery = (indicators = DEFAULT_INDICATORS) =>
 
 fragment ChartData on Market {
   marketSymbol
-  timeseries(resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST) {
+  timeseries(resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST includeBlanks: true) {
     open
     high
     low

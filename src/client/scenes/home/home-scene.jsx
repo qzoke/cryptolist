@@ -76,7 +76,7 @@ query AllCurrencies(
     markets(aggregation: VWA) {
       id
       marketSymbol
-      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST includeBlanks: true) {
+      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
         open
       }
       ticker {
