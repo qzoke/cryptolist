@@ -8,7 +8,7 @@ import { RegraphRequest } from 'regraph-request';
 createIconFactory();
 
 ReactDom.render(
-  <RegraphRequest value="https://alpha.blocktap.io/graphql">
+  <RegraphRequest value="https://www.cryptolist.com/api/graphql">
     <Router>
       <Layout />
     </Router>
