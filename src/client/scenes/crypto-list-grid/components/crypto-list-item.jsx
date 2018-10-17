@@ -13,17 +13,17 @@ export const CryptoListItem = ({ currency, bitcoin, quoteSymbol, location }) => 
         location.search
       }`}
     >
-      <div className="currency-icon-rank col-sm-2">
+      <div className="currency-icon-rank col-2">
         <div className="currency-icon">
           <i className={'cc ' + currency.symbol.toUpperCase()} />
         </div>
         <div className="currency-rank">{currency.marketCapRank}</div>
       </div>
-      <div className="currency-info col-sm-3">
+      <div className="currency-info col-3">
         <div className="name">{currency.name}</div>
         <div className="price">{currency.price.toUpperCase()}</div>
       </div>
-      <div className="currency-graph col-sm-3">
+      <div className="currency-graph col-3">
         <MiniGraph
           quoteSymbol={quoteSymbol}
           currency={currency}
