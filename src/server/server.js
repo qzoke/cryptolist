@@ -4,8 +4,11 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
+const configService = require('./core/domain/config-service');
 const app = express();
 const PORT = 8000;
+
+configService.load();
 
 app.use(compression());
 app.use('/public', serveStatic(path.join(__dirname, '../../public')));
