@@ -119,7 +119,7 @@ export class HomeSceneComponent extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-3 crypto-list-container">
+        <div className="col-auto crypto-list-container">
           <CryptoListGrid {...this.props} itemsPerPage={ITEMS_PER_PAGE} />
         </div>
         <div className="col-md-9 crypto-info-container">

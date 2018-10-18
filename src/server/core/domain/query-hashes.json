@@ -1,0 +1,23 @@
+[
+  {
+    "name": "AllCurrencies",
+    "hash": "b2cdc2bc2cec9d1661b625d328362a4a5b40ab58ac3df8c7c4dd35c7ba04bef5",
+    "variables": {
+      "name": "resolution",
+      "restriction": "in",
+      "value": ["_1h", "_2h", "_4h", "_1d"]
+    }
+  },
+  {
+    "name": "CandlestickData",
+    "hash": "7fa13b18c19f4a11cdeca9b17747b31bf83e356a93ea9c3047077c09db5f1c51"
+  },
+  {
+    "name": "HistoricalData",
+    "hash": "e4b75363879c4dd8b674e87b462be0278fce0b5ecb09891ea9d25f0dd8938fd2"
+  },
+  {
+    "name": "MarketQuery",
+    "hash": "c7f1794a15db3414e9ad05a2377be9a0549c3b36908f88c9e1bee2a4a0098dab"
+  }
+]

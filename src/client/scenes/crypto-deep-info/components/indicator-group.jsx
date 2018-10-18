@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-export const Options = ['SMA', 'EMA'];
-
 export class IndicatorGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -23,14 +21,11 @@ export class IndicatorGroup extends React.Component {
   }
 
   addIndicator(name) {
-    let result = prompt(`Enter ${name} period`);
-    if (parseInt(result)) {
-      this.props.addIndicator(name, result);
-    }
+    this.props.addIndicator(name);
   }
 
   render() {
-    let buttons = Options.map(r => (
+    let buttons = this.props.allIndicators.map(r => (
       <DropdownItem key={r} size="sm" onClick={() => this.addIndicator(r)}>
         {r}
       </DropdownItem>
@@ -51,4 +46,5 @@ export class IndicatorGroup extends React.Component {
 
 IndicatorGroup.propTypes = {
   addIndicator: PropTypes.func,
+  allIndicators: PropTypes.array,
 };

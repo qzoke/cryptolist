@@ -16,24 +16,32 @@ const INITIAL_START_TIME =
     .subtract(3, 'months')
     .unix() * 1000;
 const INITIAL_END_TIME = moment().unix() * 1000;
-const DEFAULT_INDICATORS = {
-  sma10: 'sma(periods:10)',
-  sma20: 'sma(periods:20)',
-  sma50: 'sma(periods:50)',
-};
-let getCandleQuery = (indicators = DEFAULT_INDICATORS) =>
-  `query CandlestickData($currencySymbol: String!, $quoteSymbol: String, $startTime: Int, $endTime: Int, $resolution: TimeResolution!) {
+const DEFAULT_INDICATORS = ['sma10', 'sma20', 'sma50'];
+const ALL_INDICATORS = [
+  'sma5',
+  'sma10',
+  'sma20',
+  'sma50',
+  'sma100',
+  'ema5',
+  'ema10',
+  'ema20',
+  'ema50',
+  'ema100',
+];
+const CANDLE_QUERY = `
+query CandlestickData($currencySymbol: String!, $quoteSymbol: String, $startTime: Int, $endTime: Int, $resolution: TimeResolution!) {
   currency(currencySymbol: $currencySymbol) {
     vwa: markets(filter: {quoteSymbol_eq: $quoteSymbol}, aggregation: VWA) {
-      ...ChartData
+      ...chartData
     }
     markets(filter: {quoteSymbol_eq: $quoteSymbol}) {
-      ...ChartData
+      ...chartData
     }
   }
 }
 
-fragment ChartData on Market {
+fragment chartData on Market {
   marketSymbol
   timeseries(resolution: $resolution, start: $startTime, end: $endTime, sort: OLD_FIRST includeBlanks: true) {
     open
@@ -42,19 +50,22 @@ fragment ChartData on Market {
     close
     startUnix
     volume
-    ${Object.keys(indicators).length ? '...CustomTimeseries' : ''}
+    ...timeseriesData
   }
 }
 
-  ${
-    Object.keys(indicators).length
-      ? `fragment CustomTimeseries on TimeSeries {
-        ${Object.keys(indicators).map(key => {
-          return `${key}: ${indicators[key]}`;
-        })}
-      }`
-      : ''
-  }
+fragment timeseriesData on TimeSeries {
+  sma5: sma(periods: 5)
+  sma10: sma(periods: 10)
+  sma20: sma(periods: 20)
+  sma50: sma(periods: 50)
+  sma100: sma(periods: 100)
+  ema5: ema(periods: 5)
+  ema10: ema(periods: 10)
+  ema20: ema(periods: 20)
+  ema50: ema(periods: 50)
+  ema100: ema(periods: 100)
+}
 `;
 
 export class ChartComponent extends React.Component {
@@ -104,24 +115,15 @@ export class ChartComponent extends React.Component {
     this.props.history.push(`${this.props.location.pathname}?${qs.stringify(query)}`);
   }
 
-  addIndicator(name, period) {
+  addIndicator(name) {
     name = name.toLowerCase();
-    let indicators = this.state.indicators;
-    indicators[`${name}${period}`] = `${name}(periods:${period})`;
-    this.setState({ indicators });
-    this.props.updateQuery(getCandleQuery(indicators), () => {
-      this.props.getData();
-    });
+    if (this.state.indicators.includes(name)) return;
+    this.setState(state => ({ indicators: [...state.indicators, name] }));
   }
 
   removeIndicator(name) {
     name = name.toLowerCase();
-    let indicators = this.state.indicators;
-    delete indicators[name];
-    this.setState({ indicators });
-    this.props.updateQuery(getCandleQuery(indicators), () => {
-      this.props.getData();
-    });
+    this.setState(state => ({ indicators: state.indicators.filter(i => i !== name) }));
   }
 
   render() {
@@ -152,12 +154,14 @@ export class ChartComponent extends React.Component {
             addIndicator={this.addIndicator}
             indicators={this.state.indicators}
             removeIndicator={this.removeIndicator}
+            allIndicators={ALL_INDICATORS}
           />
+
           {selectedChart === 'candle' && (
             <CandleChart currency={this.props.data.currency} indicators={this.state.indicators} />
           )}
-
           {selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
+
           <div className="historical-data-container">
             <HistoricalData
               {...this.props}
@@ -180,7 +184,7 @@ ChartComponent.propTypes = {
   history: PropTypes.object,
 };
 
-export const Chart = Query(ChartComponent, getCandleQuery(), props => ({
+export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
   startTime: INITIAL_START_TIME / 1000,
   endTime: INITIAL_END_TIME / 1000,
   resolution: INITIAL_RESOLUTION.value,

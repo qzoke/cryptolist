@@ -33,7 +33,8 @@ export class ChartUtils extends React.Component {
     timeseries: PropTypes.object,
     addIndicator: PropTypes.func,
     removeIndicator: PropTypes.func,
-    indicators: PropTypes.object,
+    indicators: PropTypes.array,
+    allIndicators: PropTypes.array,
   };
 
   constructor(props) {
@@ -108,7 +109,10 @@ export class ChartUtils extends React.Component {
           />
         </div>
         <div className="control">
-          <IndicatorGroup addIndicator={this.props.addIndicator} />
+          <IndicatorGroup
+            addIndicator={this.props.addIndicator}
+            allIndicators={this.props.allIndicators}
+          />
         </div>
         <div className="startTime control">
           <Button onClick={this.toggleStartTime}>Start</Button>
@@ -157,7 +161,7 @@ export class ChartUtils extends React.Component {
             </DropdownMenu>
           </Dropdown>
         </div>
-        {Object.keys(this.props.indicators).map(i => {
+        {this.props.indicators.map(i => {
           return (
             <div className="control" key={i}>
               <Button color="link" onClick={() => this.props.removeIndicator(i)}>

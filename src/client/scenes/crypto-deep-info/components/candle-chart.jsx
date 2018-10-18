@@ -84,7 +84,7 @@ export class CandleChart extends React.Component {
 
     console.log(this.props);
 
-    let indicators = Object.keys(this.props.indicators).map((indicator, i) => {
+    let indicators = this.props.indicators.map((indicator, i) => {
       return (
         <Line
           type="linear"
@@ -161,5 +161,5 @@ export class CandleChart extends React.Component {
 
 CandleChart.propTypes = {
   currency: PropTypes.object,
-  indicators: PropTypes.object,
+  indicators: PropTypes.array,
 };
