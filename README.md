@@ -4,5 +4,11 @@
 
 ## Contributing
 
-We're looking for contributors! The Cryptolist UI is built in React and market data is supplied by [Blocktap](https://blocktap.io). To help out, check out our [open issues](https://github.com/altangent/cryptolist/issues) 
-then [contact us](mailto:contact@altangent.com) for an open-source developer API token.
+We're looking for contributors!
+
+### Getting started
+1. [Install Node and NPM](https://nodejs.org/en/download/)
+1. Drop us an email to [request a blocktap API token](mailto:contact@altangent.com)
+1. After you have your token, put it in [the config file](https://github.com/altangent/cryptolist/blob/master/config.json#L3)
+1. `npm run watch`
+1. Visit `http://localhost:8000`
