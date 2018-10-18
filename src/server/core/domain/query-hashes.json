@@ -1,23 +1,32 @@
 [
   {
     "name": "AllCurrencies",
-    "hash": "b2cdc2bc2cec9d1661b625d328362a4a5b40ab58ac3df8c7c4dd35c7ba04bef5",
-    "variables": {
-      "name": "resolution",
-      "restriction": "in",
-      "value": ["_1h", "_2h", "_4h", "_1d"]
-    }
+    "hash": "1be1a60d4c2ce1db3aaa2d497c0ebb0615da76e424ec27083fb11419f21e9100",
+    "variables": [
+      {
+        "name": "resolution",
+        "restriction": "in",
+        "value": ["_1h", "_2h", "_4h", "_1d"]
+      }
+    ]
   },
   {
     "name": "CandlestickData",
-    "hash": "7fa13b18c19f4a11cdeca9b17747b31bf83e356a93ea9c3047077c09db5f1c51"
+    "hash": "aa5cab9f68e9bb6fd58675a63d2a184ee0f2d2fea931e20bfa3b377de2dce4ac",
+    "variables": [
+      {
+        "name": "resolution",
+        "restriction": "in",
+        "value": ["_1h", "_2h", "_4h", "_1d"]
+      }
+    ]
   },
   {
     "name": "HistoricalData",
-    "hash": "e4b75363879c4dd8b674e87b462be0278fce0b5ecb09891ea9d25f0dd8938fd2"
+    "hash": "56477ed3beb94fbced7beedfbe15fdd11dc504389b9dd686f030bec86cedaf39"
   },
   {
     "name": "MarketQuery",
-    "hash": "c7f1794a15db3414e9ad05a2377be9a0549c3b36908f88c9e1bee2a4a0098dab"
+    "hash": "4490c8d3301d58e0d5097faaf91baca9fdef7cc15b62a6485d77d63a84421b05"
   }
 ]
