@@ -8,7 +8,7 @@ import { RegraphRequest } from 'regraph-request';
 createIconFactory();
 
 ReactDom.render(
-  <RegraphRequest value="https://www.cryptolist.com/api/graphql">
+  <RegraphRequest value="/api/graphql">
     <Router>
       <Layout />
     </Router>
