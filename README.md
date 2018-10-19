@@ -4,7 +4,9 @@
 
 ## Contributing
 
-We're looking for contributors!
+We're looking for contributors! 
+
+[![Gitter](https://img.shields.io/gitter/room/altangent/cryptolist.js.svg)](https://gitter.im/altangent/cryptolist)
 
 ### Getting started
 1. [Install Node and NPM](https://nodejs.org/en/download/)
