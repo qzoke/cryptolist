@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Nav, Navbar, NavItem, NavbarBrand, Collapse, NavbarToggler } from 'reactstrap';
+import { Nav, Navbar, NavbarBrand, Collapse, NavbarToggler } from 'reactstrap';
 import { QuoteCurrencySwitcher } from './quote-currency-switcher';
 import PropTypes from 'prop-types';
 
@@ -22,12 +22,7 @@ export class AppNav extends React.Component {
         <NavbarToggler onClick={this.toggle} />
         <Collapse navbar isOpen={this.state.isOpen}>
           <Nav className="ml-auto" navbar>
-            <NavItem>
-              <QuoteCurrencySwitcher
-                quoteSymbol={this.props.quoteSymbol}
-                onClick={this.props.onQuoteChange}
-              />
-            </NavItem>
+            <QuoteCurrencySwitcher {...this.props} />
           </Nav>
         </Collapse>
       </Navbar>
@@ -35,7 +30,4 @@ export class AppNav extends React.Component {
   }
 }
 
-AppNav.propTypes = {
-  onQuoteChange: PropTypes.func,
-  quoteSymbol: PropTypes.string,
-};
+AppNav.propTypes = {};

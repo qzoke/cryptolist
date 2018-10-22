@@ -44,6 +44,7 @@ const CustomTooltip = ({ payload }) => {
     </div>
   );
 };
+
 CustomTooltip.propTypes = {
   payload: PropTypes.array,
 };
@@ -81,8 +82,6 @@ export class CandleChart extends React.Component {
     for (let index = 0; index < data.length; index += skip) {
       ticks.push(data[index].name);
     }
-
-    console.log(this.props);
 
     let indicators = this.props.indicators.map((indicator, i) => {
       return (

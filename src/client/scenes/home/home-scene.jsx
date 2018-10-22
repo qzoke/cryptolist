@@ -102,11 +102,7 @@ export class HomeSceneComponent extends React.Component {
   static getDerivedStateFromProps(props) {
     if (props.data.currency) {
       return {
-        currency: marketCapFormat(
-          props.data.currency,
-          props.data.bitcoin,
-          props.match.params.quote
-        ),
+        currency: marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.primary),
       };
     }
     return null;
@@ -132,13 +128,14 @@ export class HomeSceneComponent extends React.Component {
 
 HomeSceneComponent.propTypes = {
   data: PropTypes.object,
-  match: PropTypes.object,
+  quote: PropTypes.object,
+  base: PropTypes.string,
 };
 
-export const HomeScene = Query(HomeSceneComponent, CURRENCY_QUERY, ({ match, location }) => {
+export const HomeScene = Query(HomeSceneComponent, CURRENCY_QUERY, ({ base, location }) => {
   let query = qs.parse(location.search, { ignoreQueryPrefix: true });
   return {
-    selectedCurrency: match.params.base,
+    selectedCurrency: base,
     page: {
       limit: ITEMS_PER_PAGE,
       skip: query.page ? (query.page - 1) * ITEMS_PER_PAGE : 0,

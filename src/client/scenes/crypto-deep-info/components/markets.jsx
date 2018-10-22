@@ -154,7 +154,6 @@ export class MarketsComponent extends React.Component {
 
 MarketsComponent.propTypes = {
   data: PropTypes.object,
-  match: PropTypes.object.isRequired,
 };
 
 export const Markets = Query(MarketsComponent, MARKET_QUERY, ({ currencySymbol }) => ({

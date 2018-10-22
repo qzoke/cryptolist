@@ -4,7 +4,6 @@ import moment from 'moment';
 import { Tooltip } from 'reactstrap';
 import { Loading } from '../../../components/loading';
 import { Query } from 'regraph-request';
-import { getPairFromMatch } from '../../../library/path-tools';
 import { formatPrice } from '../../../library/currency-tools';
 import { DATETIME_FORMAT } from './chart-utils';
 
@@ -103,19 +102,18 @@ export class HistoricalDataComponent extends React.Component {
 
   render() {
     let list, exchanges;
-    let { quote } = getPairFromMatch(this.props.match);
 
     if (!this.props.data.currency) {
       list = <Loading />;
       exchanges = null;
     } else {
       let market = this.props.data.currency.markets.find(m =>
-        m.marketSymbol.endsWith(quote.toUpperCase())
+        m.marketSymbol.endsWith(this.props.quote.primary.toUpperCase())
       );
       if (!market) return null;
 
       list = market.timeseries.map(t => (
-        <HistoricalDataItem {...t} quote={quote} key={t.startUnix} />
+        <HistoricalDataItem {...t} quote={this.props.quote.primary} key={t.startUnix} />
       ));
 
       exchanges = this.props.data.currency.exchanges.map(exchange => {
@@ -163,7 +161,7 @@ export class HistoricalDataComponent extends React.Component {
         <div className="col-sm-12">
           <div className="row header">
             <div className="col-sm-3">Time</div>
-            <div className="col-sm-3 number">Volume ({quote.toUpperCase()})</div>
+            <div className="col-sm-3 number">Volume ({this.props.quote.primary.toUpperCase()})</div>
             <div className="col-sm-3 number">Percent Change</div>
             <div className="col-sm-3 number">Price</div>
           </div>
@@ -177,20 +175,24 @@ export class HistoricalDataComponent extends React.Component {
 HistoricalDataComponent.propTypes = {
   data: PropTypes.object,
   getData: PropTypes.func,
-  match: PropTypes.object,
+  quote: PropTypes.object,
+  base: PropTypes.string,
   resolution: PropTypes.object,
   endTime: PropTypes.number,
   startTime: PropTypes.number,
 };
 
-export const HistoricalData = Query(HistoricalDataComponent, CANDLE_QUERY, props => {
-  let { base, quote } = getPairFromMatch(props.match);
-  return {
-    currencySymbol: base.toUpperCase(),
-    quote: quote.toUpperCase(),
-    resolution: props.resolution.value,
-    limit: LIMIT,
-    aggregation: 'VWA',
-    exchangeSymbol: '%',
-  };
-});
+export const HistoricalData = Query(
+  HistoricalDataComponent,
+  CANDLE_QUERY,
+  ({ base, quote, resolution }) => {
+    return {
+      currencySymbol: base.toUpperCase(),
+      quote: quote.primary.toUpperCase(),
+      resolution: resolution.value,
+      limit: LIMIT,
+      aggregation: 'VWA',
+      exchangeSymbol: '%',
+    };
+  }
+);

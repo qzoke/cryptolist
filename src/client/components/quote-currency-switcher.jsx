@@ -1,55 +1,93 @@
 import React from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, NavItem, DropdownItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const quotes = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];
+const quoteOptions = ['USD', 'USDT', 'EUR', 'GBP', 'BTC'];
 
 export class QuoteCurrencySwitcher extends React.Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
+    this.togglePrimary = this.togglePrimary.bind(this);
+    this.toggleSecondary = this.toggleSecondary.bind(this);
+
     this.state = {
-      dropdownOpen: false,
+      primaryOpen: false,
+      secondaryOpen: false,
     };
   }
 
-  toggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  togglePrimary() {
+    this.setState(state => ({ primaryOpen: !state.primaryOpen }));
+  }
+
+  toggleSecondary() {
+    this.setState(state => ({ secondaryOpen: !state.secondaryOpen }));
+  }
+
+  changeQuoteSymbol(which) {
+    return value => {
+      let x = {};
+      x[which] = value;
+      this.props.updateCurrencies(x);
+    };
   }
 
   render() {
-    let quote = this.props.quoteSymbol;
-    if (!quote) quote = 'usd';
+    const inputs = (quote, onClick) =>
+      quoteOptions.map(quoteOption => {
+        const isDisabled = quoteOption === quote;
+        return (
+          <DropdownItem
+            className="dropdown-item"
+            key={quoteOption}
+            disabled={isDisabled}
+            onClick={() => onClick(quoteOption.toLowerCase())}
+          >
+            {quoteOption}
+          </DropdownItem>
+        );
+      });
 
-    const inputs = quotes.map(x => {
-      const isDisabled = x === quote;
-      return (
-        <DropdownItem
-          className="dropdown-item"
-          key={x}
-          disabled={isDisabled}
-          onClick={() => this.props.onClick(x.toLowerCase())}
-        >
-          {x}
-        </DropdownItem>
-      );
-    });
     return (
-      <ButtonDropdown
-        className="currency-switcher"
-        isOpen={this.state.dropdownOpen}
-        toggle={this.toggle}
-      >
-        <DropdownToggle color="" caret>
-          {quote.toUpperCase()}
-        </DropdownToggle>
-        <DropdownMenu>{inputs}</DropdownMenu>
-      </ButtonDropdown>
+      <React.Fragment>
+        <NavItem>
+          {this.props.quote.primary && (
+            <ButtonDropdown
+              className="currency-switcher"
+              isOpen={this.state.primaryOpen}
+              toggle={this.togglePrimary}
+            >
+              <DropdownToggle color="" caret>
+                {this.props.quote.primary.toUpperCase()}
+              </DropdownToggle>
+              <DropdownMenu>
+                {inputs(this.props.quote.primary, this.changeQuoteSymbol('primary'))}
+              </DropdownMenu>
+            </ButtonDropdown>
+          )}
+        </NavItem>
+        <NavItem>
+          {this.props.quote.secondary && (
+            <ButtonDropdown
+              className="currency-switcher"
+              isOpen={this.state.secondaryOpen}
+              toggle={this.toggleSecondary}
+            >
+              <DropdownToggle color="" caret>
+                {this.props.quote.secondary.toUpperCase()}
+              </DropdownToggle>
+              <DropdownMenu>
+                {inputs(this.props.quote.secondary, this.changeQuoteSymbol('secondary'))}
+              </DropdownMenu>
+            </ButtonDropdown>
+          )}
+        </NavItem>
+      </React.Fragment>
     );
   }
 }
 
 QuoteCurrencySwitcher.propTypes = {
-  quoteSymbol: PropTypes.string,
-  onClick: PropTypes.func,
+  quote: PropTypes.object,
+  updateCurrencies: PropTypes.func,
 };

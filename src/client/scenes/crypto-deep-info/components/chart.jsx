@@ -182,12 +182,14 @@ ChartComponent.propTypes = {
   data: PropTypes.object,
   location: PropTypes.object,
   history: PropTypes.object,
+  base: PropTypes.string,
+  quote: PropTypes.object,
 };
 
 export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
   startTime: INITIAL_START_TIME / 1000,
   endTime: INITIAL_END_TIME / 1000,
   resolution: INITIAL_RESOLUTION.value,
-  quoteSymbol: props.match.params.quote,
-  currencySymbol: props.match.params.base,
+  quoteSymbol: props.quote.primary,
+  currencySymbol: props.base,
 }));

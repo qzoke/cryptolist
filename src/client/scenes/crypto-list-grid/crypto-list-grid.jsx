@@ -41,14 +41,14 @@ export class CryptoListGridComponent extends React.Component {
     const currencyList = marketCapFormat(
       this.props.data.currencies.data,
       this.props.data.bitcoin,
-      this.props.match.params.quote
+      this.props.quote.primary
     ).map(currency => {
       return (
         <CryptoListItem
           key={currency.id}
           currency={currency}
           bitcoin={this.props.data.bitcoin}
-          quoteSymbol={this.props.match.params.quote}
+          quoteSymbol={this.props.quote.primary}
           location={this.props.location}
         />
       );
@@ -77,6 +77,7 @@ CryptoListGridComponent.propTypes = {
   match: PropTypes.object,
   location: PropTypes.object,
   history: PropTypes.object,
+  quote: PropTypes.object,
 };
 
 export const CryptoListGrid = withRouter(CryptoListGridComponent);

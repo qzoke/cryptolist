@@ -30,7 +30,7 @@ export class CryptoDeepInfo extends React.Component {
           <div className="col-sm-4">
             <h2 className="name">{currency.currencyName}</h2>
             <div className="symbol">
-              ({currency.currencySymbol}/{this.props.match.params.quote.toUpperCase()})
+              ({currency.currencySymbol}/{this.props.quote.primary.toUpperCase()})
             </div>
           </div>
           <div className="price-container col-sm-4">
@@ -67,5 +67,5 @@ export class CryptoDeepInfo extends React.Component {
 CryptoDeepInfo.propTypes = {
   data: PropTypes.object,
   currency: PropTypes.object,
-  match: PropTypes.object,
+  quote: PropTypes.object,
 };

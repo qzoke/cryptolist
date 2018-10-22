@@ -8,7 +8,7 @@ import { Route, Link } from 'react-router-dom';
 
 export class Switcher extends React.Component {
   render() {
-    const { match } = this.props;
+    const { quote, base } = this.props;
     const PropsBasicInfo = () => <BasicInfo {...this.props} />;
     const PropsChart = () => (
       <Chart {...this.props} currencySymbol={this.props.currency.currencySymbol} />
@@ -16,7 +16,7 @@ export class Switcher extends React.Component {
     const PropsMarkets = () => (
       <Markets {...this.props} currencySymbol={this.props.currency.currencySymbol} />
     );
-    const pathHead = `/${match.params.quote}/${match.params.base}`;
+    const pathHead = `/${quote.primary}-${quote.secondary}/${base}`;
     const pathname = this.props.location.pathname.toLowerCase();
     const qs = this.props.location.search;
 
@@ -58,6 +58,7 @@ export class Switcher extends React.Component {
 
 Switcher.propTypes = {
   currency: PropTypes.object,
-  match: PropTypes.object,
+  quote: PropTypes.object,
+  base: PropTypes.string,
   location: PropTypes.object,
 };

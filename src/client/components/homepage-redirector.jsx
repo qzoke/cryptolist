@@ -3,11 +3,16 @@ import { Redirect } from 'react-router-dom';
 
 export const HomepageRedirector = () => {
   if (window.location.pathname) {
-    let [quote, base] = window.location.pathname.split('/').filter(s => s.length);
+    let [quotes, base] = window.location.pathname.split('/').filter(s => s.length);
+    let [primary, secondary] = (quotes || '').split('-');
     let changed = false;
 
-    if (!quote) {
-      quote = 'usd';
+    if (!primary) {
+      primary = 'usd';
+      changed = true;
+    }
+    if (!secondary) {
+      secondary = 'btc';
       changed = true;
     }
     if (!base) {
@@ -15,7 +20,7 @@ export const HomepageRedirector = () => {
       changed = true;
     }
 
-    if (changed) return <Redirect to={`/${quote}/${base}/chart`} />;
+    if (changed) return <Redirect to={`/${primary}-${secondary}/${base}/chart`} />;
   }
   return <div />;
 };
