@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar, NavbarBrand, Collapse, NavbarToggler } from 'reactstrap';
 import { QuoteCurrencySwitcher } from './quote-currency-switcher';
-import PropTypes from 'prop-types';
 
 export class AppNav extends React.Component {
   state = {
@@ -29,5 +28,3 @@ export class AppNav extends React.Component {
     );
   }
 }
-
-AppNav.propTypes = {};

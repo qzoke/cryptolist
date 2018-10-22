@@ -48,7 +48,7 @@ export class CryptoListGridComponent extends React.Component {
           key={currency.id}
           currency={currency}
           bitcoin={this.props.data.bitcoin}
-          quoteSymbol={this.props.quote.primary}
+          quote={this.props.quote}
           location={this.props.location}
         />
       );

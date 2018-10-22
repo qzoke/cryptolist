@@ -5,29 +5,37 @@ import { HomeScene } from './home/home-scene';
 import { Route, withRouter } from 'react-router-dom';
 import { HomepageRedirector } from '../components/homepage-redirector';
 
+function getCurrenciesFromPath(path) {
+  let [, quote, base] = path.split('/');
+  let [primary, secondary] = (quote || '').split('-');
+  return {
+    quote: {
+      primary,
+      secondary,
+    },
+    base,
+  };
+}
+
 export class LayoutComponent extends React.Component {
   constructor(props) {
     super(props);
     this.updateCurrencies = this.updateCurrencies.bind(this);
 
-    let [, quote, base] = props.location.pathname.split('/');
-    let [primary, secondary] = (quote || '').split('-');
+    this.state = getCurrenciesFromPath(props.location.pathname);
+  }
 
-    this.state = {
-      quote: {
-        primary,
-        secondary,
-      },
-      base,
-    };
+  static getDerivedStateFromProps(props) {
+    return getCurrenciesFromPath(props.location.pathname);
   }
 
   updateCurrencies({ primary, secondary, base }) {
+    let [, , ...restOfPath] = this.props.location.pathname.split('/').filter(x => x);
     primary = primary || this.state.quote.primary;
     secondary = secondary || this.state.quote.secondary;
     base = base || this.state.base;
 
-    this.props.history.push(`/${primary}-${secondary}/${base}`);
+    this.props.history.push(`/${primary}-${secondary}/${base}/${restOfPath.join('/')}`);
     this.setState({
       quote: {
         primary,
