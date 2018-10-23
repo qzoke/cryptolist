@@ -156,6 +156,6 @@ MarketsComponent.propTypes = {
   data: PropTypes.object,
 };
 
-export const Markets = Query(MarketsComponent, MARKET_QUERY, ({ currencySymbol }) => ({
-  currencySymbol,
+export const Markets = Query(MarketsComponent, MARKET_QUERY, ({ currency }) => ({
+  currencySymbol: currency.currencySymbol,
 }));

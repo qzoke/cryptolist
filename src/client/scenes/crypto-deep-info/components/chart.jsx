@@ -78,11 +78,15 @@ export class ChartComponent extends React.Component {
     this.addIndicator = this.addIndicator.bind(this);
     this.removeIndicator = this.removeIndicator.bind(this);
 
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    let selectedChart = query.chart || 'candle';
+
     this.state = {
       resolution: INITIAL_RESOLUTION,
       startTime: INITIAL_START_TIME,
       endTime: INITIAL_END_TIME,
       indicators: DEFAULT_INDICATORS,
+      selectedChart,
     };
   }
 
@@ -128,16 +132,19 @@ export class ChartComponent extends React.Component {
 
   render() {
     if (!this.props.data.currency) return <Loading />;
-    if (this.props.data.currency.vwa.length === 0) {
+    if (
+      Object.keys(this.props.currency).length === 0 ||
+      this.props.data.currency.vwa.length === 0
+    ) {
       return (
-        <div>
-          No markets found for selected currency pair. Please select a different quote currency
+        <div className="row justify-content-center">
+          <div>
+            No markets found for either selected quote currency. Please select a different quote
+            currency
+          </div>
         </div>
       );
     }
-
-    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
-    let selectedChart = query.chart || 'candle';
 
     return (
       <div className="currency-info-container graph">
@@ -149,18 +156,20 @@ export class ChartComponent extends React.Component {
             updateStartTime={this.updateStartTime}
             updateEndTime={this.updateEndTime}
             updateResolution={this.updateResolution}
-            selectedChart={selectedChart}
+            selectedChart={this.state.selectedChart}
             updateSelectedChart={this.updateSelectedChart}
             addIndicator={this.addIndicator}
             indicators={this.state.indicators}
             removeIndicator={this.removeIndicator}
             allIndicators={ALL_INDICATORS}
+            base={this.props.currency.currencySymbol}
+            quote={this.props.currency.quoteSymbol}
           />
 
-          {selectedChart === 'candle' && (
+          {this.state.selectedChart === 'candle' && (
             <CandleChart currency={this.props.data.currency} indicators={this.state.indicators} />
           )}
-          {selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
+          {this.state.selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
 
           <div className="historical-data-container">
             <HistoricalData
@@ -178,18 +187,17 @@ export class ChartComponent extends React.Component {
 
 ChartComponent.propTypes = {
   getData: PropTypes.func,
-  updateQuery: PropTypes.func,
   data: PropTypes.object,
   location: PropTypes.object,
   history: PropTypes.object,
   base: PropTypes.string,
-  quote: PropTypes.object,
+  currency: PropTypes.object,
 };
 
 export const Chart = Query(ChartComponent, CANDLE_QUERY, props => ({
   startTime: INITIAL_START_TIME / 1000,
   endTime: INITIAL_END_TIME / 1000,
   resolution: INITIAL_RESOLUTION.value,
-  quoteSymbol: props.quote.primary,
+  quoteSymbol: props.currency.quote,
   currencySymbol: props.base,
 }));

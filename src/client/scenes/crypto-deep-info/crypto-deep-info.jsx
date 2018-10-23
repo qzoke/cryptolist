@@ -26,14 +26,14 @@ export class CryptoDeepInfo extends React.Component {
     let secondary = this.props.secondary;
     let isPositiveChange = Math.sign(currency.percentChange >= 0);
     let secondaryIsPositiveChange = Math.sign(secondary.percentChange >= 0);
+    let chartCurrency = !currency.computedMarket
+      ? currency
+      : !secondary.computedMarket ? secondary : {};
     return (
       <div className="crypto-deep-info">
         <div className="hero row">
           <div className="col-sm-4">
             <h2 className="name">{currency.currencyName}</h2>
-            <div className="symbol">
-              ({currency.currencySymbol}/{this.props.quote.primary.toUpperCase()})
-            </div>
           </div>
           <div className="price-container col-sm-2">
             <div className="price">{currency.price}</div>
@@ -51,7 +51,7 @@ export class CryptoDeepInfo extends React.Component {
             <div>{currency.marketCap}</div>
             <div>Market Cap ({stringifyNumber(currency.marketCapRank)})</div>
           </div>
-          {currency.computedMarket ? (
+          {chartCurrency.computedMarket ? (
             <div className="computed-market col-sm-1">
               <FontAwesomeIcon id="calculated" icon="calculator" />
               <Tooltip
@@ -61,12 +61,13 @@ export class CryptoDeepInfo extends React.Component {
                 toggle={this.toggle}
               >
                 No native market found for selected currency to quote currency. The values shown are
-                interpreted from BTC.
+                derived from BTC.
               </Tooltip>
             </div>
           ) : null}
         </div>
-        <Switcher {...this.props} currency={currency} />
+
+        <Switcher {...this.props} currency={chartCurrency} />
       </div>
     );
   }

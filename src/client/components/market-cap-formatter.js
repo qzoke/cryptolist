@@ -64,5 +64,6 @@ export const marketCapFormat = (currency, btcNode, quoteSymbol) => {
     percentChange: percentChange,
     volume: volume,
     computedMarket: !market,
+    quoteSymbol,
   });
 };

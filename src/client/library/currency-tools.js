@@ -8,9 +8,6 @@ export const formatPrice = (value, quoteSymbol, precision = 3) => {
     symbol = symbol + ' ';
   }
 
-  console.log(value, quoteSymbol);
-  console.log(fixedLength);
-
   return `${symbol}${value &&
     value.toLocaleString(undefined, {
       minimumFractionDigits: fixedLength,

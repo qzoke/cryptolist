@@ -108,12 +108,12 @@ export class HistoricalDataComponent extends React.Component {
       exchanges = null;
     } else {
       let market = this.props.data.currency.markets.find(m =>
-        m.marketSymbol.endsWith(this.props.quote.primary.toUpperCase())
+        m.marketSymbol.endsWith(this.props.currency.quoteSymbol.toUpperCase())
       );
       if (!market) return null;
 
       list = market.timeseries.map(t => (
-        <HistoricalDataItem {...t} quote={this.props.quote.primary} key={t.startUnix} />
+        <HistoricalDataItem {...t} quote={this.props.currency.quoteSymbol} key={t.startUnix} />
       ));
 
       exchanges = this.props.data.currency.exchanges.map(exchange => {
@@ -161,7 +161,9 @@ export class HistoricalDataComponent extends React.Component {
         <div className="col-sm-12">
           <div className="row header">
             <div className="col-sm-3">Time</div>
-            <div className="col-sm-3 number">Volume ({this.props.quote.primary.toUpperCase()})</div>
+            <div className="col-sm-3 number">
+              Volume ({this.props.currency.quoteSymbol.toUpperCase()})
+            </div>
             <div className="col-sm-3 number">Percent Change</div>
             <div className="col-sm-3 number">Price</div>
           </div>
@@ -175,7 +177,7 @@ export class HistoricalDataComponent extends React.Component {
 HistoricalDataComponent.propTypes = {
   data: PropTypes.object,
   getData: PropTypes.func,
-  quote: PropTypes.object,
+  currency: PropTypes.object,
   base: PropTypes.string,
   resolution: PropTypes.object,
   endTime: PropTypes.number,
@@ -185,10 +187,11 @@ HistoricalDataComponent.propTypes = {
 export const HistoricalData = Query(
   HistoricalDataComponent,
   CANDLE_QUERY,
-  ({ base, quote, resolution }) => {
+  ({ base, currency, resolution }) => {
+    console.log(currency);
     return {
       currencySymbol: base.toUpperCase(),
-      quote: quote.primary.toUpperCase(),
+      quote: currency.quoteSymbol.toUpperCase(),
       resolution: resolution.value,
       limit: LIMIT,
       aggregation: 'VWA',

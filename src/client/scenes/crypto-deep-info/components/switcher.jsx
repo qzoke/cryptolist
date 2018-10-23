@@ -9,13 +9,11 @@ import { Route, Link } from 'react-router-dom';
 export class Switcher extends React.Component {
   render() {
     const { quote, base } = this.props;
+
     const PropsBasicInfo = () => <BasicInfo {...this.props} />;
-    const PropsChart = () => (
-      <Chart {...this.props} currencySymbol={this.props.currency.currencySymbol} />
-    );
-    const PropsMarkets = () => (
-      <Markets {...this.props} currencySymbol={this.props.currency.currencySymbol} />
-    );
+    const PropsChart = () => <Chart {...this.props} />;
+    const PropsMarkets = () => <Markets {...this.props} />;
+
     const pathHead = `/${quote.primary}-${quote.secondary}/${base}`;
     const pathname = this.props.location.pathname.toLowerCase();
     const qs = this.props.location.search;
@@ -48,6 +46,7 @@ export class Switcher extends React.Component {
             </Link>
           </NavItem>
         </Nav>
+
         <Route path={`${pathHead}/chart`} render={PropsChart} />
         <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
         <Route path={`${pathHead}/markets`} render={PropsMarkets} />

@@ -35,6 +35,8 @@ export class ChartUtils extends React.Component {
     removeIndicator: PropTypes.func,
     indicators: PropTypes.array,
     allIndicators: PropTypes.array,
+    base: PropTypes.string,
+    quote: PropTypes.string,
   };
 
   constructor(props) {
@@ -170,6 +172,9 @@ export class ChartUtils extends React.Component {
             </div>
           );
         })}
+        <div className="symbol ml-auto">
+          ({this.props.base}/{this.props.quote})
+        </div>
       </div>
     );
   }

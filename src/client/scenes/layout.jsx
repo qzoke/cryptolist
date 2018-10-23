@@ -31,8 +31,6 @@ export class LayoutComponent extends React.Component {
 
   updateCurrencies({ primary, secondary, base }) {
     let [, , ...restOfPath] = this.props.location.pathname.split('/').filter(x => x);
-    console.log(restOfPath);
-    console.log(this.props);
     primary = primary || this.state.quote.primary;
     secondary = secondary || this.state.quote.secondary;
     base = base || this.state.base;

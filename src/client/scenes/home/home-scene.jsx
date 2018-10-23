@@ -9,7 +9,7 @@ import { Query } from 'regraph-request';
 import moment from 'moment';
 import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
-const ITEMS_PER_PAGE = Math.trunc((window.innerHeight - 180) / 68);
+const ITEMS_PER_PAGE = Math.trunc((window.innerHeight - 180) / 78);
 const CURRENCY_QUERY = `
 query AllCurrencies(
   $sort: [CurrencySorter]
@@ -101,9 +101,16 @@ export class HomeSceneComponent extends React.Component {
 
   static getDerivedStateFromProps(props) {
     if (props.data.currency) {
+      let currency = marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.primary);
+      let secondary = marketCapFormat(
+        props.data.currency,
+        props.data.bitcoin,
+        props.quote.secondary
+      );
+
       return {
-        currency: marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.primary),
-        secondary: marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.secondary),
+        currency,
+        secondary,
       };
     }
     return null;
