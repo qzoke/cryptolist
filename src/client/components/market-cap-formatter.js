@@ -60,7 +60,7 @@ export const marketCapFormat = (currency, btcNode, quoteSymbol) => {
 
   return Object.assign({}, currency, {
     marketCap: asCurrency(calculatePriceFromBtc(currency.marketCap, priceOfBtc), quoteSymbol),
-    price: asCurrency(lastPrice, quoteSymbol, 8),
+    price: asCurrency(lastPrice, quoteSymbol),
     percentChange: percentChange,
     volume: volume,
     computedMarket: !market,

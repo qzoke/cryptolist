@@ -96,13 +96,14 @@ query AllCurrencies(
 export class HomeSceneComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { currency: null };
+    this.state = { currency: null, secondary: null };
   }
 
   static getDerivedStateFromProps(props) {
     if (props.data.currency) {
       return {
         currency: marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.primary),
+        secondary: marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.secondary),
       };
     }
     return null;
@@ -119,7 +120,11 @@ export class HomeSceneComponent extends React.Component {
           <CryptoListGrid {...this.props} itemsPerPage={ITEMS_PER_PAGE} />
         </div>
         <div className="col-md-9 crypto-info-container">
-          <CryptoDeepInfo {...this.props} currency={this.state.currency} />
+          <CryptoDeepInfo
+            {...this.props}
+            currency={this.state.currency}
+            secondary={this.state.secondary}
+          />
         </div>
       </div>
     );

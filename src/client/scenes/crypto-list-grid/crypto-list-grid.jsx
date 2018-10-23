@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { marketCapFormat } from './components/market-cap-formatter';
+import { marketCapFormat } from '../../components/market-cap-formatter';
 import { PaginationBar } from './components/pagination-bar';
 import { CryptoListItem } from './components/crypto-list-item';
 import { Search } from './components/search';
@@ -38,15 +38,15 @@ export class CryptoListGridComponent extends React.Component {
 
   render() {
     const query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
-    const currencyList = marketCapFormat(
-      this.props.data.currencies.data,
-      this.props.data.bitcoin,
-      this.props.quote.primary
-    ).map(currency => {
+
+    const currencyList = this.props.data.currencies.data.map(c => {
+      let currency = marketCapFormat(c, this.props.data.bitcoin, this.props.quote.primary);
+      let secondary = marketCapFormat(c, this.props.data.bitcoin, this.props.quote.secondary);
       return (
         <CryptoListItem
           key={currency.id}
           currency={currency}
+          secondary={secondary}
           bitcoin={this.props.data.bitcoin}
           quote={this.props.quote}
           location={this.props.location}
