@@ -15,6 +15,7 @@
       .name {
         font-size: 0.9em;
       }
+
       .price {
         font-size: 0.7em;
         color: $gray-700;
@@ -56,6 +57,20 @@
 
     .btn {
       float: right;
+    }
+
+    button {
+      position: relative;
+      top: -0.25em;
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+
+    .pagination {
+      padding: 1em;
     }
   }
 }

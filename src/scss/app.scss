@@ -1,18 +1,23 @@
 // Variables
-@import './_variables.scss';
+@import './_variables';
 
 // Override Bootstrap
-@import '../../node_modules/bootstrap/scss/_functions.scss';
-@import '../../node_modules/bootstrap/scss/bootstrap.scss';
-@import './_bootstrap-extensions.scss';
+@import '../../node_modules/bootstrap/scss/_functions';
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import './_bootstrap-extensions';
 
 // Typekit fonts
 @import url('https://use.typekit.net/rfi6tru.css');
 
 // Components
-@import './components/_loading.scss';
-@import './components/_navbar.scss';
+@import './components/_loading';
+@import './components/_navbar';
 
 // Scenes
-@import './scenes/_layout.scss';
-@import './scenes/home/_home.scss';
+@import './scenes/_layout';
+@import './scenes/basic-info/basic-info';
+@import './scenes/crypto-deep-info/crypto-deep-info';
+@import './scenes/crypto-list-grid/crypto-list-grid';
+@import './scenes/historical-data/historical-data';
+@import './scenes/home/home';
+@import './scenes/markets/markets';
