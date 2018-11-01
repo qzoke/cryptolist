@@ -18,7 +18,7 @@ const CHART_STYLES = {
   },
 };
 
-export const DATETIME_FORMAT = 'M/D/YY H:m';
+export const DATETIME_FORMAT = 'M/D/YY HH:mm';
 
 export class ChartUtils extends React.Component {
   static propTypes = {

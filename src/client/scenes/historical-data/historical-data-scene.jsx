@@ -11,10 +11,12 @@ export const HistoricalDataScene = ({
   updateResolution,
   selectedExchange,
   selectedResolution,
+  message,
 }) => {
   let list;
 
   if (!data.currency) {
+    if (message) return <div className="row justify-content-center">{message}</div>;
     return <Loading />;
   }
 
@@ -61,4 +63,5 @@ HistoricalDataScene.propTypes = {
   selectedExchange: PropTypes.string,
   selectedResolution: PropTypes.object,
   updateResolution: PropTypes.func,
+  message: PropTypes.string,
 };

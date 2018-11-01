@@ -51,7 +51,17 @@ export class HistoricalDataSceneContainerComponent extends React.Component {
     this.state = {
       selectedExchange: 'VWA',
       selectedResolution: Resolutions.find(r => r.value === '_1d'),
+      message: '',
     };
+  }
+
+  static getDerivedStateFromProps(props) {
+    if (!props.currency.quoteSymbol)
+      return {
+        message:
+          'No markets found for either selected quote currency. Please select a different quote currency',
+      };
+    else return null;
   }
 
   updateExchange({ target }) {
@@ -98,7 +108,7 @@ export const HistoricalDataSceneContainer = Query(
   CANDLE_QUERY,
   ({ base, currency }) => ({
     currencySymbol: base.toUpperCase(),
-    quote: currency.quoteSymbol.toUpperCase(),
+    quote: currency.quoteSymbol,
     resolution: '_1d',
     limit: LIMIT,
     aggregation: 'VWA',

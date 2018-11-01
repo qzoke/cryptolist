@@ -1,9 +1,9 @@
 export const formatPrice = (value, quoteSymbol, precision = 3) => {
-  let maxFixedLength = getMaxFixedLength(quoteSymbol);
+  let maxFixedLength = getMaxFixedLength(quoteSymbol.toUpperCase());
 
   let fixedLength = Math.min(maxFixedLength, calcDecimals(value) + precision);
 
-  let symbol = calcQuoteSymbol(quoteSymbol);
+  let symbol = calcQuoteSymbol(quoteSymbol.toUpperCase());
   if (symbol) {
     symbol = symbol + ' ';
   }
