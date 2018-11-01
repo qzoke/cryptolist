@@ -1,6 +1,6 @@
 import React from 'react';
-import { BasicInfo } from './basic-info';
-import { Markets } from './markets';
+import { BasicInfoScene } from '../../basic-info/basic-info-scene';
+import { MarketsSceneContainer } from '../../markets/markets-scene-container';
 import { Chart } from './chart';
 import { HistoricalDataSceneContainer } from '../../historical-data/historical-data-scene-container';
 import { TradesDataSceneContainer } from '../../trades-data/trades-data-scene-container';
@@ -12,9 +12,9 @@ export class Switcher extends React.Component {
   render() {
     const { quote, base } = this.props;
 
-    const PropsBasicInfo = () => <BasicInfo {...this.props} />;
+    const PropsBasicInfo = () => <BasicInfoScene {...this.props} />;
     const PropsChart = () => <Chart {...this.props} />;
-    const PropsMarkets = () => <Markets {...this.props} />;
+    const PropsMarkets = () => <MarketsSceneContainer {...this.props} />;
     const PropsHistData = () => <HistoricalDataSceneContainer {...this.props} />;
     const PropsTradesData = () => <TradesDataSceneContainer {...this.props} />;
 
