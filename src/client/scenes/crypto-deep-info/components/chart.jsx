@@ -7,7 +7,6 @@ import { Query } from 'regraph-request';
 import { LineChart } from './line-chart';
 import { CandleChart } from './candle-chart';
 import { ChartUtils } from './chart-utils';
-import { HistoricalData } from './historical-data';
 import qs from 'qs';
 
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');
@@ -170,15 +169,6 @@ export class ChartComponent extends React.Component {
             <CandleChart currency={this.props.data.currency} indicators={this.state.indicators} />
           )}
           {this.state.selectedChart === 'line' && <LineChart currency={this.props.data.currency} />}
-
-          <div className="historical-data-container">
-            <HistoricalData
-              {...this.props}
-              startTime={this.state.startTime}
-              endTime={this.state.endTime}
-              resolution={this.state.resolution}
-            />
-          </div>
         </div>
       </div>
     );

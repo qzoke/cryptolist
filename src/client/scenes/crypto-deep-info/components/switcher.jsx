@@ -2,6 +2,7 @@ import React from 'react';
 import { BasicInfo } from './basic-info';
 import { Markets } from './markets';
 import { Chart } from './chart';
+import { HistoricalDataSceneContainer } from '../../historical-data/historical-data-scene-container';
 import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
@@ -13,6 +14,7 @@ export class Switcher extends React.Component {
     const PropsBasicInfo = () => <BasicInfo {...this.props} />;
     const PropsChart = () => <Chart {...this.props} />;
     const PropsMarkets = () => <Markets {...this.props} />;
+    const PropsHistData = () => <HistoricalDataSceneContainer {...this.props} />;
 
     const pathHead = `/${quote.primary}-${quote.secondary}/${base}`;
     const pathname = this.props.location.pathname.toLowerCase();
@@ -45,11 +47,20 @@ export class Switcher extends React.Component {
               Markets
             </Link>
           </NavItem>
+          <NavItem>
+            <Link
+              className={`nav-link ${pathname.endsWith('historical-data') ? 'active' : ''}`}
+              to={`${pathHead}/historical-data${qs}`}
+            >
+              Historical Data
+            </Link>
+          </NavItem>
         </Nav>
 
         <Route path={`${pathHead}/chart`} render={PropsChart} />
         <Route path={`${pathHead}/info`} render={PropsBasicInfo} />
         <Route path={`${pathHead}/markets`} render={PropsMarkets} />
+        <Route path={`${pathHead}/historical-data`} render={PropsHistData} />
       </div>
     );
   }

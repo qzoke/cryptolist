@@ -1,5 +1,4 @@
 .historical-data {
-  margin-top: 3em;
   .header.row {
     border-bottom: 1px solid $gray-300;
     .number {
@@ -11,8 +10,6 @@
     }
   }
   .contents {
-    height: 20vh;
-    overflow: scroll;
     box-shadow: inset 0px -40px 30px -40px $gray-300;
     .row {
       font-size: 0.8em;
@@ -29,6 +26,14 @@
     }
     .negative {
       color: $cl-pink;
+    }
+  }
+  .controls {
+    .control {
+      &:first-child {
+        padding-left: 1em;
+      }
+      padding-right: 3px;
     }
   }
 }
