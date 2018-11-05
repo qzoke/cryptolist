@@ -163,6 +163,7 @@ export class ChartComponent extends React.Component {
             allIndicators={ALL_INDICATORS}
             base={this.props.currency.currencySymbol}
             quote={this.props.currency.quoteSymbol}
+            getData={this.props.getData}
           />
 
           {this.state.selectedChart === 'candle' && (

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { ResolutionGroup } from './resolution-group';
 import { IndicatorGroup } from './indicator-group';
+import { RefreshButton } from './refresh-button';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -37,6 +38,7 @@ export class ChartUtils extends React.Component {
     allIndicators: PropTypes.array,
     base: PropTypes.string,
     quote: PropTypes.string,
+    getData: PropTypes.func,
   };
 
   constructor(props) {
@@ -105,18 +107,15 @@ export class ChartUtils extends React.Component {
     return (
       <div className="controls row">
         <div className="control">
+          <RefreshButton getData={this.props.getData} />
+        </div>
+        <div className="control">
           <ResolutionGroup
             updateResolution={this.props.updateResolution}
             resolution={this.props.resolution}
           />
         </div>
-        <div className="control">
-          <IndicatorGroup
-            addIndicator={this.props.addIndicator}
-            allIndicators={this.props.allIndicators}
-          />
-        </div>
-        <div className="startTime control">
+        <div className="control startTime">
           <Button onClick={this.toggleStartTime}>Start</Button>
           {this.state.startShown && (
             <div ref={ref => (this.startTimeRef = ref)}>
@@ -129,7 +128,7 @@ export class ChartUtils extends React.Component {
             </div>
           )}
         </div>
-        <div className="endTime control">
+        <div className="control endTime">
           <Button onClick={this.toggleEndTime}>End</Button>
           {this.state.endShown && (
             <div ref={ref => (this.endTimeRef = ref)}>
@@ -142,7 +141,13 @@ export class ChartUtils extends React.Component {
             </div>
           )}
         </div>
-        <div className="align-self-end control">
+        <div className="control">
+          <IndicatorGroup
+            addIndicator={this.props.addIndicator}
+            allIndicators={this.props.allIndicators}
+          />
+        </div>
+        <div className="control align-self-end">
           <Dropdown isOpen={this.state.chartSelectorShown} toggle={this.toggleChartSelector}>
             <DropdownToggle caret>
               <FontAwesomeIcon icon={CHART_STYLES[this.props.selectedChart].iconName} />
@@ -172,8 +177,10 @@ export class ChartUtils extends React.Component {
             </div>
           );
         })}
-        <div className="symbol ml-auto">
-          ({this.props.base}/{this.props.quote})
+        <div className="chart-utils-end">
+          <div className="symbol">
+            {this.props.base}/{this.props.quote}
+          </div>
         </div>
       </div>
     );
