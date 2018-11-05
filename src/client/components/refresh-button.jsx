@@ -5,7 +5,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 export class RefreshButton extends React.Component {
   static propTypes = {
-    getData: PropTypes.func,
+    update: PropTypes.func,
   };
 
   constructor(props) {
@@ -20,7 +20,7 @@ export class RefreshButton extends React.Component {
 
   update() {
     this.setState({ isRefreshing: true });
-    this.props.getData().then(() => {
+    this.props.update().then(() => {
       this.setState({ isRefreshing: false });
     });
   }

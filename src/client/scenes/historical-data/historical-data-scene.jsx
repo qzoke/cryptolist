@@ -12,6 +12,7 @@ export const HistoricalDataScene = ({
   selectedExchange,
   selectedResolution,
   message,
+  getData,
 }) => {
   let list;
 
@@ -39,6 +40,7 @@ export const HistoricalDataScene = ({
           exchanges={data.currency.exchanges}
           selectedExchange={selectedExchange}
           updateExchange={updateExchange}
+          getData={getData}
         />
       </div>
       <div className="col-sm-12">
@@ -64,4 +66,5 @@ HistoricalDataScene.propTypes = {
   selectedResolution: PropTypes.object,
   updateResolution: PropTypes.func,
   message: PropTypes.string,
+  getData: PropTypes.func,
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { ResolutionGroup } from './resolution-group';
 import { IndicatorGroup } from './indicator-group';
-import { RefreshButton } from './refresh-button';
+import { RefreshButton } from '../../../components/refresh-button';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -107,7 +107,7 @@ export class ChartUtils extends React.Component {
     return (
       <div className="controls row">
         <div className="control">
-          <RefreshButton getData={this.props.getData} />
+          <RefreshButton update={this.props.getData} />
         </div>
         <div className="control">
           <ResolutionGroup

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ResolutionGroup } from '../../crypto-deep-info/components/resolution-group';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { RefreshButton } from '../../../components/refresh-button';
 
 export class Toolbar extends React.Component {
   static propTypes = {
@@ -10,6 +11,7 @@ export class Toolbar extends React.Component {
     exchanges: PropTypes.array,
     selectedExchange: PropTypes.string,
     updateExchange: PropTypes.func,
+    getData: PropTypes.func,
   };
 
   state = {
@@ -55,6 +57,9 @@ export class Toolbar extends React.Component {
 
     return (
       <div className="controls row">
+        <div className="control">
+          <RefreshButton update={this.props.getData} />
+        </div>
         <div className="control">
           <ResolutionGroup
             updateResolution={this.props.updateResolution}
