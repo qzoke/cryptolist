@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from '../../components/loading';
 import { TradesDataItem } from './components/trades-data-item';
+import { Toolbar } from './components/toolbar';
 
-export const TradesDataScene = ({ data, currency, message }) => {
+export const TradesDataScene = ({ data, currency, message, getData }) => {
   if (!data.currency || !data.currency.markets.length) {
     if (message) return <div className="row justify-content-center">{message}</div>;
     return <Loading />;
@@ -17,6 +18,9 @@ export const TradesDataScene = ({ data, currency, message }) => {
 
   return (
     <div className="historical-data row">
+      <div className="col-sm-12">
+        <Toolbar getData={getData} />
+      </div>
       <div className="col-sm-12">
         {message && <div>{message}</div>}
         <div className="row header">
@@ -39,4 +43,5 @@ TradesDataScene.propTypes = {
   quote: PropTypes.object,
   usingSecondary: PropTypes.bool,
   currency: PropTypes.object,
+  getData: PropTypes.func,
 };
