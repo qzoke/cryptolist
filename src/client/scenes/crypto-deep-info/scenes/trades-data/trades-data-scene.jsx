@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from '../../components/loading';
+import { Loading } from '../../../../components/loading';
 import { TradesDataItem } from './components/trades-data-item';
 import { Toolbar } from './components/toolbar';
 

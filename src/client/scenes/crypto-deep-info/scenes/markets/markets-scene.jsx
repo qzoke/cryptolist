@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loading } from '../../components/loading';
+import { Loading } from '../../../../components/loading';
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from 'recharts';
 import { CustomChartLabel } from './components/custom-chart-label';
 

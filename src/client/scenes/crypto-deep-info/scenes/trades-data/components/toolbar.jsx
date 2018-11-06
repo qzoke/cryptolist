@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RefreshButton } from '../../../components/refresh-button';
+import { RefreshButton } from '../../../../../components/refresh-button';
 
 export const Toolbar = ({ getData }) => {
   return (

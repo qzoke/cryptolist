@@ -1,9 +1,9 @@
 import React from 'react';
-import { BasicInfoScene } from '../../basic-info/basic-info-scene';
-import { MarketsSceneContainer } from '../../markets/markets-scene-container';
+import { BasicInfoScene } from '../scenes/basic-info/basic-info-scene';
+import { MarketsSceneContainer } from '../scenes/markets/markets-scene-container';
 import { ChartRouter } from './chart-router';
-import { HistoricalDataSceneContainer } from '../../historical-data/historical-data-scene-container';
-import { TradesDataSceneContainer } from '../../trades-data/trades-data-scene-container';
+import { HistoricalDataSceneContainer } from '../scenes/historical-data/historical-data-scene-container';
+import { TradesDataSceneContainer } from '../scenes/trades-data/trades-data-scene-container';
 import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';

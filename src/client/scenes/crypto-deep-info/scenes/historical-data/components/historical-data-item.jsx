@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { formatPrice } from '../../../library/currency-tools';
-import { DATETIME_FORMAT } from '../../crypto-deep-info/scenes/native-chart/components/chart-utils';
+import { formatPrice } from '../../../../../library/currency-tools';
+import { DATETIME_FORMAT } from '../../native-chart/components/chart-utils';
 
 export const HistoricalDataItem = ({ startUnix, quoteVolume, percentChange, open, quote }) => {
   let isPositiveChange = percentChange >= 0;

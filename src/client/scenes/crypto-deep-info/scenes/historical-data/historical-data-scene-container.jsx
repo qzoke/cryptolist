@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'regraph-request';
 import { HistoricalDataScene } from './historical-data-scene';
-import { Resolutions } from '../crypto-deep-info/scenes/native-chart/components/resolution-group';
+import { Resolutions } from '../native-chart/components/resolution-group';
 
 const LIMIT = 50;
 const CANDLE_QUERY = `
