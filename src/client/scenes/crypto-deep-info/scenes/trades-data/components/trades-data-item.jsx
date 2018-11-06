@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { DATETIME_FORMAT } from '../../crypto-deep-info/components/chart-utils';
+import { DATETIME_FORMAT } from '../../crypto-deep-info/scenes/native-chart/components/chart-utils';
 import { formatPrice } from '../../../library/currency-tools';
 
 export const TradesDataItem = ({ exchange, price, amount, taker, tradeId, unix, quote }) => {

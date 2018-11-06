@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ResolutionGroup } from '../../crypto-deep-info/components/resolution-group';
+import { ResolutionGroup } from '../../crypto-deep-info/scenes/native-chart/components/resolution-group';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { RefreshButton } from '../../../components/refresh-button';
 

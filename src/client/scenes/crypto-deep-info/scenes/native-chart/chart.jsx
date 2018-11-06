@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Resolutions } from './resolution-group';
-import { Loading } from '../../../components/loading';
+import { Resolutions } from './components/resolution-group';
+import { Loading } from '../../../../components/loading';
 import { Query } from 'regraph-request';
-import { LineChart } from './line-chart';
-import { CandleChart } from './candle-chart';
-import { ChartUtils } from './chart-utils';
+import { LineChart } from './components/line-chart';
+import { CandleChart } from './components/candle-chart';
+import { ChartUtils } from './components/chart-utils';
 import qs from 'qs';
 
 const INITIAL_RESOLUTION = Resolutions.find(r => r.value === '_1d');

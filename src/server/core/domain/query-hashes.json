@@ -22,6 +22,17 @@
     ]
   },
   {
+    "name": "TradingViewCandles",
+    "hash": "25c0dd5e095cf3b9723f119d77158153cb4e0bcea0fe6cb42315fd67d4b34b29",
+    "variables": [
+      {
+        "name": "resolution",
+        "restriction": "in",
+        "value": ["_1h", "_2h", "_4h", "_1d"]
+      }
+    ]
+  },
+  {
     "name": "HistoricalData",
     "hash": "56477ed3beb94fbced7beedfbe15fdd11dc504389b9dd686f030bec86cedaf39"
   },

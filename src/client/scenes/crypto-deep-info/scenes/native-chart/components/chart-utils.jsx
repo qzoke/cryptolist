@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { ResolutionGroup } from './resolution-group';
 import { IndicatorGroup } from './indicator-group';
-import { RefreshButton } from '../../../components/refresh-button';
+import { RefreshButton } from '../../../../../components/refresh-button';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
