@@ -84,28 +84,31 @@ let Cryptolist = (window.Cryptolist = {});
         break;
     }
 
-    let [exchange, pair] = symbolInfo.name.split(':');
-    let [base, quote] = pair.split('/');
+    let [base, quote] = symbolInfo.name.split('/');
     let data = {
       query: `
       query TradingViewCandles(
-        $exchangeSymbol:String!
-        $baseSymbol:String!
-        $quoteSymbol:String!
-        $resolution:TimeResolution!
-        $start:Int!
-        $end:Int!
+        $baseSymbol: String!
+        $quoteSymbol: String!
+        $resolution: TimeResolution!
+        $start: Int!
+        $end: Int!
       ) {
-        market(
-          exchangeSymbol:$exchangeSymbol
-          baseSymbol:$baseSymbol
-          quoteSymbol:$quoteSymbol
-        ) {
-          ohlcv(resolution:$resolution, start: $start, end: $end)
+        currency(currencySymbol:$baseSymbol){
+          markets (
+            filter: { quoteSymbol_eq:$quoteSymbol }
+            aggregation:VWA
+          ) {
+            ohlcv(
+              resolution: $resolution
+              start: $start
+              end: $end
+            )
+          }
         }
-      }`,
+      }
+      `,
       variables: {
-        exchangeSymbol: exchange,
         baseSymbol: base,
         quoteSymbol: quote,
         resolution,
@@ -128,7 +131,7 @@ let Cryptolist = (window.Cryptolist = {});
         if (json.errors) {
           throw new Error(json.errors[0].message);
         }
-        let reversed = json.data.market.ohlcv.reverse();
+        let reversed = json.data.currency.markets[0].ohlcv.reverse();
         let bars = reversed.map(p => {
           return {
             time: p[0] * 1000,
