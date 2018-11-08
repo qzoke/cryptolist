@@ -2,7 +2,7 @@
 @import './components/_currency-info.scss';
 
 .crypto-deep-info {
-  color: $gray-700;
+  color: $gray-100;
   .hero {
     align-items: baseline;
     .name {
@@ -10,7 +10,7 @@
     }
     .computed-market {
       align-self: center;
-      color: $gray-700;
+      color: $gray-100;
     }
   }
 

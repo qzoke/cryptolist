@@ -10,10 +10,12 @@
   margin-bottom: 0.8em;
 }
 
-.pagination-sm .page-item:first-child .page-link,
-.pagination-sm .page-item:last-child .page-link {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+.pagination .page-item {
+  &:first-child .page-link,
+  &:last-child .page-link {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 .btn-group > .btn,
@@ -28,6 +30,11 @@
   padding: 0.2em 0.5em;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+
+  &.active {
+    color: $gray-100;
+    background: $background;
+  }
 }
 
 .btn,
@@ -38,20 +45,25 @@
 
 input {
   &.form-control {
-    border: 1px solid $gray-200;
+    border: 1px solid $gray-400;
     &::placeholder {
-      color: $gray-300;
+      color: $gray-400;
     }
 
     &:active,
     &:hover,
     &:focus {
-      border: 1px solid $gray-300;
-      box-shadow: 1px 1px 15px 0px $gray-400;
+      border: 1px solid $gray-900;
+      box-shadow: 1px 1px 15px 0px $gray-700;
 
       &::placeholder {
         color: $gray-500;
       }
     }
+  }
+  &[type='text'],
+  &[type='text']:active,
+  &[type='text']:focus {
+    background: $background;
   }
 }

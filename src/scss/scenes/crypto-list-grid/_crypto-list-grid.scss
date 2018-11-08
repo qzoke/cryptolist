@@ -6,7 +6,7 @@
     flex-direction: row;
     padding: 0.7em 0.5em;
     &:hover {
-      background-color: $gray-100;
+      background-color: $gray-900;
       cursor: pointer;
       text-decoration: none;
     }
@@ -18,7 +18,7 @@
 
       .price {
         font-size: 0.7em;
-        color: $gray-700;
+        color: $gray-100;
       }
     }
 
@@ -39,7 +39,7 @@
 
       .currency-rank {
         font-size: 0.6em;
-        color: $gray-600;
+        color: $gray-200;
       }
     }
 
