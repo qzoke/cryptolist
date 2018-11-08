@@ -45,14 +45,14 @@ export class TradingViewChart extends React.Component {
         { text: '3d', resolution: '15', description: '3 Days', title: '3d' },
         { text: '1d', resolution: '5', description: '1 Day', title: '1d' },
       ],
-      toolbar_bg: '#333338',
+      toolbar_bg: '#2a2a2e',
       overrides: {
-        'paneProperties.background': '#333338',
+        'paneProperties.background': '#2a2a2e',
         'paneProperties.vertGridProperties.color': '#404040',
         'paneProperties.horzGridProperties.color': '#404040',
         'symbolWatermarkProperties.color': 'rgba(0, 0, 0, 0.00)',
         'scalesProperties.textColor': '#888',
-        'scalesProperties.backgroundColor': '#333338',
+        'scalesProperties.backgroundColor': '#2a2a2e',
         'scalesProperties.lineColor': '#404040',
       },
     });

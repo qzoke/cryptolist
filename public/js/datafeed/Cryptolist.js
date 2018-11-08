@@ -166,6 +166,7 @@ let Cryptolist = (window.Cryptolist = {});
 
   function calculateHistoryDepth(resolution, resolutionBack, intervalBack) {
     console.log('calculateHistoryDepth', resolution, resolutionBack, intervalBack);
+    if (intervalBack > 2000) return { resolution, resolutionBack, intervalBack: 2000 };
     return undefined;
   }
 

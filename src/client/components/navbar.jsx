@@ -14,7 +14,7 @@ export class AppNav extends React.Component {
 
   render() {
     return (
-      <Navbar className="main-navbar" light expand="md">
+      <Navbar className="main-navbar col-md-11" light expand="md">
         <NavbarBrand tag={Link} onClick={() => location.reload()} to="/">
           <img src="/public/img/cryptolist.png" alt="Cryptolist" />
         </NavbarBrand>

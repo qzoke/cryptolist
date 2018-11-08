@@ -55,6 +55,18 @@
 .dropdown-menu,
 .tooltip-inner {
   border-radius: 0;
+  background-color: $highlight;
+  color: $text-color;
+}
+
+.dropdown-menu {
+  box-shadow: 0px 8px 16px -4px rgba(0, 0, 0, 0.75);
+
+  .dropdown-item {
+    &:hover {
+      background-color: lighten($highlight, 10%);
+    }
+  }
 }
 
 input {

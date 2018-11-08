@@ -109,14 +109,43 @@
     }
   }
 
+  // Tabbed dialog
+  .tv-tabbed-dialog {
+    background-color: $background;
+    color: $text-color;
+
+    .tv-dialog__close svg {
+      fill: $text-color;
+    }
+
+    .tv-objects-tree-item {
+      &.i-active,
+      &:hover {
+        background-color: $highlight;
+      }
+    }
+
+    .tv-tabs__tab:active,
+    .tv-tabs__tab:hover,
+    .tv-tabs__tab:active,
+    .tv-tabs__tab.i-active,
+    .tv-tabs__tab.i-hover {
+      color: $text-color;
+    }
+
+    .tv-objects-tree-item {
+      color: $text-color;
+    }
+  }
+
   .feature-no-touch .item-31XunD5q-:active,
   .feature-no-touch .item-31XunD5q-:hover,
   .feature-touch .item-31XunD5q-:active,
   .item-31XunD5q-.hovered-2A1Cpat5- {
-    color: #fff;
+    color: $text-color;
   }
 
   .item-31XunD5q- {
-    color: #ccc;
+    color: darken($text-color, 10%);
   }
 }

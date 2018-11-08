@@ -10,8 +10,12 @@
     padding-top: 0.1em;
 
     button {
-      color: rgba(0, 0, 0, 0.5);
+      color: $text-color;
       cursor: pointer;
     }
+  }
+
+  .nav-item {
+    padding-right: 2px;
   }
 }
