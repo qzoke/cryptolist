@@ -9,7 +9,7 @@ import { Query } from 'regraph-request';
 import moment from 'moment';
 import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
-const ITEMS_PER_PAGE = Math.trunc((window.innerHeight - 180) / 78);
+const ITEMS_PER_PAGE = 10;
 const CURRENCY_QUERY = `
 query AllCurrencies(
   $sort: [CurrencySorter]

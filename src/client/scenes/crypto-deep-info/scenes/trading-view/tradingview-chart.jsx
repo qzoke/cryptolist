@@ -26,7 +26,7 @@ export class TradingViewChart extends React.Component {
       container_id: 'chart_container',
       datafeed: Cryptolist.datafeed,
       library_path: '/public/js/trading-view/charting_library/',
-      // custom_css_url: '/public/dist/css/site.css',
+      custom_css_url: '/public/css/app.css',
       locale: 'en',
       enabled_features: ['chart_property_page_trading'],
       disabled_features: [

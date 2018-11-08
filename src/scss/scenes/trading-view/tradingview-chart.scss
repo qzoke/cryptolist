@@ -1,0 +1,122 @@
+// TradingView root
+.chart-page {
+  .chart-container {
+    border: none;
+  }
+
+  .layout__area-- {
+    // Top bar
+    &top {
+      // Buttons
+      .group-wWM3zP_M- {
+        background: none;
+      }
+      .button-2ioYhFEY-.isInteractive-20uLObIc-,
+      .button-13wlLwhJ- {
+        color: $text-color;
+
+        &.isOpened-1939ai3F- {
+          background-color: $highlight;
+        }
+      }
+
+      .button-2ioYhFEY-.isInteractive-20uLObIc-.isOpened-p-Ume5l9- {
+        background-color: $highlight;
+      }
+    }
+
+    // Highlight
+    // #454548
+
+    // Left bar
+    &left {
+      // Buttons
+      .button-263WXsg-- {
+        &.isActive-2mI1-NUL- .bg-1kRv1Pf2- {
+          background-color: $highlight;
+        }
+        .icon-1Y-3MM9F- {
+          color: $text-color;
+        }
+      }
+    }
+  }
+
+  .tv-dialog {
+    background-color: $highlight;
+    color: $text-color;
+
+    .tv-dialog__title {
+      color: $text-color;
+    }
+
+    .tv-insert-study-item:hover {
+      background-color: $background;
+    }
+  }
+
+  // Tooltip
+  .common-tooltip-wrapper {
+    .common-tooltip-body {
+      background-color: $background;
+    }
+  }
+
+  // Menus
+  .menuWrap-23ejLU7n- {
+    background-color: $highlight;
+    border-radius: 0;
+
+    .menuBox-3CsColoQ- {
+      padding: 0;
+
+      .item-2xPVYue0- {
+        background: $highlight;
+        color: $text-color;
+      }
+
+      .separator-25lkUpN-- {
+        background-color: $highlight;
+        height: 12px;
+        margin: 0;
+      }
+    }
+  }
+
+  // Bottom toolbar
+  .chart-controls-bar {
+    color: $text-color;
+  }
+
+  // Context menu
+  .context-menu-wrapper {
+    background-color: $highlight;
+
+    .action-separator td {
+      background-color: $highlight;
+      border-color: $highlight;
+    }
+
+    .text {
+      color: $text-color;
+    }
+  }
+
+  // Timezone popup
+  .charts-popup-list {
+    .item {
+      padding: 0;
+    }
+  }
+
+  .feature-no-touch .item-31XunD5q-:active,
+  .feature-no-touch .item-31XunD5q-:hover,
+  .feature-touch .item-31XunD5q-:active,
+  .item-31XunD5q-.hovered-2A1Cpat5- {
+    color: #fff;
+  }
+
+  .item-31XunD5q- {
+    color: #ccc;
+  }
+}

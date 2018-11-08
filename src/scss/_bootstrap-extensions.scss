@@ -11,10 +11,20 @@
 }
 
 .pagination .page-item {
+  .page-link {
+    background-color: $background;
+    border-color: $dimmed-text;
+    &:hover {
+      background: $highlight;
+    }
+  }
+
   &:first-child .page-link,
   &:last-child .page-link {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
@@ -26,14 +36,18 @@
   border-bottom-left-radius: 0;
 }
 
-.nav-tabs a.nav-link {
-  padding: 0.2em 0.5em;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.nav-tabs {
+  border-bottom-color: $dimmed-text;
+  a.nav-link {
+    padding: 0.2em 0.5em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 
-  &.active {
-    color: $gray-100;
-    background: $background;
+    &.active {
+      color: $gray-100;
+      background: $background;
+      border-color: $dimmed-text;
+    }
   }
 }
 

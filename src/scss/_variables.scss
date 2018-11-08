@@ -5,7 +5,10 @@ $cl-blue: #43d7ff;
 $primary: $cl-blue;
 
 $background: #333338;
-$paragraph: #eee;
+$highlight: lighten($background, 10%);
+$text-color: #eee;
+$paragraph: $text-color;
+$dimmed-text: #888;
 
 $positive-change: $cl-green;
 $negative-change: $cl-pink;
