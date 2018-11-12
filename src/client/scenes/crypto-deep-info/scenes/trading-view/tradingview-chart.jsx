@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const NO_MARKET_MSG =
+  'No markets found for either selected quote currency. Please select a different quote currency';
+
 export class TradingViewChart extends React.Component {
   constructor(props) {
     super(props);
@@ -10,6 +13,7 @@ export class TradingViewChart extends React.Component {
       rendered: false,
       base: '',
       quote: '',
+      message: '',
     };
   }
 
@@ -61,27 +65,67 @@ export class TradingViewChart extends React.Component {
   }
 
   componentDidMount() {
-    const widget = TradingViewChart.getWidget(this.props.currency);
+    let widget = TradingViewChart.getWidget(this.props.currency);
+    const quote = TradingViewChart.getQuoteToUse(this.props.currency.markets, this.props.quote);
+    let message = '';
+    if (!quote) {
+      widget = null;
+      message = NO_MARKET_MSG;
+    }
+
     this.setState({
       widget,
+      message,
       rendered: true,
       base: this.props.currency.currencySymbol,
-      quote: this.props.currency.quoteSymbol,
+      quote: quote,
     });
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { currencySymbol, quoteSymbol } = props.currency;
-    if (state.rendered && (currencySymbol !== state.base || quoteSymbol !== state.quote)) {
-      const widget = TradingViewChart.getWidget(props.currency);
-      return { widget, base: currencySymbol, quote: quoteSymbol };
+    const { currencySymbol: base } = props.currency;
+    const quote = TradingViewChart.getQuoteToUse(props.currency.markets, props.quote);
+    let message = '';
+
+    if (state.rendered && (base !== state.base || quote !== state.quote)) {
+      let widget = TradingViewChart.getWidget(props.currency);
+      if (!quote) {
+        widget = null;
+        message = NO_MARKET_MSG;
+      }
+      return { widget, quote, base, message };
     }
+
     return null;
+  }
+
+  static getQuoteToUse(markets, quotes) {
+    const secondaryMarket = TradingViewChart.marketExistsForQuote(
+      markets,
+      quotes.secondary.toUpperCase()
+    );
+    const primaryMarket = TradingViewChart.marketExistsForQuote(
+      markets,
+      quotes.primary.toUpperCase()
+    );
+
+    if (primaryMarket) return quotes.primary;
+    else if (secondaryMarket) return quotes.secondary;
+    return null;
+  }
+
+  static marketExistsForQuote(markets, quote) {
+    if (!markets) return null;
+    return markets.find(market => {
+      let marketQuote = market.marketSymbol.split('/')[1];
+      return marketQuote === quote;
+    });
   }
 
   render() {
     return (
       <div className="widget">
+        {this.state.message && <div className="alert alert-warning">{this.state.message}</div>}
         <div id="chart_container" className="chart" />
       </div>
     );
@@ -90,4 +134,5 @@ export class TradingViewChart extends React.Component {
 
 TradingViewChart.propTypes = {
   currency: PropTypes.object,
+  quote: PropTypes.object,
 };
