@@ -63,6 +63,13 @@
   box-shadow: 0px 8px 16px -4px rgba(0, 0, 0, 0.75);
 
   .dropdown-item {
+    color: $text-color;
+    &.active {
+      color: $background;
+      &:hover {
+        color: white;
+      }
+    }
     &:hover {
       background-color: lighten($highlight, 10%);
     }

@@ -141,7 +141,7 @@ export class CandleChart extends React.Component {
               activeDot={false}
               opacity={0}
             >
-              <ErrorBar dataKey="shadow" width={0} strokeWidth={1} stroke="black" direction="y" />
+              <ErrorBar dataKey="shadow" width={0} strokeWidth={1} stroke="white" direction="y" />
               <ErrorBar
                 dataKey="greenBody"
                 width={0}
