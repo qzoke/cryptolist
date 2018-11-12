@@ -69,7 +69,6 @@ export class TradingViewChart extends React.Component {
     const quote = TradingViewChart.getQuoteToUse(this.props.currency.markets, this.props.quote);
     let message = '';
     if (!quote) {
-      widget = null;
       message = NO_MARKET_MSG;
     }
 
@@ -84,16 +83,18 @@ export class TradingViewChart extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     const { currencySymbol: base } = props.currency;
-    const quote = TradingViewChart.getQuoteToUse(props.currency.markets, props.quote);
-    let message = '';
+    const quote = TradingViewChart.getQuoteToUse(props.currency.markets, props.quote) || '';
 
-    if (state.rendered && (base !== state.base || quote !== state.quote)) {
-      let widget = TradingViewChart.getWidget(props.currency);
-      if (!quote) {
-        widget = null;
-        message = NO_MARKET_MSG;
-      }
-      return { widget, quote, base, message };
+    if (
+      state.rendered &&
+      state.widget._innerAPI() &&
+      (base !== state.base || quote !== state.quote)
+    ) {
+      let message;
+      if (!quote) message = NO_MARKET_MSG;
+      let chart = state.widget.chart();
+      chart.setSymbol(`${base}/${quote.toUpperCase()}`);
+      return { quote, base, message };
     }
 
     return null;
