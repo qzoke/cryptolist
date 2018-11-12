@@ -1,6 +1,6 @@
 .historical-data {
   .header.row {
-    border-bottom: 1px solid $gray-300;
+    border-bottom: 1px solid $highlight;
     .number {
       text-align: right;
     }
@@ -10,12 +10,12 @@
     }
   }
   .contents {
-    box-shadow: inset 0px -40px 30px -40px $gray-300;
+    box-shadow: inset 0px -40px 30px -40px $highlight;
     .row {
       font-size: 0.8em;
       padding: 0.3em 0;
       &:hover {
-        background: $gray-200;
+        background: $highlight;
       }
       .number {
         text-align: right;
