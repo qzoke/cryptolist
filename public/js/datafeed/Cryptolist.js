@@ -2,12 +2,12 @@ let Cryptolist = (window.Cryptolist = {});
 
 (function() {
   let symbolInfoBase = {
-    name: 'Binance:BTC/USDT', // Change
-    ticker: 'Binance:BTC/USDT', // Change
-    description: 'Binance:BTC/USDT', // Change
+    name: 'Blocktap:BTC/USDT', // Change
+    ticker: 'Blocktap:BTC/USDT', // Change
+    description: 'Blocktap:BTC/USDT', // Change
     type: 'bitcoin',
     session: '24x7',
-    exchange: 'Binance', // Change
+    exchange: 'Blocktap.io', // Change
     timezone: 'Etc/UTC',
     pricescale: 100,
     minmov: 1,
