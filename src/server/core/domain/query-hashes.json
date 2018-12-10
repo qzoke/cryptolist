@@ -1,7 +1,7 @@
 [
   {
     "name": "AllCurrencies",
-    "hash": "1be1a60d4c2ce1db3aaa2d497c0ebb0615da76e424ec27083fb11419f21e9100",
+    "hash": "c7c10f5d04d0085a8cee01ade415230454fe7cb38f05bc6495f2bb0c42d7b745",
     "variables": [
       {
         "name": "resolution",
@@ -38,7 +38,7 @@
   },
   {
     "name": "MarketQuery",
-    "hash": "4490c8d3301d58e0d5097faaf91baca9fdef7cc15b62a6485d77d63a84421b05"
+    "hash": "69ac6a3cab0eade90ef2a3de934a8ddcd23d7e362985db7954096a6259fa9931"
   },
   {
     "name": "TradesData",

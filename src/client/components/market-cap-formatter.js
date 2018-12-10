@@ -1,16 +1,16 @@
 import { formatPrice } from '../library/currency-tools';
 
 const asCurrency = (value, quoteSymbol, precision) => {
-  return formatPrice(value, quoteSymbol, precision);
+  return formatPrice(parseFloat(value), quoteSymbol, precision);
 };
 
 const calculatePriceFromBtc = (priceInBtc, priceOfBtc) => {
-  return priceInBtc * priceOfBtc;
+  return parseFloat(priceInBtc) * parseFloat(priceOfBtc);
 };
 
 const getPriceOfBtc = (btcNode, quoteSymbol) => {
   const btcMarket = btcNode.markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
-  return btcMarket ? btcMarket.ticker.last : 1;
+  return btcMarket ? parseFloat(btcMarket.ticker.lastPrice) : 1;
 };
 
 const getPercentageChange = (markets, btcNode, quoteSymbol) => {
@@ -24,8 +24,8 @@ const getPercentageChange = (markets, btcNode, quoteSymbol) => {
   const currencyBtcMarket = markets.find(market => market.marketSymbol.endsWith('BTC'));
   const btcQuoteMarket = btcNode.markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
   if (currencyBtcMarket && btcQuoteMarket && currencyBtcMarket.ticker) {
-    let btcChange = currencyBtcMarket.ticker.percentChange;
-    let currencyToBtcChange = btcQuoteMarket.ticker.percentChange;
+    let btcChange = parseFloat(currencyBtcMarket.ticker.percentChange);
+    let currencyToBtcChange = parseFloat(btcQuoteMarket.ticker.percentChange);
     return (btcChange + currencyToBtcChange).toFixed(2);
   }
 
@@ -50,7 +50,7 @@ export const marketCapFormat = (currency, btcNode, quoteSymbol) => {
     : null;
   const percentChange = getPercentageChange(currency.markets, btcNode, quoteSymbol);
   const btcMarket = currency.markets.find(market => market.marketSymbol.endsWith('BTC'));
-  const priceInBtc = btcMarket && btcMarket.ticker ? btcMarket.ticker.last : 1;
+  const priceInBtc = btcMarket && btcMarket.ticker ? parseFloat(btcMarket.ticker.lastPrice) : 1;
   const volume = get24HourVolume(market, btcMarket, priceOfBtc, quoteSymbol);
 
   let lastPrice = hasMarkets && market && market.ticker ? market.ticker.lastPrice : 0;

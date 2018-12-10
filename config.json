@@ -1,7 +1,7 @@
 {
   "blocktap": {
     "apiKey": "supersecret",
-    "graphqlEndpoint": "https://alpha.blocktap.io/graphql"
+    "graphqlEndpoint": "https://staging.blocktap.io/graphql"
   },
   "mysql": {}
 }
