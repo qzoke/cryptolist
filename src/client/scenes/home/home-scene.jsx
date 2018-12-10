@@ -11,39 +11,26 @@ import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
 const ITEMS_PER_PAGE = 10;
 const CURRENCY_QUERY = `
-query AllCurrencies(
-  $sort: [CurrencySorter]
-  $page: Page
-  $filter: CurrencyFilter
-  $selectedCurrency: String!
-  $start: Int
-  $end: Int
-  $resolution: TimeResolution!
-) {
+query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilter, $selectedCurrency: String!, $start: Int, $end: Int, $resolution: TimeResolution!) {
   currencies(sort: $sort, page: $page, filter: $filter) {
-    totalCount
-    data {
+    id
+    currencyName
+    currentSupply
+    totalSupply
+    currencySymbol
+    marketCap
+    marketCapRank
+    markets(aggregation: VWA) {
       id
-      currencyName
-      currentSupply
-      totalSupply
-      currencySymbol
-      marketCap
-      marketCapRank
-      markets(aggregation: VWA) {
-        id
-        marketSymbol
-        timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-        	open
-      	}
-        ticker {
-          last
-          percentChange
-          dayLow
-          dayHigh
-          baseVolume
-          quoteVolume
-        }
+      marketSymbol
+      ohlcv(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST)
+      ticker {
+        lastPrice
+        percentChange
+        lowPrice
+        highPrice
+        baseVolume
+        quoteVolume
       }
     }
   }
@@ -59,10 +46,10 @@ query AllCurrencies(
       id
       marketSymbol
       ticker {
-        last
+        lastPrice
         percentChange
-        dayLow
-        dayHigh
+        lowPrice
+        highPrice
         baseVolume
         quoteVolume
       }
@@ -76,14 +63,12 @@ query AllCurrencies(
     markets(aggregation: VWA) {
       id
       marketSymbol
-      timeseries(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST) {
-        open
-      }
+      ohlcv(start: $start, end: $end, resolution: $resolution, sort: OLD_FIRST)
       ticker {
-        last
+        lastPrice
         percentChange
-        dayLow
-        dayHigh
+        lowPrice
+        highPrice
         baseVolume
         quoteVolume
       }

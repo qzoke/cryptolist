@@ -18,7 +18,7 @@ const getPercentageChange = (markets, btcNode, quoteSymbol) => {
 
   // Try to use native market
   const market = markets.find(market => market.marketSymbol.endsWith(quoteSymbol));
-  if (market && market.ticker) return market.ticker.percentChange.toFixed(2);
+  if (market && market.ticker) return parseFloat(market.ticker.percentChange).toFixed(2);
 
   // If native market does not exist, convert to btc
   const currencyBtcMarket = markets.find(market => market.marketSymbol.endsWith('BTC'));
@@ -53,7 +53,7 @@ export const marketCapFormat = (currency, btcNode, quoteSymbol) => {
   const priceInBtc = btcMarket && btcMarket.ticker ? btcMarket.ticker.last : 1;
   const volume = get24HourVolume(market, btcMarket, priceOfBtc, quoteSymbol);
 
-  let lastPrice = hasMarkets && market && market.ticker ? market.ticker.last : 0;
+  let lastPrice = hasMarkets && market && market.ticker ? market.ticker.lastPrice : 0;
   if (lastPrice === 0 && hasMarkets) {
     lastPrice = calculatePriceFromBtc(priceInBtc, priceOfBtc);
   }

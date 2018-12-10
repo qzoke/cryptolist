@@ -12,10 +12,10 @@ const MARKET_QUERY = `
         id
         marketSymbol
         ticker {
-          last
+          lastPrice
           percentChange
-          dayLow
-          dayHigh
+          lowPrice
+          highPrice
           baseVolume
           quoteVolume
         }
