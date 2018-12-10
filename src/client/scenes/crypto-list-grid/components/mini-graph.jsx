@@ -14,14 +14,14 @@ const generatePoints = ({ markets, btcMarkets, quoteSymbol, height, width }) => 
   let market = markets.find(findMarketWithQuote);
 
   if (market) {
-    prices = market.timeseries.map(t => t.open);
+    prices = market.ohlcv.map(t => t[1]);
   } else {
     if (!btcMarkets.length) return;
     let toBTCMarket = markets.find(market => market.marketSymbol.split('/')[1] == 'BTC');
     let btcToQuoteMarket = btcMarkets.find(findMarketWithQuote);
     if (!toBTCMarket || !btcToQuoteMarket) return;
-    prices = toBTCMarket.timeseries.map((t, i) => {
-      return t.open * btcToQuoteMarket.timeseries[i].open;
+    prices = toBTCMarket.ohlcv.map((t, i) => {
+      return t[1] * btcToQuoteMarket.ohlcv[i][1];
     });
   }
 

@@ -1,4 +1,5 @@
 export const formatPrice = (value, quoteSymbol, precision = 3) => {
+  value = parseFloat(value);
   let maxFixedLength = getMaxFixedLength(quoteSymbol.toUpperCase());
 
   let fixedLength = Math.min(maxFixedLength, calcDecimals(value) + precision);

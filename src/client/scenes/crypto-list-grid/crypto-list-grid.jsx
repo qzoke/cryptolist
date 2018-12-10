@@ -39,7 +39,7 @@ export class CryptoListGridComponent extends React.Component {
   render() {
     const query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
 
-    const currencyList = this.props.data.currencies.data.map(c => {
+    const currencyList = this.props.data.currencies.map(c => {
       let currency = marketCapFormat(c, this.props.data.bitcoin, this.props.quote.primary);
       let secondary = marketCapFormat(c, this.props.data.bitcoin, this.props.quote.secondary);
       return (

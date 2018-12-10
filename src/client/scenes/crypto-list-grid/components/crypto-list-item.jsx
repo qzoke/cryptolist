@@ -4,24 +4,23 @@ import { MiniGraph } from './mini-graph';
 import { Link } from 'react-router-dom';
 
 export const CryptoListItem = ({ currency, secondary, bitcoin, quote, location }) => {
-  let [, , ...restOfPath] = location.pathname.split('/').filter(x => x);
+  let [quotes, , ...restOfPath] = location.pathname.split('/').filter(x => x);
+  const { id, currencySymbol, marketCapRank, currencyName, price, percentChange } = currency;
   return (
     <Link
-      key={currency.id}
+      key={id}
       className="currency-list-item row"
-      to={`/${quote.primary}-${
-        quote.secondary
-      }/${currency.currencySymbol.toLowerCase()}/${restOfPath.join('/')}${location.search}`}
+      to={`/${quotes}/${currencySymbol.toLowerCase()}/${restOfPath.join('/')}${location.search}`}
     >
       <div className="currency-icon-rank col-2">
         <div className="currency-icon">
-          <i className={'cc ' + currency.currencySymbol.toUpperCase()} />
+          <i className={'cc ' + currencySymbol.toUpperCase()} />
         </div>
-        <div className="currency-rank">{currency.marketCapRank}</div>
+        <div className="currency-rank">{marketCapRank}</div>
       </div>
       <div className="currency-info col-6">
-        <div className="name">{currency.currencyName}</div>
-        <div className="price">{currency.price.toUpperCase()}</div>
+        <div className="name">{currencyName}</div>
+        <div className="price">{price.toUpperCase()}</div>
         <div className="price">{secondary.price.toUpperCase()}</div>
       </div>
       <div className="currency-graph col-3">
@@ -31,7 +30,7 @@ export const CryptoListItem = ({ currency, secondary, bitcoin, quote, location }
           bitcoin={bitcoin}
           width={80}
           height={30}
-          isPositive={currency.percentChange >= 0}
+          isPositive={percentChange >= 0}
         />
       </div>
     </Link>
