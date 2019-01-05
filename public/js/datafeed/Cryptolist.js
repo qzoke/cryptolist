@@ -2,17 +2,15 @@ let Cryptolist = (window.Cryptolist = {});
 
 (function() {
   let symbolInfoBase = {
-    name: 'Blocktap:BTC/USDT', // Change
-    ticker: 'Blocktap:BTC/USDT', // Change
-    description: 'Blocktap:BTC/USDT', // Change
+    name: 'Blocktap:BTC/USD', // Change
+    ticker: 'Blocktap:BTC/USD', // Change
+    description: 'Blocktap:BTC/USD', // Change
     type: 'bitcoin',
     session: '24x7',
     exchange: 'Blocktap.io', // Change
     timezone: 'Etc/UTC',
-    pricescale: 100,
+    pricescale: 10000,
     minmov: 1,
-    minmove2: 0,
-    fractional: true,
     has_intraday: true,
     supported_resolutions: ['60', '120', '240', 'D'],
     intraday_multipliers: ['60', '120', '240'],
@@ -22,7 +20,7 @@ let Cryptolist = (window.Cryptolist = {});
     has_empty_bars: true,
     force_session_rebuild: true,
     has_no_volume: false,
-    volume_precision: 4,
+    volume_precision: 1,
     data_status: 'streaming',
     expired: false,
     sector: 'cryptocurrency',
@@ -54,7 +52,7 @@ let Cryptolist = (window.Cryptolist = {});
       name: symbolName,
       ticker: symbolName,
       description: symbolName,
-      excahnge: symbolName.split(':')[0],
+      pricescale: symbolName.indexOf('/BTC') !== -1 ? 100000000 : 10000
     });
     setTimeout(() => onSymbolResolvedCallback(symbol));
   }
