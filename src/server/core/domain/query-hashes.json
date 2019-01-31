@@ -1,7 +1,7 @@
 [
   {
     "name": "AllCurrencies",
-    "hash": "c7c10f5d04d0085a8cee01ade415230454fe7cb38f05bc6495f2bb0c42d7b745",
+    "hash": "54650128e7a820abeb8f7c0246eea0a787422c0b4bf9797b7c63f8dd85df7db7",
     "variables": [
       {
         "name": "resolution",
@@ -23,7 +23,7 @@
   },
   {
     "name": "TradingViewCandles",
-    "hash": "1e238269b24fd79ad3e6689f0712a03c2230bc1824f7d568fce2a7d7966ec744",
+    "hash": "1b7ef9c18d04fd891edca29916128df91b318504e9357d00f51a070ae90ee126",
     "variables": [
       {
         "name": "resolution",
@@ -34,14 +34,14 @@
   },
   {
     "name": "HistoricalData",
-    "hash": "56477ed3beb94fbced7beedfbe15fdd11dc504389b9dd686f030bec86cedaf39"
+    "hash": "b19a8cb8d1d3d2e000f4aeeb40c184a6140a93b8936a55864b47231b7b04fcce"
   },
   {
     "name": "MarketQuery",
-    "hash": "69ac6a3cab0eade90ef2a3de934a8ddcd23d7e362985db7954096a6259fa9931"
+    "hash": "d940d93ec07bb2fb0e3f8c6339eed8dda7b7a1caf854772db08c7997b76dec1e"
   },
   {
     "name": "TradesData",
-    "hash": "8bad42ad7d0f9288f0fa2b6928a2a25bdc5eaf5b49efbe2c15644ae8cb7c2816"
+    "hash": "70f6e3a7646dadf5c226888ff59d76600c27fb6f111cecf79307008d682305b3"
   }
 ]

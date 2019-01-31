@@ -6,7 +6,7 @@ import { MarketsScene } from './markets-scene';
 
 const MARKET_QUERY = `
   query MarketQuery($currencySymbol: String!) {
-    currency(currencySymbol: $currencySymbol) {
+    asset(assetSymbol: $currencySymbol) {
       id
       markets {
         id
@@ -37,7 +37,9 @@ MarketsSceneContainerComponent.propTypes = {
 export const MarketsSceneContainer = Query(
   MarketsSceneContainerComponent,
   MARKET_QUERY,
-  ({ currency }) => ({
-    currencySymbol: currency.currencySymbol,
-  })
+  ({ currency }) => {
+    return {
+      currencySymbol: currency.assetSymbol,
+    };
+  }
 );

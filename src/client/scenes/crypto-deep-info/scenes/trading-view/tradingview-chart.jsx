@@ -20,7 +20,7 @@ export class TradingViewChart extends React.Component {
   static getWidget(currency) {
     const TradingView = window.TradingView;
     const Cryptolist = window.Cryptolist;
-    const symbol = `${currency.currencySymbol}/${currency.quoteSymbol}`;
+    const symbol = `${currency.assetSymbol}/${currency.quoteSymbol}`;
 
     const widget = new TradingView.widget({
       autosize: true,
@@ -72,17 +72,19 @@ export class TradingViewChart extends React.Component {
       message = NO_MARKET_MSG;
     }
 
+    console.log('componentDidMount', this.props.currency.assetSymbol);
+
     this.setState({
       widget,
       message,
       rendered: true,
-      base: this.props.currency.currencySymbol,
+      base: this.props.currency.assetSymbol,
       quote: quote,
     });
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { currencySymbol: base } = props.currency;
+    const { assetSymbol: base } = props.currency;
     const quote = TradingViewChart.getQuoteToUse(props.currency.markets, props.quote) || '';
 
     if (

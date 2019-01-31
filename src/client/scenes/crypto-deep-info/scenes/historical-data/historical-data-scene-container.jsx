@@ -11,31 +11,25 @@ query HistoricalData (
   $quote: String!
   $resolution: TimeResolution!
   $limit: Int!
-  $aggregation:Aggregation
   $exchangeSymbol:String
+  $aggregation:Aggregation
 ) {
-  currency(currencySymbol: $currencySymbol) {
-    markets(filter: {
-      _and: [
-        { quoteSymbol_eq: $quote},
-        { exchangeSymbol_like: $exchangeSymbol}
-      ]}
-      aggregation: $aggregation
-    ) {
+  asset(assetSymbol: $currencySymbol) {
+    exchanges:markets(filter:{quoteSymbol:{_eq: $quote}}){
       marketSymbol
-      timeseries(
-        resolution: $resolution,
-        limit: $limit,
-      ) {
-        startUnix
-        volume
-        quoteVolume
-        percentChange
-        open
-      }
     }
-    exchanges:markets(filter:{quoteSymbol_eq:$quote}){
-      marketSymbol
+  }
+  timeseries(resolution:$resolution, limit:$limit){
+    startUnix
+    markets(filter: { _and: [
+      { baseSymbol: { _eq: $currencySymbol } }
+      { quoteSymbol: { _eq: $quote } }
+      { exchangeSymbol: { _like: $exchangeSymbol} }
+    ]}, aggregation:$aggregation) {
+      quoteSymbol
+      quoteVolume
+      percentChange
+      openPrice
     }
   }
 }

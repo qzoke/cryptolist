@@ -16,20 +16,14 @@ export const HistoricalDataScene = ({
 }) => {
   let list;
 
-  if (!data.currency) {
+  if (!data.asset) {
     if (message) return <div className="row justify-content-center">{message}</div>;
     return <Loading />;
   }
 
-  let market = data.currency.markets.find(m =>
-    m.marketSymbol.endsWith(currency.quoteSymbol.toUpperCase())
-  );
+  if (!data.timeseries.length) return null;
 
-  if (!market) return null;
-
-  list = market.timeseries.map(t => (
-    <HistoricalDataItem {...t} quote={currency.quoteSymbol} key={t.startUnix} />
-  ));
+  list = data.timeseries.map(t => <HistoricalDataItem {...t} key={t.startUnix} />);
 
   return (
     <div className="historical-data row">
@@ -37,7 +31,7 @@ export const HistoricalDataScene = ({
         <Toolbar
           resolution={selectedResolution}
           updateResolution={updateResolution}
-          exchanges={data.currency.exchanges}
+          exchanges={data.asset.exchanges}
           selectedExchange={selectedExchange}
           updateExchange={updateExchange}
           getData={getData}
@@ -46,7 +40,7 @@ export const HistoricalDataScene = ({
       <div className="col-sm-12">
         <div className="row header">
           <div className="col-sm-3">Time</div>
-          <div className="col-sm-3 number">Volume ({currency.quoteSymbol.toUpperCase()})</div>
+          <div className="col-sm-3 number">Volume</div>
           <div className="col-sm-3 number">Percent Change</div>
           <div className="col-sm-3 number">Price</div>
         </div>

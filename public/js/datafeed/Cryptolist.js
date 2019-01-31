@@ -52,7 +52,7 @@ let Cryptolist = (window.Cryptolist = {});
       name: symbolName,
       ticker: symbolName,
       description: symbolName,
-      pricescale: symbolName.indexOf('/BTC') !== -1 ? 100000000 : 10000
+      pricescale: symbolName.indexOf('/BTC') !== -1 ? 100000000 : 10000,
     });
     setTimeout(() => onSymbolResolvedCallback(symbol));
   }
@@ -85,26 +85,14 @@ let Cryptolist = (window.Cryptolist = {});
     let [base, quote] = symbolInfo.name.split('/');
     let data = {
       query: `
-      query TradingViewCandles(
-        $baseSymbol: String!
-        $quoteSymbol: String!
-        $resolution: TimeResolution!
-        $start: Int!
-        $end: Int!
-      ) {
-        currency(currencySymbol:$baseSymbol){
-          markets (
-            filter: { quoteSymbol_eq:$quoteSymbol }
-            aggregation:VWA
-          ) {
-            ohlcv(
-              resolution: $resolution
-              start: $start
-              end: $end
-            )
+      query TradingViewCandles($baseSymbol: String!, $quoteSymbol: String!, $resolution: TimeResolution!, $start: Int!, $end: Int!) {
+        asset(assetSymbol: $baseSymbol) {
+          markets(filter: {quoteSymbol:{_eq: $quoteSymbol} }, aggregation: VWA) {
+            ohlcv(resolution: $resolution, start: $start, end: $end)
           }
         }
       }
+
       `,
       variables: {
         baseSymbol: base,
@@ -129,7 +117,7 @@ let Cryptolist = (window.Cryptolist = {});
         if (json.errors) {
           throw new Error(json.errors[0].message);
         }
-        let reversed = json.data.currency.markets[0].ohlcv.reverse();
+        let reversed = json.data.asset.markets[0].ohlcv.reverse();
         let bars = reversed.map(p => {
           return {
             time: p[0] * 1000,

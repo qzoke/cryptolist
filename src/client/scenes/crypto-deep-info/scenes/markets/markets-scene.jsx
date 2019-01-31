@@ -27,11 +27,11 @@ const getQuoteVolume = markets => {
 };
 
 export const MarketsScene = ({ data }) => {
-  if (!data.currency) return <Loading />;
-  if (!data.currency.markets) return null;
+  if (!data.asset) return <Loading />;
+  if (!data.asset.markets) return null;
 
-  let exchangeVolumeObjects = getExchangeVolume(data.currency.markets);
-  let quoteVolumeObjects = getQuoteVolume(data.currency.markets);
+  let exchangeVolumeObjects = getExchangeVolume(data.asset.markets);
+  let quoteVolumeObjects = getQuoteVolume(data.asset.markets);
 
   let exchangeVolumes = Object.entries(exchangeVolumeObjects).map(volume => ({
     name: volume[0],

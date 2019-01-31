@@ -5,12 +5,12 @@ import { TradesDataItem } from './components/trades-data-item';
 import { Toolbar } from './components/toolbar';
 
 export const TradesDataScene = ({ data, currency, message, getData }) => {
-  if (!data.currency || !data.currency.markets.length) {
+  if (!data.asset || !data.asset.markets.length) {
     if (message) return <div className="row justify-content-center">{message}</div>;
     return <Loading />;
   }
 
-  const market = data.currency.markets[0];
+  const market = data.asset.markets[0];
   const { trades } = market;
   const list = trades.map(t => (
     <TradesDataItem key={t.tradeId} quote={currency.quoteSymbol || ''} {...t} />

@@ -11,13 +11,13 @@ import { NUMBER_OF_DAYS } from '../crypto-list-grid/components/mini-graph';
 
 const ITEMS_PER_PAGE = 10;
 const CURRENCY_QUERY = `
-query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilter, $selectedCurrency: String!, $start: Int, $end: Int, $resolution: TimeResolution!) {
-  currencies(sort: $sort, page: $page, filter: $filter) {
+query AllCurrencies($sort: [AssetSorter], $page: Page, $filter: AssetFilter, $selectedCurrency: String!, $start: Int, $end: Int, $resolution: TimeResolution!) {
+  assets(sort: $sort, page: $page, filter: $filter) {
     id
-    currencyName
+    assetName
     currentSupply
     totalSupply
-    currencySymbol
+    assetSymbol
     marketCap
     marketCapRank
     markets(aggregation: VWA) {
@@ -34,12 +34,12 @@ query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilte
       }
     }
   }
-  currency(currencySymbol: $selectedCurrency) {
+  asset(assetSymbol: $selectedCurrency) {
     id
-    currencyName
+    assetName
     currentSupply
     totalSupply
-    currencySymbol
+    assetSymbol
     marketCap
     marketCapRank
     markets(aggregation: VWA) {
@@ -55,11 +55,11 @@ query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilte
       }
     }
   }
-  bitcoin: currency(currencySymbol: "BTC") {
+  bitcoin: asset(assetSymbol: "BTC") {
     id
-    currencyName
+    assetName
     currentSupply
-    currencySymbol
+    assetSymbol
     markets(aggregation: VWA) {
       id
       marketSymbol
@@ -76,6 +76,7 @@ query AllCurrencies($sort: [CurrencySorter], $page: Page, $filter: CurrencyFilte
   }
 }
 
+
 `;
 
 export class HomeSceneComponent extends React.Component {
@@ -85,13 +86,9 @@ export class HomeSceneComponent extends React.Component {
   }
 
   static getDerivedStateFromProps(props) {
-    if (props.data.currency) {
-      let currency = marketCapFormat(props.data.currency, props.data.bitcoin, props.quote.primary);
-      let secondary = marketCapFormat(
-        props.data.currency,
-        props.data.bitcoin,
-        props.quote.secondary
-      );
+    if (props.data.asset) {
+      let currency = marketCapFormat(props.data.asset, props.data.bitcoin, props.quote.primary);
+      let secondary = marketCapFormat(props.data.asset, props.data.bitcoin, props.quote.secondary);
 
       return {
         currency,
@@ -102,7 +99,7 @@ export class HomeSceneComponent extends React.Component {
   }
 
   render() {
-    if (!this.props.data.currencies || !this.props.data.bitcoin || !this.props.data.currency) {
+    if (!this.props.data.assets || !this.props.data.bitcoin || !this.props.data.asset) {
       return <Loading />;
     }
 

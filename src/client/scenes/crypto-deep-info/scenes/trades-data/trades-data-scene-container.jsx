@@ -5,10 +5,10 @@ import { TradesDataScene } from './trades-data-scene';
 
 const TRADES_QUERY = `
 query TradesData ($currencySymbol:String!, $quoteSymbol:String!) {
-  currency(currencySymbol: $currencySymbol) {
+  asset(assetSymbol: $currencySymbol) {
     markets(
       aggregation: VWA,
-      filter:{ quoteSymbol_eq:$quoteSymbol},
+      filter:{quoteSymbol:{_eq:$quoteSymbol} },
     ) {
       trades {
         exchange
