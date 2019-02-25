@@ -51,6 +51,10 @@ export class TradingViewChart extends React.Component {
       ],
       toolbar_bg: '#2a2a2e',
       overrides: {
+        'mainSeriesProperties.style': 3,
+        'mainSeriesProperties.areaStyle.linecolor': '#43d7ff',
+        'mainSeriesProperties.areaStyle.color1': '#43d7ff',
+        'mainSeriesProperties.areaStyle.color2': 'rgb(0, 0, 0, 0)',
         'paneProperties.background': '#2a2a2e',
         'paneProperties.vertGridProperties.color': '#404040',
         'paneProperties.horzGridProperties.color': '#404040',
