@@ -125,9 +125,11 @@ let Cryptolist = (window.Cryptolist = {});
             high: p[2],
             low: p[3],
             close: p[4],
-            volume: p[5],
+            volume: parseFloat(p[5]),
           };
         });
+
+        console.log(bars);
         onHistoryCallback(bars, { noData: false });
       })
       .catch(err => {
