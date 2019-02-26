@@ -54,7 +54,7 @@ export class TradingViewChart extends React.Component {
         'mainSeriesProperties.style': 3,
         'mainSeriesProperties.areaStyle.linecolor': '#43d7ff',
         'mainSeriesProperties.areaStyle.color1': '#43d7ff',
-        'mainSeriesProperties.areaStyle.color2': 'rgb(0, 0, 0, 0)',
+        'mainSeriesProperties.areaStyle.color2': 'rgba(0, 0, 0, 0.00)',
         'paneProperties.background': '#2a2a2e',
         'paneProperties.vertGridProperties.color': '#404040',
         'paneProperties.horzGridProperties.color': '#404040',
