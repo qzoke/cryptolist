@@ -25,7 +25,7 @@ let Cryptolist = (window.Cryptolist = {});
     expired: false,
     sector: 'cryptocurrency',
     industry: 'Crypto Asset',
-    currency_code: '$',
+    currency_code: '$'
   };
 
   function onReady(callback) {
@@ -120,11 +120,11 @@ let Cryptolist = (window.Cryptolist = {});
         let reversed = json.data.asset.markets[0].ohlcv.reverse();
         let bars = reversed.map(p => {
           return {
-            time: p[0] * 1000,
-            open: p[1],
-            high: p[2],
-            low: p[3],
-            close: p[4],
+            time: parseInt(p[0]) * 1000,
+            open: parseFloat(p[1]),
+            high: parseFloat(p[2]),
+            low: parseFloat(p[3]),
+            close: parseFloat(p[4]),
             volume: parseFloat(p[5]),
           };
         });

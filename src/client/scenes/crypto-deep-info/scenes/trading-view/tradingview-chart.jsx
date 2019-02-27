@@ -26,7 +26,7 @@ export class TradingViewChart extends React.Component {
       autosize: true,
       symbol: symbol,
       interval: '60',
-      timezone: 'America/New_York',
+      timezone: 'Etc/UTC',
       container_id: 'chart_container',
       datafeed: Cryptolist.datafeed,
       library_path: '/public/js/trading-view/charting_library/',
@@ -61,7 +61,7 @@ export class TradingViewChart extends React.Component {
         'symbolWatermarkProperties.color': 'rgba(0, 0, 0, 0.00)',
         'scalesProperties.textColor': '#888',
         'scalesProperties.backgroundColor': '#2a2a2e',
-        'scalesProperties.lineColor': '#404040',
+        'scalesProperties.lineColor': '#404040'
       },
     });
 
