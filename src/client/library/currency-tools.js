@@ -38,7 +38,7 @@ function calcQuoteSymbol(quoteSymbol) {
     case 'GBP':
       return '£';
     case 'BTC':
-      return '฿';
+      return '₿';
     default:
       return '';
   }
