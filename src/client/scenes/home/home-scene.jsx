@@ -150,10 +150,10 @@ export const HomeScene = Query(HomeSceneComponent, CURRENCY_QUERY, ({ base, loca
         return {
           _or: [
             {
-              currencySymbol_like: `%${query.search}%`,
+              assetSymbol: { _like: `%${query.search}%` },
             },
             {
-              currencyName_like: `%${query.search}%`,
+              assetName: { _like: `%${query.search}%` },
             },
           ],
         };
