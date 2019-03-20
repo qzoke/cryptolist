@@ -98,5 +98,6 @@ input {
   &[type='text']:active,
   &[type='text']:focus {
     background: $background;
+    color: $text-color;
   }
 }
