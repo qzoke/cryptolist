@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Query } from 'regraph-request';
 import { PeerToPeerScene } from './peer-to-peer-scene';
 
-export const SUPPORTED_ASSETS = ['BTC', 'LTC'];
-// const assetMapping = { BTC: 'AssetBtc', LTC: 'AssetLtc' };
+export const SUPPORTED_ASSETS = ['BTC'];
+const TX_LIMIT = 10;
 
 const P2P_QUERY = `
 query PeerToPeerData($assetSymbol: String!, $skip: Int, $limit: Int, $search: String) {
@@ -53,7 +53,7 @@ fragment block on BitcoinBlock {
     }
   }
 }
-  `;
+`;
 
 export class PeerToPeerSceneContainerComponent extends React.Component {
   constructor(props) {
@@ -64,6 +64,10 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
       searchQuery: '',
       displayLatestBlock: true,
       expandedTransactions: [],
+      nextTxPageAvailable: true,
+      prevTxPageAvailable: false,
+      txPage: 1,
+      txTotalPages: 1,
     };
 
     SUPPORTED_ASSETS.indexOf(props.currency.assetSymbol) >= 0;
@@ -92,21 +96,72 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
   }
 
   runSearch() {
-    this.props.getData({ search: this.state.searchQuery }).then(() => {
+    this.props.getData({ skip: 0, search: this.state.searchQuery }).then(() => {
       this.setState({
+        txPage: 1,
         displayLatestBlock: !this.state.searchQuery,
+        expandedTransactions: [],
       });
     });
   }
 
-  static getDerivedStateFromProps(props) {
+  static getTxPageAvailability(asset, page, useLatestBlock) {
+    let nextTxPageAvailable,
+      prevTxPageAvailable,
+      txTotalPages,
+      block = useLatestBlock ? asset.block : asset.searchBlock;
+
+    if (!block) return {};
+
+    prevTxPageAvailable = page !== 1;
+    nextTxPageAvailable = page * TX_LIMIT < block.txCount;
+    txTotalPages = Math.ceil(block.txCount / TX_LIMIT);
+
+    return {
+      nextTxPageAvailable,
+      prevTxPageAvailable,
+      txTotalPages,
+    };
+  }
+
+  goToPage(pageNumer) {
+    return this.props
+      .getData({
+        skip: pageNumer - 1 * TX_LIMIT,
+      })
+      .then(() => {
+        this.setState({
+          txPage: pageNumer,
+        });
+      });
+  }
+
+  nextPage() {
+    if (this.state.nextTxPageAvailable) {
+      this.goToPage(this.state.txPage + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.state.prevTxPageAvailable) {
+      this.goToPage(this.state.txPage - 1);
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
     if (!props.data || !props.data.asset || !props.data.asset.block) {
       return {
         error: 'Could not find asset peer to peer data',
       };
     } else {
+      let pagination = PeerToPeerSceneContainerComponent.getTxPageAvailability(
+        props.data.asset,
+        state.txPage,
+        state.displayLatestBlock
+      );
       return {
         error: null,
+        ...pagination,
       };
     }
   }
@@ -119,6 +174,8 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
         runSearch={this.runSearch.bind(this)}
         updateSearchQuery={this.updateSearchQuery.bind(this)}
         toggleTransactionExpanded={this.toggleTransactionExpanded.bind(this)}
+        nextPage={this.nextPage.bind(this)}
+        prevPage={this.prevPage.bind(this)}
       />
     );
   }
@@ -137,7 +194,7 @@ export const PeerToPeerSceneContainer = Query(
   ({ currency }) => {
     return {
       assetSymbol: currency.assetSymbol.toUpperCase(),
-      limit: 10,
+      limit: TX_LIMIT,
       skip: 0,
       search: '',
     };
