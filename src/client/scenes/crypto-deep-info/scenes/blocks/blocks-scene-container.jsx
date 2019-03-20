@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'regraph-request';
-import { PeerToPeerScene } from './peer-to-peer-scene';
+import { BlocksScene } from './blocks-scene';
 
 export const SUPPORTED_ASSETS = ['BTC'];
 const TX_LIMIT = 10;
@@ -55,7 +55,7 @@ fragment block on BitcoinBlock {
 }
 `;
 
-export class PeerToPeerSceneContainerComponent extends React.Component {
+export class BlocksSceneContainerComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -154,7 +154,7 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
         error: 'Could not find asset peer to peer data',
       };
     } else {
-      let pagination = PeerToPeerSceneContainerComponent.getTxPageAvailability(
+      let pagination = BlocksSceneContainerComponent.getTxPageAvailability(
         props.data.asset,
         state.txPage,
         state.displayLatestBlock
@@ -168,7 +168,7 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
 
   render() {
     return (
-      <PeerToPeerScene
+      <BlocksScene
         {...this.props}
         {...this.state}
         runSearch={this.runSearch.bind(this)}
@@ -181,15 +181,15 @@ export class PeerToPeerSceneContainerComponent extends React.Component {
   }
 }
 
-PeerToPeerSceneContainerComponent.propTypes = {
+BlocksSceneContainerComponent.propTypes = {
   data: PropTypes.object,
   getData: PropTypes.func,
   base: PropTypes.string,
   currency: PropTypes.object,
 };
 
-export const PeerToPeerSceneContainer = Query(
-  PeerToPeerSceneContainerComponent,
+export const BlocksSceneContainer = Query(
+  BlocksSceneContainerComponent,
   P2P_QUERY,
   ({ currency }) => {
     return {

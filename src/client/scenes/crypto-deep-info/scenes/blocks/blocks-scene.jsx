@@ -5,7 +5,7 @@ import { Input, Button, Form } from 'reactstrap';
 import { BlockInfo } from './components/block-info';
 import { TransactionsInfo } from './components/transactions-info';
 
-export const PeerToPeerScene = ({
+export const BlocksScene = ({
   error,
   data,
   toggleTransactionExpanded,
@@ -73,7 +73,7 @@ export const PeerToPeerScene = ({
   );
 };
 
-PeerToPeerScene.propTypes = {
+BlocksScene.propTypes = {
   error: PropTypes.string,
   data: PropTypes.object,
   toggleTransactionExpanded: PropTypes.func,
