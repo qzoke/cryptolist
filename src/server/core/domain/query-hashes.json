@@ -43,5 +43,9 @@
   {
     "name": "TradesData",
     "hash": "70f6e3a7646dadf5c226888ff59d76600c27fb6f111cecf79307008d682305b3"
+  },
+  {
+    "name": "PeerToPeerData",
+    "hash": "dbfd632d08e974d99e6a381c4f6a1511e27470ea3b1b6e5e1c7bb156a1118f07"
   }
 ]
