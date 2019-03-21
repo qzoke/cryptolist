@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'regraph-request';
 import { BlocksScene } from './blocks-scene';
+import qs from 'qs';
 
 export const SUPPORTED_ASSETS = ['BTC'];
-const TX_LIMIT = 10;
+const TX_LIMIT = 20;
 
 const P2P_QUERY = `
 query PeerToPeerData($assetSymbol: String!, $skip: Int, $limit: Int, $search: String) {
@@ -96,13 +97,9 @@ export class BlocksSceneContainerComponent extends React.Component {
   }
 
   runSearch() {
-    this.props.getData({ skip: 0, search: this.state.searchQuery }).then(() => {
-      this.setState({
-        txPage: 1,
-        displayLatestBlock: !this.state.searchQuery,
-        expandedTransactions: [],
-      });
-    });
+    let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    query.block = this.state.searchQuery;
+    this.props.history.push(`${this.props.location.pathname}?${qs.stringify(query)}`);
   }
 
   static getTxPageAvailability(asset, page, useLatestBlock) {
@@ -154,13 +151,16 @@ export class BlocksSceneContainerComponent extends React.Component {
         error: 'Could not find asset peer to peer data',
       };
     } else {
+      let query = qs.parse(location.search, { ignoreQueryPrefix: true });
+      let displayLatestBlock = !query.block;
       let pagination = BlocksSceneContainerComponent.getTxPageAvailability(
         props.data.asset,
         state.txPage,
-        state.displayLatestBlock
+        displayLatestBlock
       );
       return {
         error: null,
+        displayLatestBlock,
         ...pagination,
       };
     }
@@ -186,17 +186,20 @@ BlocksSceneContainerComponent.propTypes = {
   getData: PropTypes.func,
   base: PropTypes.string,
   currency: PropTypes.object,
+  history: PropTypes.object,
+  location: PropTypes.object,
 };
 
 export const BlocksSceneContainer = Query(
   BlocksSceneContainerComponent,
   P2P_QUERY,
-  ({ currency }) => {
+  ({ currency, location }) => {
+    let query = qs.parse(location.search, { ignoreQueryPrefix: true });
     return {
       assetSymbol: currency.assetSymbol.toUpperCase(),
       limit: TX_LIMIT,
       skip: 0,
-      search: '',
+      search: query.block,
     };
   }
 );

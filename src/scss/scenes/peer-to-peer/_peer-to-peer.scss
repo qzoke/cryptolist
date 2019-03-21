@@ -43,10 +43,7 @@
   .label {
     font-weight: bold;
   }
-
-  .value {
-    &.hash {
-      font-size: 0.75rem;
-    }
+  .hash {
+    font-size: 0.75rem;
   }
 }

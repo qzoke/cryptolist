@@ -23,15 +23,32 @@ export const TransactionsInfo = ({
     <div className="row">
       <div className="col-md-12">
         <div className="transactions">
-          <div>
+          <div className="header">
             <h3>Transactions</h3>
+            <Pagination size="sm">
+              <PaginationItem disabled={!prevTxPageAvailable}>
+                <PaginationLink previous onClick={prevPage} />
+              </PaginationItem>
+              <PaginationItem disabled>
+                <PaginationLink>
+                  {page}/{totalPages}
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem disabled={!nextTxPageAvailable}>
+                <PaginationLink next onClick={nextPage} />
+              </PaginationItem>
+            </Pagination>
           </div>
           <div className="expandable-table">
             {block.txs.map(t => {
               const isExpanded = expandedTransactions.indexOf(t.txId) > -1;
               return (
                 <div className={`item ${isExpanded ? 'expanded' : ''}`} key={t.txId}>
-                  <a href="#" onClick={e => toggleTransactionExpandedWrapped(e, t.txId)}>
+                  <a
+                    href="#"
+                    // className="hash"
+                    onClick={e => toggleTransactionExpandedWrapped(e, t.txId)}
+                  >
                     {t.txId}
                   </a>
                   {isExpanded && <Transaction {...t} />}
@@ -39,19 +56,6 @@ export const TransactionsInfo = ({
               );
             })}
           </div>
-          <Pagination>
-            <PaginationItem disabled={!prevTxPageAvailable}>
-              <PaginationLink previous onClick={prevPage} />
-            </PaginationItem>
-            <PaginationItem disabled>
-              <PaginationLink>
-                {page}/{totalPages}
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem disabled={!nextTxPageAvailable}>
-              <PaginationLink next onClick={nextPage} />
-            </PaginationItem>
-          </Pagination>
         </div>
       </div>
     </div>
