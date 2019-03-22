@@ -51,5 +51,9 @@
   {
     "name": "PeerToPeerAddressData",
     "hash": "349de65558ee11e1356a5b31049a03eaf05ad9742094c93e0839f48b80d398dc"
+  },
+  {
+    "name": "PeerToPeerTransactionData",
+    "hash": "580885123bf739d362b327087edf6eb310ed3322450b6a4429126cc5cf0bbb01"
   }
 ]

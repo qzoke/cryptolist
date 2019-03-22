@@ -5,6 +5,7 @@ import { HistoricalDataSceneContainer } from '../scenes/historical-data/historic
 import { TradesDataSceneContainer } from '../scenes/trades-data/trades-data-scene-container';
 import { BlocksSceneContainer } from '../scenes/blocks/blocks-scene-container';
 import { AddressSceneContainer } from '../scenes/address/address-scene-container';
+import { TransactionSceneContainer } from '../scenes/transaction/transaction-scene-container';
 import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Route, Link } from 'react-router-dom';
@@ -20,6 +21,7 @@ export class Switcher extends React.Component {
     const PropsTradesData = () => <TradesDataSceneContainer {...this.props} />;
     const PropsBlocks = () => <BlocksSceneContainer {...this.props} />;
     const PropsAddress = () => <AddressSceneContainer {...this.props} />;
+    const PropsTransaction = () => <TransactionSceneContainer {...this.props} />;
 
     const pathHead = `/${quote.primary}-${quote.secondary}/${base}`;
     const pathname = this.props.location.pathname.toLowerCase();
@@ -78,6 +80,14 @@ export class Switcher extends React.Component {
                   Address
                 </Link>
               </NavItem>
+              <NavItem>
+                <Link
+                  className={`nav-link ${pathname.endsWith('transaction') ? 'active' : ''}`}
+                  to={`${pathHead}/transaction${qs}`}
+                >
+                  Transaction
+                </Link>
+              </NavItem>
             </React.Fragment>
           )}
         </Nav>
@@ -88,6 +98,7 @@ export class Switcher extends React.Component {
         <Route path={`${pathHead}/trades`} render={PropsTradesData} />
         <Route path={`${pathHead}/blocks`} render={PropsBlocks} />
         <Route path={`${pathHead}/address`} render={PropsAddress} />
+        <Route path={`${pathHead}/transaction`} render={PropsTransaction} />
       </div>
     );
   }
