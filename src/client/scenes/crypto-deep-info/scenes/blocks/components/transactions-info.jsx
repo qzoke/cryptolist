@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import { Transaction } from './transaction';
+import { Link } from 'react-router-dom';
+import { getNewPath } from '../../../../../library/path-tools';
+
+const getTxPath = txId => {
+  return getNewPath(window.location.pathname, '/*/*/transaction', {
+    transaction: txId || undefined,
+  });
+};
 
 export const TransactionsInfo = ({
   block,
-  expandedTransactions,
-  toggleTransactionExpanded,
   nextTxPageAvailable,
   prevTxPageAvailable,
   nextPage,
@@ -14,11 +19,6 @@ export const TransactionsInfo = ({
   page,
   totalPages,
 }) => {
-  const toggleTransactionExpandedWrapped = (e, id) => {
-    e.preventDefault();
-    toggleTransactionExpanded(id);
-  };
-
   return (
     <div className="row">
       <div className="col-md-12">
@@ -40,21 +40,11 @@ export const TransactionsInfo = ({
             </Pagination>
           </div>
           <div className="expandable-table">
-            {block.txs.map(t => {
-              const isExpanded = expandedTransactions.indexOf(t.txId) > -1;
-              return (
-                <div className={`item ${isExpanded ? 'expanded' : ''}`} key={t.txId}>
-                  <a
-                    href="#"
-                    // className="hash"
-                    onClick={e => toggleTransactionExpandedWrapped(e, t.txId)}
-                  >
-                    {t.txId}
-                  </a>
-                  {isExpanded && <Transaction {...t} />}
-                </div>
-              );
-            })}
+            {block.txs.map(t => (
+              <div className="item" key={t.txId}>
+                <Link to={getTxPath(t.txId)}>{t.txId}</Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>

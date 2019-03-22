@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { Input, Button, Form } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
+import { getNewPath } from '../../../../library/path-tools';
+import { Link } from 'react-router-dom';
+const getBlockPath = blockHash => {
+  return getNewPath(window.location.pathname, '/*/*/blocks', {
+    block: blockHash || undefined,
+  });
+};
 
 export const TransactionScene = ({ error, data, search, updateTransaction, runSearch }) => {
   let tx = data.asset && data.asset.tx;
@@ -39,7 +46,9 @@ export const TransactionScene = ({ error, data, search, updateTransaction, runSe
               </div>
               <div className="item">
                 <div className="label">Block Hash</div>
-                <div className="value hash">{tx.blockhash}</div>
+                <div className="value hash">
+                  <Link to={getBlockPath(tx.blockHash)}>{tx.blockhash}</Link>
+                </div>
               </div>
               <div className="item">
                 <div className="label">Value In</div>

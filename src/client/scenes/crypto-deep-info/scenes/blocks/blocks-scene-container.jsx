@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import qs from 'qs';
 import { Query } from 'regraph-request';
 import { BlocksScene } from './blocks-scene';
-import qs from 'qs';
 
 export const SUPPORTED_ASSETS = ['BTC'];
 const TX_LIMIT = 20;
@@ -64,7 +64,6 @@ export class BlocksSceneContainerComponent extends React.Component {
       message: '',
       searchQuery: '',
       displayLatestBlock: true,
-      expandedTransactions: [],
       nextTxPageAvailable: true,
       prevTxPageAvailable: false,
       txPage: 1,
@@ -72,24 +71,6 @@ export class BlocksSceneContainerComponent extends React.Component {
     };
 
     SUPPORTED_ASSETS.indexOf(props.currency.assetSymbol) >= 0;
-  }
-
-  toggleTransactionExpanded(txId) {
-    this.setState(state => {
-      const idx = state.expandedTransactions.indexOf(txId);
-
-      if (idx > -1) {
-        const { expandedTransactions } = state;
-        expandedTransactions.splice(idx, 1);
-        return {
-          expandedTransactions,
-        };
-      } else {
-        return {
-          expandTransaction: state.expandedTransactions.push(txId),
-        };
-      }
-    });
   }
 
   updateSearchQuery(event) {
@@ -173,7 +154,6 @@ export class BlocksSceneContainerComponent extends React.Component {
         {...this.state}
         runSearch={this.runSearch.bind(this)}
         updateSearchQuery={this.updateSearchQuery.bind(this)}
-        toggleTransactionExpanded={this.toggleTransactionExpanded.bind(this)}
         nextPage={this.nextPage.bind(this)}
         prevPage={this.prevPage.bind(this)}
       />

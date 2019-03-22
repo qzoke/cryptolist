@@ -1,6 +1,14 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { getNewPath } from '../../../../../library/path-tools';
+
+const getBlockPath = blockHash => {
+  return getNewPath(window.location.pathname, '/*/*/blocks', {
+    block: blockHash || undefined,
+  });
+};
 
 export const BlockInfo = ({ block }) => {
   return (
@@ -54,11 +62,15 @@ export const BlockInfo = ({ block }) => {
             </div>
             <div className="item">
               <div className="label">Previous</div>
-              <div className="value hash">{block.prevHash}</div>
+              <div className="value hash">
+                <Link to={getBlockPath(block.prevHash)}>{block.prevHash}</Link>
+              </div>
             </div>
             <div className="item">
               <div className="label">Next</div>
-              <div className="value hash">{block.nextHash || 'None'}</div>
+              <div className="value hash">
+                {<Link to={getBlockPath(block.nextHash)}>{block.nextHash}</Link> || 'None'}
+              </div>
             </div>
             <div className="item">
               <div className="label">Merkle Root</div>
