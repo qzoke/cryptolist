@@ -98,7 +98,7 @@ export class BlocksSceneContainerComponent extends React.Component {
 
   runSearch() {
     let query = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
-    query.block = this.state.searchQuery;
+    query.block = this.state.searchQuery || undefined;
     this.props.history.push(`${this.props.location.pathname}?${qs.stringify(query)}`);
   }
 
